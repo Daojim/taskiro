@@ -146,7 +146,8 @@ router.post('/login', authLimiter, loginValidation, async (req, res, next) => {
     const { accessToken, refreshToken } = generateTokens(user.id, user.email);
 
     // Return user data without password hash
-    const { passwordHash, ...userWithoutPassword } = user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { passwordHash: _, ...userWithoutPassword } = user;
 
     res.json({
       message: 'Login successful',

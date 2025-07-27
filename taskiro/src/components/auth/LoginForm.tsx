@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { loginSchema, LoginFormData } from '../../utils/validation';
-import { ApiError } from '../../types/auth';
+import { useAuth } from '../../hooks/useAuth';
+import { loginSchema } from '../../utils/validation';
+import type { LoginFormData } from '../../utils/validation';
+import type { ApiError } from '../../types/auth';
 
 const LoginForm: React.FC = () => {
   const { login, isLoading } = useAuth();
@@ -24,7 +25,7 @@ const LoginForm: React.FC = () => {
       setApiError('');
       await login(data);
       navigate('/dashboard');
-    } catch (error: any) {
+    } catch (error: unknown) {
       const apiError = error as ApiError;
       setApiError(apiError.error?.message || 'Login failed. Please try again.');
     }

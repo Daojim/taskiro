@@ -16,7 +16,7 @@ export const validateRequest = (
     }));
 
     const error = createError('Validation failed', 400, 'VALIDATION_ERROR');
-    (error as any).details = errorMessages;
+    (error as { details?: unknown }).details = errorMessages;
     throw error;
   }
 

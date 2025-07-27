@@ -1,21 +1,17 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from 'react';
-import {
+import React, { createContext, useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
+import type {
   AuthContextType,
   User,
   AuthTokens,
   LoginRequest,
   RegisterRequest,
-  ApiError,
 } from '../types/auth';
 import { apiService } from '../services/api';
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined
+);
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -123,12 +119,4 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
-
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 };

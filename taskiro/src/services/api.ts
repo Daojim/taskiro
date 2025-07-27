@@ -1,9 +1,9 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import {
+import axios from 'axios';
+import type { AxiosInstance, AxiosResponse } from 'axios';
+import type {
   AuthResponse,
   LoginRequest,
   RegisterRequest,
-  RefreshTokenRequest,
   User,
   ApiError,
 } from '../types/auth';
@@ -95,7 +95,7 @@ class ApiService {
       localStorage.setItem('taskiro_user', JSON.stringify(response.data.user));
 
       return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleApiError(error);
     }
   }
@@ -112,7 +112,7 @@ class ApiService {
       localStorage.setItem('taskiro_user', JSON.stringify(response.data.user));
 
       return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleApiError(error);
     }
   }
@@ -126,7 +126,7 @@ class ApiService {
         { refreshToken }
       );
       return response.data.tokens;
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleApiError(error);
     }
   }
@@ -151,7 +151,7 @@ class ApiService {
       localStorage.setItem('taskiro_user', JSON.stringify(response.data.user));
 
       return response.data.user;
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleApiError(error);
     }
   }
@@ -167,16 +167,24 @@ class ApiService {
     return !!tokens?.accessToken;
   }
 
-  private handleApiError(error: any): ApiError {
-    if (error.response?.data?.error) {
-      return error.response.data;
+  private handleApiError(error: unknown): ApiError {
+    if (error && typeof error === 'object' && 'response' in error) {
+      const axiosError = error as { response?: { data?: ApiError } };
+      if (axiosError.response?.data?.error) {
+        return axiosError.response.data;
+      }
     }
 
     // Network or other errors
+    const errorMessage =
+      error && typeof error === 'object' && 'message' in error
+        ? (error as { message: string }).message
+        : 'An unexpected error occurred';
+
     return {
       error: {
         code: 'NETWORK_ERROR',
-        message: error.message || 'An unexpected error occurred',
+        message: errorMessage,
         timestamp: new Date().toISOString(),
       },
     };
@@ -187,7 +195,7 @@ class ApiService {
     try {
       const response = await this.api.get('/health');
       return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleApiError(error);
     }
   }
