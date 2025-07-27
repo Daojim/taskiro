@@ -11,7 +11,7 @@
 
 - [ ] 2. Implement core authentication system
 
-  - [ ] 2.1 Create user registration and login backend API
+  - [x] 2.1 Create user registration and login backend API
 
     - Implement user model with Prisma schema
     - Create JWT authentication middleware
