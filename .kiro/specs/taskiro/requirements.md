@@ -24,11 +24,13 @@ Taskiro is a personal productivity web application that helps users organize bot
 
 #### Acceptance Criteria
 
-1. WHEN a user types a natural language phrase like "Buy groceries tomorrow" THEN the system SHALL parse the text and extract the task name and due date
+1. WHEN a user types a natural language phrase like "Buy groceries tomorrow" THEN the system SHALL parse the text and extract the task name, due date, and due time if specified
 2. WHEN the system successfully parses natural language input THEN it SHALL create a new task with the extracted information
 3. WHEN a user enters phrases with relative dates like "next Tuesday" or "in two weeks" THEN the system SHALL correctly calculate and assign the absolute due date
-4. WHEN natural language parsing fails to extract clear information THEN the system SHALL prompt the user to clarify or use manual entry
-5. WHEN a user includes priority indicators in their input THEN the system SHALL attempt to extract and assign the appropriate priority level
+4. WHEN a user enters ambiguous date phrases like "next week" THEN the system SHALL display a popup with selectable date options for the next 7-14 days
+5. WHEN a user enters phrases like "end of month" THEN the system SHALL display a popup with selectable options for the last few days of the current month
+6. WHEN a user includes priority indicators like "urgent", "important", "ASAP", or "major" THEN the system SHALL extract and assign the appropriate priority level
+7. WHEN natural language parsing fails to extract clear information THEN the system SHALL prompt the user to clarify or use manual entry
 
 ### Requirement 3
 
@@ -36,11 +38,12 @@ Taskiro is a personal productivity web application that helps users organize bot
 
 #### Acceptance Criteria
 
-1. WHEN a user chooses manual task creation THEN the system SHALL provide a form with fields for task name, due date, priority, and category
+1. WHEN a user chooses manual task creation THEN the system SHALL provide a form with fields for task name, due date, due time, priority, and category
 2. WHEN a user submits a valid manual task form THEN the system SHALL create the task with the specified details
-3. WHEN a user wants to edit an existing task THEN the system SHALL allow modification of all task properties
-4. WHEN a user updates a task THEN the system SHALL save the changes and reflect them in both list and calendar views
-5. IF required fields are missing in manual entry THEN the system SHALL display validation errors
+3. WHEN a user wants to edit an existing task THEN the system SHALL allow inline editing of all task properties
+4. WHEN a user wants detailed task editing THEN the system SHALL provide an option to open a comprehensive edit form
+5. WHEN a user updates a task THEN the system SHALL save the changes and reflect them in both list and calendar views
+6. IF required fields are missing in manual entry THEN the system SHALL display validation errors
 
 ### Requirement 4
 
@@ -51,8 +54,11 @@ Taskiro is a personal productivity web application that helps users organize bot
 1. WHEN creating a task THEN the system SHALL allow assignment of a category (optional)
 2. WHEN a user hasn't used categories before THEN the system SHALL provide default categories like "work", "personal", and "school"
 3. WHEN a user wants to create custom categories THEN the system SHALL allow them to add and name new categories
-4. WHEN creating or editing a task THEN the system SHALL allow selection of priority level (high, medium, low)
-5. WHEN no priority is specified THEN the system SHALL default to medium priority
+4. WHEN a user wants to edit or delete custom categories THEN the system SHALL provide category management options
+5. WHEN a user deletes a category with associated tasks THEN the system SHALL display a popup asking whether to delete the tasks or move them to an unassigned state
+6. WHEN creating or editing a task THEN the system SHALL allow selection of priority level (high, medium, low)
+7. WHEN no priority is specified THEN the system SHALL default to medium priority
+8. WHEN no category is assigned THEN tasks SHALL exist in an unassigned/uncategorized state
 
 ### Requirement 5
 
@@ -60,11 +66,12 @@ Taskiro is a personal productivity web application that helps users organize bot
 
 #### Acceptance Criteria
 
-1. WHEN a user accesses the task list view THEN the system SHALL display all tasks with their name, due date, priority, and category
-2. WHEN a user clicks on a task checkbox THEN the system SHALL mark the task as complete and update its visual status
-3. WHEN viewing the task list THEN the system SHALL allow filtering by category, priority, or completion status
-4. WHEN tasks are overdue THEN the system SHALL visually highlight them in the list
-5. WHEN a user wants to delete a task THEN the system SHALL provide a delete option with confirmation
+1. WHEN a user accesses the task list view THEN the system SHALL display all tasks by default with their name, due date, due time, priority, and category
+2. WHEN a user clicks on a task checkbox THEN the system SHALL mark the task as complete and display it with a crossed-out visual style
+3. WHEN a user clicks on a completed task checkbox THEN the system SHALL allow them to uncheck and restore the task to active status
+4. WHEN viewing the task list THEN the system SHALL allow filtering by category, priority, or completion status
+5. WHEN tasks are overdue THEN the system SHALL visually highlight them in the list
+6. WHEN a user wants to delete a task THEN the system SHALL archive the task rather than permanently delete it
 
 ### Requirement 6
 
@@ -89,3 +96,15 @@ Taskiro is a personal productivity web application that helps users organize bot
 3. WHEN the application experiences an unexpected shutdown THEN the system SHALL preserve all previously saved task data
 4. WHEN multiple users use the application THEN the system SHALL ensure each user only sees their own tasks
 5. IF database operations fail THEN the system SHALL display appropriate error messages to the user
+
+### Requirement 8
+
+**User Story:** As a user, I want to access my archived tasks, so that I can review what I've accomplished and reference past work.
+
+#### Acceptance Criteria
+
+1. WHEN a user deletes a task THEN the system SHALL move it to an archived state rather than permanently removing it
+2. WHEN a user wants to view archived tasks THEN the system SHALL provide access to a separate archived tasks view
+3. WHEN viewing archived tasks THEN the system SHALL display them with timestamps of when they were archived
+4. WHEN a user wants to restore an archived task THEN the system SHALL allow them to move it back to active status
+5. WHEN viewing archived tasks THEN the system SHALL allow filtering by date range and original category
