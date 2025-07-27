@@ -20,7 +20,8 @@
     - Add refresh token functionality
     - _Requirements: 1.1, 1.2, 1.3_
 
-  - [ ] 2.2 Build authentication frontend components
+  - [x] 2.2 Build authentication frontend components
+
     - Create registration form with validation
     - Create login form with validation
     - Implement JWT token storage and management

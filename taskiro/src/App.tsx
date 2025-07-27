@@ -1,27 +1,49 @@
-import { useState } from "react";
+import React from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import LoginForm from './components/auth/LoginForm';
+import RegisterForm from './components/auth/RegisterForm';
+import Dashboard from './components/Dashboard';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-md">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          Taskiro - Setup Complete!
-        </h1>
-        <div className="space-y-4">
-          <p className="text-gray-600">
-            React + TypeScript + Vite + Tailwind CSS + Prisma setup is working!
-          </p>
-          <button
-            onClick={() => setCount((count) => count + 1)}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Count is {count}
-          </button>
-        </div>
-      </div>
-    </div>
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <div className="App">
+            <Routes>
+              {/* Public routes */}
+              <Route path="/login" element={<LoginForm />} />
+              <Route path="/register" element={<RegisterForm />} />
+
+              {/* Protected routes */}
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Default redirect */}
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
+              {/* Catch all route */}
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+          </div>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
