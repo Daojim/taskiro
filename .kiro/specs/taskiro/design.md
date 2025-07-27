@@ -72,14 +72,19 @@ graph TB
    - Virtualized list for performance with large task sets
    - Inline editing capabilities for all task properties
    - Filtering and sorting controls (category, priority, status, date)
-   - Drag-and-drop reordering within priority levels
+   - Real-time search functionality by title and description
+   - Mobile gestures: tap to complete, swipe to delete with undo option
+   - Pull-to-refresh for manual sync trigger
+   - Offline mode indicator and sync queue status
 
 3. **CalendarGridView**
 
    - Traditional monthly calendar layout
    - Task display with priority-based color coding
+   - "Show more" button for days with many tasks (>3 tasks)
    - Click-to-edit task details
    - Month navigation with keyboard shortcuts
+   - Daily task limit warning at 10 tasks per day
 
 4. **DateDisambiguationPopup**
 
@@ -89,15 +94,31 @@ graph TB
    - Quick selection with keyboard navigation
 
 5. **CategoryManager**
+
    - CRUD operations for custom categories
    - Default category templates (work, personal, school)
    - Bulk task reassignment on category deletion
    - Category color customization
 
+6. **ThemeProvider**
+
+   - Dark/light mode toggle with system preference detection
+   - Theme persistence across sessions
+   - Smooth theme transitions
+
+7. **OfflineManager**
+   - Offline data caching with IndexedDB
+   - Sync queue for pending actions
+   - Network status monitoring
+   - Automatic sync when connection restored
+
 #### Supporting Components
 
 - **AuthenticationForms**: Login/register with validation
 - **TaskCard**: Reusable task display component
+- **SearchBar**: Real-time search with highlighted results
+- **SyncStatusIndicator**: Shows last sync time and connection status
+- **UndoToast**: Temporary undo option for deleted tasks
 - **FilterPanel**: Advanced filtering and search
 - **ArchiveView**: Historical task browsing
 - **SettingsPanel**: User preferences and integrations
@@ -282,6 +303,28 @@ interface Suggestion {
 3. **Validation Errors**: Comprehensive input sanitization and validation
 4. **External API Errors**: Circuit breaker pattern for Google Calendar API
 5. **Rate Limiting**: Request throttling with informative error messages
+
+### Offline & Sync Error Handling
+
+1. **Network Failures**:
+
+   - Cache data locally with IndexedDB
+   - Queue actions for later sync
+   - Show offline mode indicator
+   - Automatic retry with exponential backoff
+
+2. **Google Calendar Integration**:
+
+   - Automatic token refresh using refresh tokens
+   - Graceful degradation when sync fails
+   - Manual reconnection option for users
+   - Sync status indicator with last successful sync time
+   - User-triggered sync with pull-to-refresh
+
+3. **Sync Conflicts**:
+   - Last-write-wins strategy for task updates
+   - Conflict resolution UI for simultaneous edits
+   - Backup conflicted data for user review
 
 ### Error Response Format
 
