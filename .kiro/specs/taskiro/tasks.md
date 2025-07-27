@@ -31,7 +31,7 @@
 
 - [ ] 3. Implement database models and core data layer
 
-  - [ ] 3.1 Create complete database schema
+  - [x] 3.1 Create complete database schema
 
     - Define users, categories, tasks, and calendar_integrations tables
     - Add proper indexes for performance

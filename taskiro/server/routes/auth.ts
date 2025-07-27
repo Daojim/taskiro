@@ -1,7 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import rateLimit from 'express-rate-limit';
-import { PrismaClient } from '@prisma/client';
+
 import {
   registerValidation,
   loginValidation,
@@ -14,9 +14,9 @@ import {
   AuthenticatedRequest,
 } from '../middleware/auth';
 import { createError } from '../middleware/errorHandler';
+import { prisma, createDefaultCategories } from '../utils/database';
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 // Rate limiting for auth endpoints
 const authLimiter = rateLimit({
@@ -67,28 +67,7 @@ router.post(
       });
 
       // Create default categories for the new user
-      await prisma.category.createMany({
-        data: [
-          {
-            userId: user.id,
-            name: 'Work',
-            color: '#3B82F6',
-            isDefault: true,
-          },
-          {
-            userId: user.id,
-            name: 'Personal',
-            color: '#10B981',
-            isDefault: true,
-          },
-          {
-            userId: user.id,
-            name: 'School',
-            color: '#F59E0B',
-            isDefault: true,
-          },
-        ],
-      });
+      await createDefaultCategories(user.id);
 
       // Generate tokens
       const { accessToken, refreshToken } = generateTokens(user.id, user.email);
