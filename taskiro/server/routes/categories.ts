@@ -1,5 +1,6 @@
 import express, { Response, NextFunction } from 'express';
 import { body, param } from 'express-validator';
+import { Status } from '@prisma/client';
 import { authenticateToken, AuthenticatedRequest } from '../middleware/auth';
 import { validateRequest } from '../middleware/validation';
 import { createError } from '../middleware/errorHandler';
@@ -50,7 +51,7 @@ router.get(
             select: {
               tasks: {
                 where: {
-                  status: { not: 'ARCHIVED' },
+                  status: { not: Status.ARCHIVED },
                 },
               },
             },
@@ -106,7 +107,7 @@ router.post(
             select: {
               tasks: {
                 where: {
-                  status: { not: 'ARCHIVED' },
+                  status: { not: Status.ARCHIVED },
                 },
               },
             },
@@ -143,7 +144,7 @@ router.get(
             select: {
               tasks: {
                 where: {
-                  status: { not: 'ARCHIVED' },
+                  status: { not: Status.ARCHIVED },
                 },
               },
             },
@@ -215,7 +216,7 @@ router.put(
             select: {
               tasks: {
                 where: {
-                  status: { not: 'ARCHIVED' },
+                  status: { not: Status.ARCHIVED },
                 },
               },
             },
@@ -285,7 +286,7 @@ router.delete(
               userId: req.user!.id,
             },
             data: {
-              status: 'ARCHIVED',
+              status: Status.ARCHIVED,
               archivedAt: new Date(),
             },
           });
@@ -344,7 +345,7 @@ router.get(
       interface CategoryTasksWhereClause {
         categoryId: string;
         userId: string;
-        status?: unknown;
+        status?: Status | { not: Status };
       }
 
       const where: CategoryTasksWhereClause = {
@@ -354,9 +355,9 @@ router.get(
 
       // Filter by status
       if (status && typeof status === 'string') {
-        where.status = status.toUpperCase();
+        where.status = status.toUpperCase() as Status;
       } else {
-        where.status = { not: 'ARCHIVED' };
+        where.status = { not: Status.ARCHIVED };
       }
 
       const tasks = await prisma.task.findMany({
