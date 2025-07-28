@@ -41,6 +41,21 @@ const DATE_PATTERNS = {
   PREPOSITION_CLEANUP: /^(by|for|at)\s+/gi,
 } as const;
 
+const DAY_NAMES = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+] as const;
+
+const DATE_FORMAT_OPTIONS = {
+  SHORT_DATE: { month: 'short', day: 'numeric' } as const,
+  WEEKDAY_LONG: { weekday: 'long' } as const,
+} as const;
+
 export class DateParsingService {
   /**
    * Parse natural language input to extract task information
@@ -163,12 +178,25 @@ export class DateParsingService {
 
   /**
    * Check for ambiguous date patterns before chrono parsing
+   * Requirements 2.4, 2.5: Detect ambiguous date expressions that need disambiguation
    */
   private checkForAmbiguousDatePatterns(
     text: string,
     referenceDate: Date
   ): AmbiguousElement | null {
     const lowerText = text.toLowerCase();
+
+    // Check for "next week" patterns - ambiguous, could be any day 7-14 days ahead
+    if (lowerText.includes('next week')) {
+      const match = text.match(/next week/i);
+      if (match) {
+        return {
+          type: 'date',
+          originalText: match[0],
+          suggestions: this.generateNextWeekSuggestions(referenceDate),
+        };
+      }
+    }
 
     // Check for "end of month" patterns
     if (
@@ -209,41 +237,50 @@ export class DateParsingService {
 
   /**
    * Generate suggestions for "next week" (7-14 days ahead)
+   * Requirements 2.4: Generate date options for "next week" (7-14 days ahead)
    */
   private generateNextWeekSuggestions(referenceDate: Date): Suggestion[] {
     const suggestions: Suggestion[] = [];
-    const startOfNextWeek = new Date(referenceDate);
 
-    // Find next Monday (start of next week)
-    const daysUntilNextMonday = (8 - startOfNextWeek.getDay()) % 7 || 7;
-    startOfNextWeek.setDate(startOfNextWeek.getDate() + daysUntilNextMonday);
-
-    const dayNames = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday',
-    ];
-
-    for (let i = 0; i < 7; i++) {
-      const date = new Date(startOfNextWeek);
-      date.setDate(date.getDate() + i);
-
-      suggestions.push({
-        value: date,
-        display: `${dayNames[i]}, ${date.toLocaleDateString()}`,
-        confidence: CONFIDENCE_SCORES.NEXT_WEEK,
-      });
+    // Start from 7 days ahead and go to 14 days ahead
+    for (let daysAhead = 7; daysAhead <= 14; daysAhead++) {
+      const date = this.addDaysToDate(referenceDate, daysAhead);
+      const suggestion = this.createDateSuggestion(
+        date,
+        CONFIDENCE_SCORES.NEXT_WEEK
+      );
+      suggestions.push(suggestion);
     }
 
     return suggestions;
   }
 
   /**
+   * Utility method to add days to a date without mutating the original
+   */
+  private addDaysToDate(date: Date, days: number): Date {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  }
+
+  /**
+   * Create a standardized date suggestion object
+   */
+  private createDateSuggestion(date: Date, confidence: number): Suggestion {
+    const dayOfWeek = date.getDay();
+    const dayName = DAY_NAMES[dayOfWeek];
+
+    return {
+      value: date,
+      display: `${dayName}, ${date.toLocaleDateString('en-US', DATE_FORMAT_OPTIONS.SHORT_DATE)}`,
+      confidence,
+    };
+  }
+
+  /**
    * Generate suggestions for "end of month" (last few days)
+   * Requirements 2.5: Generate options for "end of month" (last few days)
    */
   private generateEndOfMonthSuggestions(referenceDate: Date): Suggestion[] {
     const suggestions: Suggestion[] = [];
@@ -252,19 +289,19 @@ export class DateParsingService {
 
     // Get last day of current month
     const lastDay = new Date(year, month + 1, 0).getDate();
+    const today = referenceDate.getDate();
 
-    // Generate suggestions for last 5 days of month
-    for (let day = lastDay - 4; day <= lastDay; day++) {
-      if (day > 0) {
-        const date = new Date(year, month, day);
-        const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+    // Generate suggestions for last few days of month (last 3-5 days)
+    // Start from 5 days before end of month, but not before today
+    const startDay = Math.max(lastDay - 4, today);
 
-        suggestions.push({
-          value: date,
-          display: `${dayName}, ${date.toLocaleDateString()}`,
-          confidence: CONFIDENCE_SCORES.END_OF_MONTH,
-        });
-      }
+    for (let day = startDay; day <= lastDay; day++) {
+      const date = new Date(year, month, day);
+      const suggestion = this.createDateSuggestion(
+        date,
+        CONFIDENCE_SCORES.END_OF_MONTH
+      );
+      suggestions.push(suggestion);
     }
 
     return suggestions;
@@ -363,6 +400,44 @@ export class DateParsingService {
    */
   public getConfidenceScore(parsed: ParsedInput): number {
     return parsed.confidence;
+  }
+
+  /**
+   * Generate disambiguation suggestions for ambiguous date text
+   * Requirements 2.4, 2.5: Provide date options for ambiguous expressions
+   */
+  public generateDisambiguationSuggestions(
+    dateText: string,
+    referenceDate: Date = new Date()
+  ): AmbiguousElement[] {
+    const ambiguousElements: AmbiguousElement[] = [];
+    const lowerText = dateText.toLowerCase().trim();
+
+    // Check for "next week" - generate 7-14 days ahead options
+    if (lowerText.includes('next week')) {
+      ambiguousElements.push({
+        type: 'date',
+        originalText: 'next week',
+        suggestions: this.generateNextWeekSuggestions(referenceDate),
+      });
+    }
+
+    // Check for "end of month" - generate last few days of month
+    if (
+      lowerText.includes('end of month') ||
+      lowerText.includes('end of the month')
+    ) {
+      const originalText = lowerText.includes('end of the month')
+        ? 'end of the month'
+        : 'end of month';
+      ambiguousElements.push({
+        type: 'date',
+        originalText,
+        suggestions: this.generateEndOfMonthSuggestions(referenceDate),
+      });
+    }
+
+    return ambiguousElements;
   }
 }
 

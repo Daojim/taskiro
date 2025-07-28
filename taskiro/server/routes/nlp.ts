@@ -57,6 +57,7 @@ router.post(
 /**
  * POST /api/nlp/disambiguate
  * Resolve ambiguous dates by providing suggestions
+ * Requirements 2.4, 2.5: Generate date options for ambiguous expressions
  */
 router.post(
   '/disambiguate',
@@ -85,20 +86,14 @@ router.post(
       const { dateText, referenceDate } = req.body;
       const refDate = referenceDate ? new Date(referenceDate) : new Date();
 
-      // Parse the input to get ambiguous elements
-      const parsed = dateParsingService.parseInput(dateText, refDate);
+      // Generate disambiguation suggestions directly
+      const ambiguousElements =
+        dateParsingService.generateDisambiguationSuggestions(dateText, refDate);
 
-      if (parsed.ambiguousElements && parsed.ambiguousElements.length > 0) {
-        res.json({
-          success: true,
-          ambiguousElements: parsed.ambiguousElements,
-        });
-      } else {
-        res.json({
-          success: true,
-          ambiguousElements: [],
-        });
-      }
+      res.json({
+        success: true,
+        ambiguousElements,
+      });
     } catch (error) {
       console.error('Error disambiguating date:', error);
       res.status(500).json({
