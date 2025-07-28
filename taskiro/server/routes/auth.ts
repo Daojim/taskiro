@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import rateLimit from 'express-rate-limit';
 
@@ -18,6 +18,26 @@ import { prisma, createDefaultCategories } from '../utils/database';
 
 const router = express.Router();
 
+// Constants
+const BCRYPT_SALT_ROUNDS = 12;
+
+// Reusable user selection patterns
+const PUBLIC_USER_SELECT = {
+  id: true,
+  email: true,
+  createdAt: true,
+} as const;
+
+const USER_WITH_PASSWORD_SELECT = {
+  ...PUBLIC_USER_SELECT,
+  passwordHash: true,
+} as const;
+
+const PROFILE_USER_SELECT = {
+  ...PUBLIC_USER_SELECT,
+  updatedAt: true,
+} as const;
+
 // Rate limiting for auth endpoints
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -32,7 +52,7 @@ router.post(
   '/register',
   authLimiter,
   registerValidation,
-  async (req, res, next) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, password } = req.body;
 
@@ -50,8 +70,7 @@ router.post(
       }
 
       // Hash password
-      const saltRounds = 12;
-      const passwordHash = await bcrypt.hash(password, saltRounds);
+      const passwordHash = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
 
       // Create user
       const user = await prisma.user.create({
@@ -59,11 +78,7 @@ router.post(
           email,
           passwordHash,
         },
-        select: {
-          id: true,
-          email: true,
-          createdAt: true,
-        },
+        select: PUBLIC_USER_SELECT,
       });
 
       // Create default categories for the new user
@@ -87,100 +102,100 @@ router.post(
 );
 
 // User login
-router.post('/login', authLimiter, loginValidation, async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
+router.post(
+  '/login',
+  authLimiter,
+  loginValidation,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email, password } = req.body;
 
-    // Find user
-    const user = await prisma.user.findUnique({
-      where: { email },
-      select: {
-        id: true,
-        email: true,
-        passwordHash: true,
-        createdAt: true,
-      },
-    });
+      // Find user
+      const user = await prisma.user.findUnique({
+        where: { email },
+        select: USER_WITH_PASSWORD_SELECT,
+      });
 
-    if (!user) {
-      throw createError(
-        'Invalid email or password',
-        401,
-        'INVALID_CREDENTIALS'
-      );
+      if (!user) {
+        throw createError(
+          'Invalid email or password',
+          401,
+          'INVALID_CREDENTIALS'
+        );
+      }
+
+      // Verify password
+      const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+
+      if (!isPasswordValid) {
+        throw createError(
+          'Invalid email or password',
+          401,
+          'INVALID_CREDENTIALS'
+        );
+      }
+
+      // Generate tokens
+      const { accessToken, refreshToken } = generateTokens(user.id, user.email);
+
+      // Return user data without password hash
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { passwordHash: _, ...userWithoutPassword } = user;
+
+      res.json({
+        message: 'Login successful',
+        user: userWithoutPassword,
+        tokens: {
+          accessToken,
+          refreshToken,
+        },
+      });
+    } catch (error) {
+      next(error);
     }
-
-    // Verify password
-    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
-
-    if (!isPasswordValid) {
-      throw createError(
-        'Invalid email or password',
-        401,
-        'INVALID_CREDENTIALS'
-      );
-    }
-
-    // Generate tokens
-    const { accessToken, refreshToken } = generateTokens(user.id, user.email);
-
-    // Return user data without password hash
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { passwordHash: _, ...userWithoutPassword } = user;
-
-    res.json({
-      message: 'Login successful',
-      user: userWithoutPassword,
-      tokens: {
-        accessToken,
-        refreshToken,
-      },
-    });
-  } catch (error) {
-    next(error);
   }
-});
+);
 
 // Refresh access token
-router.post('/refresh', refreshTokenValidation, async (req, res, next) => {
-  try {
-    const { refreshToken } = req.body;
+router.post(
+  '/refresh',
+  refreshTokenValidation,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { refreshToken } = req.body;
 
-    // Verify refresh token
-    const decoded = verifyRefreshToken(refreshToken);
+      // Verify refresh token
+      const decoded = verifyRefreshToken(refreshToken);
 
-    // Verify user still exists
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
-      select: {
-        id: true,
-        email: true,
-        createdAt: true,
-      },
-    });
+      // Verify user still exists
+      const user = await prisma.user.findUnique({
+        where: { id: decoded.userId },
+        select: PUBLIC_USER_SELECT,
+      });
 
-    if (!user) {
-      throw createError('User not found', 401, 'USER_NOT_FOUND');
+      if (!user) {
+        throw createError('User not found', 401, 'USER_NOT_FOUND');
+      }
+
+      // Generate new tokens
+      const tokens = generateTokens(user.id, user.email);
+
+      res.json({
+        message: 'Token refreshed successfully',
+        user,
+        tokens,
+      });
+    } catch (error) {
+      next(error);
     }
-
-    // Generate new tokens
-    const tokens = generateTokens(user.id, user.email);
-
-    res.json({
-      message: 'Token refreshed successfully',
-      user,
-      tokens,
-    });
-  } catch (error) {
-    next(error);
   }
-});
+);
 
 // Logout (client-side token removal, but we can add token blacklisting later)
 router.delete(
   '/logout',
   authenticateToken,
-  async (req: AuthenticatedRequest, res, next) => {
+  async (_req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
       // For now, logout is handled client-side by removing tokens
       // In a production app, you might want to implement token blacklisting
@@ -198,16 +213,11 @@ router.delete(
 router.get(
   '/me',
   authenticateToken,
-  async (req: AuthenticatedRequest, res, next) => {
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
       const user = await prisma.user.findUnique({
         where: { id: req.user!.id },
-        select: {
-          id: true,
-          email: true,
-          createdAt: true,
-          updatedAt: true,
-        },
+        select: PROFILE_USER_SELECT,
       });
 
       if (!user) {
