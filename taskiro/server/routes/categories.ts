@@ -13,20 +13,7 @@ import {
 
 const router = express.Router();
 
-// Reusable query fragments
-const CATEGORY_WITH_TASK_COUNT = {
-  include: {
-    _count: {
-      select: {
-        tasks: {
-          where: {
-            status: { not: Status.ARCHIVED },
-          },
-        },
-      },
-    },
-  },
-} as const;
+// Reusable query fragments - removed unused constant
 
 // All category routes require authentication
 router.use(authenticateToken);
