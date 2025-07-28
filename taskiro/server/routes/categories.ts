@@ -13,6 +13,21 @@ import {
 
 const router = express.Router();
 
+// Reusable query fragments
+const CATEGORY_WITH_TASK_COUNT = {
+  include: {
+    _count: {
+      select: {
+        tasks: {
+          where: {
+            status: { not: Status.ARCHIVED },
+          },
+        },
+      },
+    },
+  },
+} as const;
+
 // All category routes require authentication
 router.use(authenticateToken);
 
@@ -276,37 +291,39 @@ router.delete(
         );
       }
 
-      // Handle associated tasks
-      if (existingCategory._count.tasks > 0) {
-        if (deleteAssociatedTasks) {
-          // Archive all tasks in this category
-          await prisma.task.updateMany({
-            where: {
-              categoryId: id,
-              userId: req.user!.id,
-            },
-            data: {
-              status: Status.ARCHIVED,
-              archivedAt: new Date(),
-            },
-          });
-        } else {
-          // Remove category from tasks (set to null)
-          await prisma.task.updateMany({
-            where: {
-              categoryId: id,
-              userId: req.user!.id,
-            },
-            data: {
-              categoryId: null,
-            },
-          });
+      // Handle associated tasks and delete category in a transaction
+      await prisma.$transaction(async (tx) => {
+        if (existingCategory._count.tasks > 0) {
+          if (deleteAssociatedTasks) {
+            // Archive all tasks in this category
+            await tx.task.updateMany({
+              where: {
+                categoryId: id,
+                userId: req.user!.id,
+              },
+              data: {
+                status: Status.ARCHIVED,
+                archivedAt: new Date(),
+              },
+            });
+          } else {
+            // Remove category from tasks (set to null)
+            await tx.task.updateMany({
+              where: {
+                categoryId: id,
+                userId: req.user!.id,
+              },
+              data: {
+                categoryId: null,
+              },
+            });
+          }
         }
-      }
 
-      // Delete the category
-      await prisma.category.delete({
-        where: { id },
+        // Delete the category
+        await tx.category.delete({
+          where: { id },
+        });
       });
 
       res.json({
@@ -360,21 +377,22 @@ router.get(
         where.status = { not: Status.ARCHIVED };
       }
 
-      const tasks = await prisma.task.findMany({
-        where,
-        include: {
-          category: true,
-        },
-        orderBy: [
-          { dueDate: 'asc' },
-          { priority: 'desc' },
-          { createdAt: 'desc' },
-        ],
-        take: Math.min(parseInt(limit as string), 100),
-        skip: parseInt(offset as string),
-      });
-
-      const totalCount = await prisma.task.count({ where });
+      const [tasks, totalCount] = await Promise.all([
+        prisma.task.findMany({
+          where,
+          include: {
+            category: true,
+          },
+          orderBy: [
+            { dueDate: 'asc' },
+            { priority: 'desc' },
+            { createdAt: 'desc' },
+          ],
+          take: Math.min(parseInt(limit as string), 100),
+          skip: parseInt(offset as string),
+        }),
+        prisma.task.count({ where }),
+      ]);
 
       res.json({
         category,
