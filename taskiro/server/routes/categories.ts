@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Response, NextFunction } from 'express';
 import { body, param } from 'express-validator';
 import { authenticateToken, AuthenticatedRequest } from '../middleware/auth';
 import { validateRequest } from '../middleware/validation';
@@ -37,40 +37,43 @@ const categoryValidation = [
 ];
 
 // GET /api/categories - Get all categories for the authenticated user
-router.get('/', async (req: AuthenticatedRequest, res, next) => {
-  try {
-    const categories = await prisma.category.findMany({
-      where: {
-        userId: req.user!.id,
-      },
-      include: {
-        _count: {
-          select: {
-            tasks: {
-              where: {
-                status: { not: 'ARCHIVED' },
+router.get(
+  '/',
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    try {
+      const categories = await prisma.category.findMany({
+        where: {
+          userId: req.user!.id,
+        },
+        include: {
+          _count: {
+            select: {
+              tasks: {
+                where: {
+                  status: { not: 'ARCHIVED' },
+                },
               },
             },
           },
         },
-      },
-      orderBy: [
-        { isDefault: 'desc' }, // Default categories first
-        { createdAt: 'asc' },
-      ],
-    });
+        orderBy: [
+          { isDefault: 'desc' }, // Default categories first
+          { createdAt: 'asc' },
+        ],
+      });
 
-    res.json({ categories });
-  } catch (error) {
-    next(error);
+      res.json({ categories });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 // POST /api/categories - Create a new category
 router.post(
   '/',
   categoryValidation,
-  async (req: AuthenticatedRequest, res, next) => {
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
       const { name, color } = req.body;
 
@@ -126,7 +129,7 @@ router.get(
   '/:id',
   param('id').isString().withMessage('Category ID must be a string'),
   validateRequest,
-  async (req: AuthenticatedRequest, res, next) => {
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
 
@@ -164,7 +167,7 @@ router.put(
   '/:id',
   param('id').isString().withMessage('Category ID must be a string'),
   categoryValidation,
-  async (req: AuthenticatedRequest, res, next) => {
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
       const { name, color } = req.body;
@@ -239,7 +242,7 @@ router.delete(
     .isBoolean()
     .withMessage('deleteAssociatedTasks must be a boolean'),
   validateRequest,
-  async (req: AuthenticatedRequest, res, next) => {
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
       const { deleteAssociatedTasks = false } = req.body;
@@ -321,7 +324,7 @@ router.get(
   '/:id/tasks',
   param('id').isString().withMessage('Category ID must be a string'),
   validateRequest,
-  async (req: AuthenticatedRequest, res, next) => {
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
       const { status, limit = '50', offset = '0' } = req.query;
@@ -338,13 +341,19 @@ router.get(
         throw createError('Category not found', 404, 'CATEGORY_NOT_FOUND');
       }
 
-      const where: any = {
+      interface CategoryTasksWhereClause {
+        categoryId: string;
+        userId: string;
+        status?: unknown;
+      }
+
+      const where: CategoryTasksWhereClause = {
         categoryId: id,
         userId: req.user!.id,
       };
 
       // Filter by status
-      if (status) {
+      if (status && typeof status === 'string') {
         where.status = status.toUpperCase();
       } else {
         where.status = { not: 'ARCHIVED' };

@@ -48,7 +48,8 @@
     - Add user isolation for all task operations
     - _Requirements: 2.1, 2.2, 3.1, 3.2, 3.3, 3.4, 5.1, 5.6, 8.1, 8.4_
 
-  - [ ] 3.3 Build category management API
+  - [x] 3.3 Build category management API
+
     - Create CRUD endpoints for categories
     - Implement category deletion with task reassignment logic
     - Add default category creation for new users

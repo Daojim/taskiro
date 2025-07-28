@@ -1,0 +1,23 @@
+{
+  "enabled": true,
+  "name": "Auto Fix & Commit",
+  "description": "Automatically reviews files for errors, fixes them, tests the code, and commits changes after any task completion",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "taskiro/**/*.ts",
+      "taskiro/**/*.js",
+      "taskiro/**/*.tsx",
+      "taskiro/**/*.jsx",
+      "taskiro/**/*.json",
+      "taskiro/**/*.md",
+      "taskiro/**/*.yml",
+      "taskiro/**/*.yaml"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "I have completed a task and files have been modified. Please review all the files in the taskiro directory for any errors, bugs, or issues. Fix any problems you find, then test the code to ensure everything works correctly. If the tests pass and everything looks good, commit the changes with an appropriate commit message and push to the repository."
+  }
+}
