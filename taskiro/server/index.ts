@@ -5,6 +5,8 @@ import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 import authRoutes from './routes/auth';
+import taskRoutes from './routes/tasks';
+import categoryRoutes from './routes/categories';
 import { errorHandler } from './middleware/errorHandler';
 
 // Load environment variables
@@ -42,6 +44,8 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.use('/api/auth', authRoutes);
+app.use('/api/tasks', taskRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // Error handling middleware
 app.use(errorHandler);

@@ -39,7 +39,7 @@
     - Seed default categories (work, personal, school)
     - _Requirements: 4.2, 7.1, 7.2, 7.3, 7.4, 7.5_
 
-  - [ ] 3.2 Build task management API endpoints
+  - [x] 3.2 Build task management API endpoints
 
     - Create CRUD endpoints for tasks (GET, POST, PUT, DELETE)
     - Implement task archiving instead of deletion
