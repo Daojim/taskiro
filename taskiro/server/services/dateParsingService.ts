@@ -16,6 +16,115 @@ const PRIORITY_KEYWORDS = {
   low: ['low', 'minor', 'whenever', 'low priority', 'optional'],
 } as const;
 
+// Category suggestion keywords - Requirements 4.6, 4.7
+const CATEGORY_KEYWORDS = {
+  work: [
+    'meeting',
+    'presentation',
+    'report',
+    'project',
+    'deadline',
+    'client',
+    'office',
+    'conference',
+    'email',
+    'call',
+    'review',
+    'proposal',
+    'budget',
+    'team',
+    'manager',
+    'colleague',
+    'business',
+    'professional',
+    'work',
+    'job',
+    'career',
+    'interview',
+    'resume',
+    'salary',
+    'promotion',
+    'training',
+    'workshop',
+    'seminar',
+  ],
+  personal: [
+    'grocery',
+    'groceries',
+    'shopping',
+    'doctor',
+    'appointment',
+    'dentist',
+    'gym',
+    'exercise',
+    'workout',
+    'family',
+    'friend',
+    'birthday',
+    'anniversary',
+    'vacation',
+    'travel',
+    'hobby',
+    'personal',
+    'home',
+    'house',
+    'cleaning',
+    'laundry',
+    'cooking',
+    'meal',
+    'dinner',
+    'lunch',
+    'breakfast',
+    'health',
+    'medical',
+    'pharmacy',
+    'bank',
+    'finance',
+    'bills',
+    'insurance',
+    'car',
+    'maintenance',
+    'repair',
+  ],
+  school: [
+    'assignment',
+    'homework',
+    'study',
+    'exam',
+    'test',
+    'quiz',
+    'class',
+    'lecture',
+    'professor',
+    'teacher',
+    'student',
+    'school',
+    'university',
+    'college',
+    'course',
+    'semester',
+    'grade',
+    'paper',
+    'essay',
+    'research',
+    'thesis',
+    'dissertation',
+    'lab',
+    'laboratory',
+    'textbook',
+    'library',
+    'campus',
+    'tuition',
+    'scholarship',
+    'degree',
+    'major',
+    'minor',
+    'graduation',
+    'academic',
+    'education',
+  ],
+} as const;
+
 const CONFIDENCE_SCORES = {
   BASE: 0.5,
   YEAR_BONUS: 0.2,
@@ -26,6 +135,9 @@ const CONFIDENCE_SCORES = {
   PRIORITY_HIGH: 0.8,
   PRIORITY_MEDIUM: 0.7,
   PRIORITY_LOW: 0.8,
+  CATEGORY_HIGH: 0.8,
+  CATEGORY_MEDIUM: 0.6,
+  CATEGORY_LOW: 0.4,
   AMBIGUOUS_DATE: 0.6,
   NEXT_WEEK: 0.8,
   END_OF_MONTH: 0.7,
@@ -80,6 +192,13 @@ export class DateParsingService {
         .replace(new RegExp(priority.matchedText, 'gi'), '')
         .trim();
       result.confidence = Math.max(result.confidence, priority.confidence);
+    }
+
+    // Extract category suggestion based on task content
+    const category = this.extractCategorySuggestion(input);
+    if (category.category) {
+      result.category = category.category;
+      result.confidence = Math.max(result.confidence, category.confidence);
     }
 
     // Check for special ambiguous date patterns first
@@ -144,6 +263,7 @@ export class DateParsingService {
     if (
       result.dueDate ||
       result.priority ||
+      result.category ||
       (result.ambiguousElements && result.ambiguousElements.length > 0)
     ) {
       result.confidence = Math.max(
@@ -355,6 +475,116 @@ export class DateParsingService {
   }
 
   /**
+   * Extract category suggestion based on task content
+   * Requirements 4.6, 4.7: Implement category suggestion based on task content
+   */
+  private extractCategorySuggestion(text: string): {
+    category?: string;
+    matchedKeywords: string[];
+    confidence: number;
+  } {
+    const lowerText = text.toLowerCase();
+    const categoryScores: Record<
+      string,
+      { score: number; keywords: string[] }
+    > = {
+      work: { score: 0, keywords: [] },
+      personal: { score: 0, keywords: [] },
+      school: { score: 0, keywords: [] },
+    };
+
+    // Define high-priority keywords that should have stronger influence
+    const highPriorityKeywords = {
+      work: [
+        'meeting',
+        'client',
+        'project',
+        'deadline',
+        'presentation',
+        'conference',
+        'business',
+      ],
+      personal: [
+        'gym',
+        'doctor',
+        'dentist',
+        'family',
+        'birthday',
+        'groceries',
+        'shopping',
+      ],
+      school: [
+        'assignment',
+        'exam',
+        'lecture',
+        'professor',
+        'university',
+        'homework',
+        'lab',
+        'thesis',
+      ],
+    };
+
+    // Check each category's keywords
+    for (const [categoryName, keywords] of Object.entries(CATEGORY_KEYWORDS)) {
+      for (const keyword of keywords) {
+        const regex = new RegExp(`\\b${keyword}\\b`, 'i');
+        if (regex.test(lowerText)) {
+          // Give higher weight to more specific keywords
+          let weight = 1;
+
+          // High priority keywords get extra weight
+          if (
+            highPriorityKeywords[
+              categoryName as keyof typeof highPriorityKeywords
+            ]?.includes(keyword)
+          ) {
+            weight = 2.5;
+          } else if (keyword.length > 6) {
+            weight = 1.5; // Longer, more specific keywords get higher weight
+          }
+
+          if (keyword.includes(' ')) weight *= 1.5; // Multi-word keywords get even higher weight
+
+          categoryScores[categoryName].score += weight;
+          categoryScores[categoryName].keywords.push(keyword);
+        }
+      }
+    }
+
+    // Find the category with the highest score
+    let bestCategory = '';
+    let bestScore = 0;
+    let bestKeywords: string[] = [];
+
+    for (const [categoryName, data] of Object.entries(categoryScores)) {
+      if (data.score > bestScore) {
+        bestCategory = categoryName;
+        bestScore = data.score;
+        bestKeywords = data.keywords;
+      }
+    }
+
+    // Calculate confidence based on score and keyword quality
+    let confidence = 0;
+    if (bestScore > 0) {
+      if (bestScore >= 3) {
+        confidence = CONFIDENCE_SCORES.CATEGORY_HIGH;
+      } else if (bestScore >= 2) {
+        confidence = CONFIDENCE_SCORES.CATEGORY_MEDIUM;
+      } else {
+        confidence = CONFIDENCE_SCORES.CATEGORY_LOW;
+      }
+    }
+
+    return {
+      category: bestScore > 0 ? bestCategory : undefined,
+      matchedKeywords: bestKeywords,
+      confidence,
+    };
+  }
+
+  /**
    * Clean up the extracted title
    */
   private cleanTitle(title: string): string {
@@ -438,6 +668,25 @@ export class DateParsingService {
     }
 
     return ambiguousElements;
+  }
+
+  /**
+   * Get category suggestion for a given text
+   * Requirements 4.6, 4.7: Provide category suggestions based on task content
+   */
+  public getCategorySuggestion(text: string): {
+    category?: string;
+    matchedKeywords: string[];
+    confidence: number;
+  } {
+    return this.extractCategorySuggestion(text);
+  }
+
+  /**
+   * Get all available category keywords for reference
+   */
+  public getCategoryKeywords(): typeof CATEGORY_KEYWORDS {
+    return CATEGORY_KEYWORDS;
   }
 }
 

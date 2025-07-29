@@ -8,7 +8,12 @@ module.exports = {
     '<rootDir>/server/**/*.(test|spec).{js,jsx,ts,tsx}',
   ],
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
+    '^.+\\.(ts|tsx)$': [
+      'ts-jest',
+      {
+        tsconfig: '<rootDir>/server/tsconfig.json',
+      },
+    ],
   },
   collectCoverageFrom: [
     'server/**/*.{ts,tsx}',
@@ -17,7 +22,7 @@ module.exports = {
     '!server/dist/**',
   ],
   setupFilesAfterEnv: ['<rootDir>/server/tests/setup.ts'],
-  moduleNameMapping: {
+  moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/server/$1',
   },
 };

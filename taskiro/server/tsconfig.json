@@ -14,8 +14,10 @@
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "types": ["jest", "node"]
   },
-  "include": ["**/*"],
-  "exclude": ["node_modules", "../dist"]
+  "include": ["**/*", "types/**/*"],
+  "exclude": ["node_modules", "../dist"],
+  "typeRoots": ["../node_modules/@types", "./types"]
 }

@@ -155,4 +155,47 @@ router.post(
   }
 );
 
+/**
+ * POST /api/nlp/suggest-category
+ * Suggest category based on task content
+ * Requirements 4.6, 4.7: Implement category suggestion based on task content
+ */
+router.post(
+  '/suggest-category',
+  [
+    body('text')
+      .isString()
+      .trim()
+      .isLength({ min: 1, max: 1000 })
+      .withMessage('Text must be a string between 1 and 1000 characters'),
+  ],
+  (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        error: 'Validation failed',
+        details: errors.array(),
+      });
+    }
+
+    try {
+      const { text } = req.body;
+
+      const suggestion = dateParsingService.getCategorySuggestion(text);
+
+      res.json({
+        success: true,
+        suggestion,
+      });
+    } catch (error) {
+      console.error('Error suggesting category:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Failed to suggest category',
+      });
+    }
+  }
+);
+
 export default router;
