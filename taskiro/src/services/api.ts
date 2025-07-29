@@ -7,6 +7,15 @@ import type {
   User,
   ApiError,
 } from '../types/auth';
+import type {
+  Task,
+  Category,
+  CreateTaskRequest,
+  UpdateTaskRequest,
+  ParseRequest,
+  ParseResponse,
+  DisambiguationResponse,
+} from '../types/task';
 
 class ApiService {
   private api: AxiosInstance;
@@ -188,6 +197,136 @@ class ApiService {
         timestamp: new Date().toISOString(),
       },
     };
+  }
+
+  // Task API methods
+  async getTasks(params?: {
+    status?: string;
+    category?: string;
+    priority?: string;
+    search?: string;
+    limit?: number;
+    offset?: number;
+  }): Promise<{
+    tasks: Task[];
+    pagination: { total: number; limit: number; offset: number };
+  }> {
+    try {
+      const response = await this.api.get('/api/tasks', { params });
+      return response.data;
+    } catch (error: unknown) {
+      throw this.handleApiError(error);
+    }
+  }
+
+  async createTask(
+    task: CreateTaskRequest
+  ): Promise<{ message: string; task: Task }> {
+    try {
+      const response = await this.api.post('/api/tasks', task);
+      return response.data;
+    } catch (error: unknown) {
+      throw this.handleApiError(error);
+    }
+  }
+
+  async updateTask(
+    id: string,
+    task: UpdateTaskRequest
+  ): Promise<{ message: string; task: Task }> {
+    try {
+      const response = await this.api.put(`/api/tasks/${id}`, task);
+      return response.data;
+    } catch (error: unknown) {
+      throw this.handleApiError(error);
+    }
+  }
+
+  async deleteTask(id: string): Promise<{ message: string; task: Task }> {
+    try {
+      const response = await this.api.delete(`/api/tasks/${id}`);
+      return response.data;
+    } catch (error: unknown) {
+      throw this.handleApiError(error);
+    }
+  }
+
+  async toggleTaskCompletion(
+    id: string
+  ): Promise<{ message: string; task: Task }> {
+    try {
+      const response = await this.api.post(`/api/tasks/${id}/complete`);
+      return response.data;
+    } catch (error: unknown) {
+      throw this.handleApiError(error);
+    }
+  }
+
+  // Category API methods
+  async getCategories(): Promise<{ categories: Category[] }> {
+    try {
+      const response = await this.api.get('/api/categories');
+      return response.data;
+    } catch (error: unknown) {
+      throw this.handleApiError(error);
+    }
+  }
+
+  async createCategory(category: {
+    name: string;
+    color?: string;
+  }): Promise<{ message: string; category: Category }> {
+    try {
+      const response = await this.api.post('/api/categories', category);
+      return response.data;
+    } catch (error: unknown) {
+      throw this.handleApiError(error);
+    }
+  }
+
+  // Natural Language Processing API methods
+  async parseNaturalLanguage(request: ParseRequest): Promise<ParseResponse> {
+    try {
+      const response = await this.api.post('/api/nlp/parse', request);
+      return response.data;
+    } catch (error: unknown) {
+      throw this.handleApiError(error);
+    }
+  }
+
+  async disambiguateDate(
+    dateText: string,
+    referenceDate?: string
+  ): Promise<DisambiguationResponse> {
+    try {
+      const response = await this.api.post('/api/nlp/disambiguate', {
+        dateText,
+        referenceDate,
+      });
+      return response.data;
+    } catch (error: unknown) {
+      throw this.handleApiError(error);
+    }
+  }
+
+  async suggestCategory(
+    text: string
+  ): Promise<{
+    success: boolean;
+    suggestion: {
+      category?: string;
+      matchedKeywords: string[];
+      confidence: number;
+    };
+  }> {
+    try {
+      const response = await this.api.post('/api/nlp/suggest-category', {
+        text,
+      });
+      return response.data;
+    } catch (error: unknown) {
+      throw this.handleApiError(error);
+    }
   }
 
   // Health check

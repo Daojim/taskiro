@@ -25,7 +25,7 @@ export interface Suggestion {
 
 export interface ParseRequest {
   input: string;
-  referenceDate?: Date;
+  referenceDate?: string; // ISO string for API compatibility
   userId?: string; // For context-aware parsing
 }
 
