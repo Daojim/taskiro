@@ -10,7 +10,7 @@ async function testFullTaskFlow() {
 
     // Register a test user
     const testEmail = `test-${Date.now()}@example.com`;
-    const testPassword = 'testpassword123';
+    const testPassword = 'TestPassword123!';
 
     let authToken;
     try {
@@ -24,8 +24,11 @@ async function testFullTaskFlow() {
       authToken = registerResponse.data.tokens.accessToken;
       console.log('✅ Test user registered successfully');
     } catch (error) {
-      if (error.response?.status === 400) {
-        // User might already exist, try login
+      if (
+        error.response?.status === 400 &&
+        error.response?.data?.error?.code === 'EMAIL_ALREADY_EXISTS'
+      ) {
+        // User already exists, try login
         const loginResponse = await axios.post(
           'http://localhost:3001/api/auth/login',
           {
