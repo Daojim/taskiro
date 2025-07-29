@@ -35,6 +35,26 @@ const Dashboard: React.FC = () => {
     setNotification(null);
   };
 
+  const formatTaskTime = (timeString: string) => {
+    // Handle both HH:MM format and full datetime strings
+    if (timeString.includes('T')) {
+      // Extract time from datetime string like "1970-01-01T18:00:00.000Z"
+      const time = timeString.split('T')[1].split(':');
+      const hours = parseInt(time[0]);
+      const minutes = time[1];
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const displayHour = hours % 12 || 12;
+      return `${displayHour}:${minutes} ${ampm}`;
+    } else {
+      // Handle HH:MM format
+      const [hours, minutes] = timeString.split(':');
+      const hour = parseInt(hours);
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const displayHour = hour % 12 || 12;
+      return `${displayHour}:${minutes} ${ampm}`;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <nav className="bg-white dark:bg-gray-800 shadow">
@@ -151,7 +171,8 @@ const Dashboard: React.FC = () => {
                           {task.dueDate && (
                             <p className="text-xs text-gray-500 dark:text-gray-400">
                               Due: {new Date(task.dueDate).toLocaleDateString()}
-                              {task.dueTime && ` at ${task.dueTime}`}
+                              {task.dueTime &&
+                                ` at ${formatTaskTime(task.dueTime)}`}
                             </p>
                           )}
                         </div>

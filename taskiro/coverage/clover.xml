@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1753751890398" clover="3.2.0">
-  <project timestamp="1753751890398" name="All files">
-    <metrics statements="1159" coveredstatements="139" conditionals="336" coveredconditionals="44" methods="138" coveredmethods="14" elements="1633" coveredelements="197" complexity="0" loc="1159" ncloc="1159" packages="9" files="30" classes="30"/>
+<coverage generated="1753763297699" clover="3.2.0">
+  <project timestamp="1753763297699" name="All files">
+    <metrics statements="1159" coveredstatements="139" conditionals="340" coveredconditionals="44" methods="138" coveredmethods="14" elements="1637" coveredelements="197" complexity="0" loc="1159" ncloc="1159" packages="9" files="30" classes="30"/>
     <package name="server">
       <metrics statements="397" coveredstatements="0" conditionals="59" coveredconditionals="0" methods="32" coveredmethods="0"/>
       <file name="index.ts" path="C:\Users\Jimmy\Documents\KiroHackathon\taskiro\server\index.ts">
@@ -1083,7 +1083,7 @@
       </file>
     </package>
     <package name="server.types">
-      <metrics statements="26" coveredstatements="0" conditionals="13" coveredconditionals="0" methods="7" coveredmethods="0"/>
+      <metrics statements="26" coveredstatements="0" conditionals="17" coveredconditionals="0" methods="7" coveredmethods="0"/>
       <file name="nlp.ts" path="C:\Users\Jimmy\Documents\KiroHackathon\taskiro\server\types\nlp.ts">
         <metrics statements="19" coveredstatements="0" conditionals="13" coveredconditionals="0" methods="4" coveredmethods="0"/>
         <line num="53" count="0" type="stmt"/>
@@ -1107,14 +1107,14 @@
         <line num="90" count="0" type="stmt"/>
       </file>
       <file name="parsing.ts" path="C:\Users\Jimmy\Documents\KiroHackathon\taskiro\server\types\parsing.ts">
-        <metrics statements="7" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="0"/>
+        <metrics statements="7" coveredstatements="0" conditionals="4" coveredconditionals="0" methods="3" coveredmethods="0"/>
         <line num="35" count="0" type="stmt"/>
-        <line num="36" count="0" type="stmt"/>
+        <line num="36" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="39" count="0" type="stmt"/>
         <line num="40" count="0" type="stmt"/>
-        <line num="43" count="0" type="stmt"/>
-        <line num="44" count="0" type="stmt"/>
         <line num="45" count="0" type="stmt"/>
+        <line num="46" count="0" type="stmt"/>
+        <line num="47" count="0" type="stmt"/>
       </file>
     </package>
     <package name="server.utils">

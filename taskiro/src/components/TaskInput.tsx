@@ -42,6 +42,7 @@ const TaskInput: React.FC<TaskInputProps> = ({
 
   const inputRef = useRef<HTMLInputElement>(null);
   const parseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const shouldMaintainFocus = useRef(false);
 
   // Real-time parsing with debounce
   useEffect(() => {
@@ -57,6 +58,9 @@ const TaskInput: React.FC<TaskInputProps> = ({
 
     // Debounce parsing by 500ms
     parseTimeoutRef.current = setTimeout(async () => {
+      // Store current focus state
+      const wasInputFocused = document.activeElement === inputRef.current;
+
       try {
         setIsLoading(true);
         const response = await apiService.parseNaturalLanguage({
@@ -82,8 +86,18 @@ const TaskInput: React.FC<TaskInputProps> = ({
       } catch (error) {
         console.error('Parsing error:', error);
         setParsedData(null);
+        setShowDisambiguation(false);
+        setAmbiguousElements([]);
       } finally {
         setIsLoading(false);
+
+        // Restore focus if it was on the input before parsing
+        if (wasInputFocused && inputRef.current) {
+          // Use setTimeout to ensure the DOM has updated
+          setTimeout(() => {
+            inputRef.current?.focus();
+          }, 0);
+        }
       }
     }, 500);
 
@@ -93,6 +107,14 @@ const TaskInput: React.FC<TaskInputProps> = ({
       }
     };
   }, [input, isManualMode]);
+
+  // Maintain focus during parsing
+  useEffect(() => {
+    if (shouldMaintainFocus.current && inputRef.current) {
+      inputRef.current.focus();
+      shouldMaintainFocus.current = false;
+    }
+  }, [isLoading, parsedData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -131,7 +153,9 @@ const TaskInput: React.FC<TaskInputProps> = ({
       const taskData: CreateTaskRequest = {
         title: parsedData.title,
         dueDate: parsedData.dueDate
-          ? parsedData.dueDate.toISOString().split('T')[0]
+          ? typeof parsedData.dueDate === 'string'
+            ? new Date(parsedData.dueDate).toISOString().split('T')[0]
+            : parsedData.dueDate.toISOString().split('T')[0]
           : undefined,
         dueTime: parsedData.dueTime,
         priority: parsedData.priority || 'medium',
@@ -223,8 +247,9 @@ const TaskInput: React.FC<TaskInputProps> = ({
     }
   };
 
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', {
+  const formatDate = (date: Date | string) => {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toLocaleDateString('en-US', {
       weekday: 'short',
       month: 'short',
       day: 'numeric',
@@ -232,7 +257,14 @@ const TaskInput: React.FC<TaskInputProps> = ({
   };
 
   const formatTime = (time: string) => {
-    const [hours, minutes] = time.split(':');
+    // Handle both HH:MM format and full datetime strings
+    let timeStr = time;
+    if (time.includes('T')) {
+      // Extract time from datetime string like "1970-01-01T18:00:00.000Z"
+      timeStr = time.split('T')[1].split(':').slice(0, 2).join(':');
+    }
+
+    const [hours, minutes] = timeStr.split(':');
     const hour = parseInt(hours);
     const ampm = hour >= 12 ? 'PM' : 'AM';
     const displayHour = hour % 12 || 12;
@@ -280,9 +312,14 @@ const TaskInput: React.FC<TaskInputProps> = ({
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
+                onFocus={() => {
+                  shouldMaintainFocus.current = true;
+                }}
+                onBlur={() => {
+                  shouldMaintainFocus.current = false;
+                }}
                 placeholder="e.g., 'Buy groceries tomorrow at 3pm' or 'Meeting with John next Tuesday high priority'"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
-                disabled={isLoading}
               />
               {isLoading && (
                 <div className="absolute right-3 top-3">

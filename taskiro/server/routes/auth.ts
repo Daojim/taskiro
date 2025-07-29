@@ -38,10 +38,10 @@ const PROFILE_USER_SELECT = {
   updatedAt: true,
 } as const;
 
-// Rate limiting for auth endpoints
+// Rate limiting for auth endpoints (relaxed for development)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // limit each IP to 5 requests per windowMs for auth endpoints
+  max: 100, // increased limit for development testing
   message: 'Too many authentication attempts, please try again later.',
   standardHeaders: true,
   legacyHeaders: false,

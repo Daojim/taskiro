@@ -48,7 +48,7 @@ export type AmbiguousElementType = 'date' | 'time' | 'priority' | 'category';
 
 export interface ParsedInput {
   title: string;
-  dueDate?: Date;
+  dueDate?: Date | string;
   dueTime?: string;
   priority?: Priority;
   category?: string;
