@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useTasks } from '../hooks/useTasks';
 import TaskInput from './TaskInput';
+import TaskList from './TaskList';
 import type { Task } from '../types/task';
 
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
-  const { tasks, categories, isLoading, error, clearError } = useTasks();
+  const { categories, error, clearError } = useTasks();
   const [notification, setNotification] = useState<{
     type: 'success' | 'error';
     message: string;
@@ -25,6 +26,19 @@ const Dashboard: React.FC = () => {
     setTimeout(() => setNotification(null), 3000);
   };
 
+  const handleTaskUpdated = (_task: Task) => {
+    setNotification({ type: 'success', message: 'Task updated successfully!' });
+    setTimeout(() => setNotification(null), 3000);
+  };
+
+  const handleTaskDeleted = (_taskId: string) => {
+    setNotification({
+      type: 'success',
+      message: 'Task archived successfully!',
+    });
+    setTimeout(() => setNotification(null), 3000);
+  };
+
   const handleError = (errorMessage: string) => {
     setNotification({ type: 'error', message: errorMessage });
     setTimeout(() => setNotification(null), 5000);
@@ -33,26 +47,6 @@ const Dashboard: React.FC = () => {
   const handleClearError = () => {
     clearError();
     setNotification(null);
-  };
-
-  const formatTaskTime = (timeString: string) => {
-    // Handle both HH:MM format and full datetime strings
-    if (timeString.includes('T')) {
-      // Extract time from datetime string like "1970-01-01T18:00:00.000Z"
-      const time = timeString.split('T')[1].split(':');
-      const hours = parseInt(time[0]);
-      const minutes = time[1];
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      const displayHour = hours % 12 || 12;
-      return `${displayHour}:${minutes} ${ampm}`;
-    } else {
-      // Handle HH:MM format
-      const [hours, minutes] = timeString.split(':');
-      const hour = parseInt(hours);
-      const ampm = hour >= 12 ? 'PM' : 'AM';
-      const displayHour = hour % 12 || 12;
-      return `${displayHour}:${minutes} ${ampm}`;
-    }
   };
 
   return (
@@ -127,93 +121,12 @@ const Dashboard: React.FC = () => {
             />
           </div>
 
-          {/* Task List Preview */}
-          <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">
-                Recent Tasks
-              </h3>
-
-              {isLoading ? (
-                <div className="flex items-center justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                </div>
-              ) : tasks.length === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-gray-500 dark:text-gray-400">
-                    No tasks yet. Create your first task above!
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {tasks.slice(0, 5).map((task) => (
-                    <div
-                      key={task.id}
-                      className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <input
-                          type="checkbox"
-                          checked={task.status === 'completed'}
-                          readOnly
-                          className="h-4 w-4 text-blue-600 rounded"
-                        />
-                        <div>
-                          <p
-                            className={`text-sm font-medium ${
-                              task.status === 'completed'
-                                ? 'line-through text-gray-500 dark:text-gray-400'
-                                : 'text-gray-900 dark:text-white'
-                            }`}
-                          >
-                            {task.title}
-                          </p>
-                          {task.dueDate && (
-                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                              Due: {new Date(task.dueDate).toLocaleDateString()}
-                              {task.dueTime &&
-                                ` at ${formatTaskTime(task.dueTime)}`}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        {task.priority && (
-                          <span
-                            className={`px-2 py-1 text-xs font-medium rounded-full ${
-                              task.priority === 'high'
-                                ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-200'
-                                : task.priority === 'medium'
-                                  ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-200'
-                                  : 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-200'
-                            }`}
-                          >
-                            {task.priority.toUpperCase()}
-                          </span>
-                        )}
-                        {task.category && (
-                          <span
-                            className="px-2 py-1 text-xs font-medium rounded-full text-white"
-                            style={{ backgroundColor: task.category.color }}
-                          >
-                            {task.category.name}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-
-                  {tasks.length > 5 && (
-                    <div className="text-center pt-4">
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        And {tasks.length - 5} more tasks...
-                      </p>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
+          {/* Task List */}
+          <TaskList
+            onTaskUpdated={handleTaskUpdated}
+            onTaskDeleted={handleTaskDeleted}
+            onError={handleError}
+          />
         </div>
       </main>
     </div>
