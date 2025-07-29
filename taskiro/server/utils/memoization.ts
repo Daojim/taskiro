@@ -46,13 +46,13 @@ export function memoize<T>(ttlMs?: number) {
   const cache = new MemoizationCache<T>(ttlMs);
 
   return function (
-    target: any,
+    target: unknown,
     propertyName: string,
     descriptor: PropertyDescriptor
   ) {
     const method = descriptor.value;
 
-    descriptor.value = function (...args: any[]) {
+    descriptor.value = function (...args: unknown[]) {
       const key = JSON.stringify(args);
       const cached = cache.get(key);
 

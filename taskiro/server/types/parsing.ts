@@ -32,12 +32,14 @@ export interface ParsingContext {
 }
 
 // Validation functions
-export const isValidPriority = (value: any): value is Priority => {
-  return ['low', 'medium', 'high'].includes(value);
+export const isValidPriority = (value: unknown): value is Priority => {
+  return typeof value === 'string' && ['low', 'medium', 'high'].includes(value);
 };
 
-export const isValidCategory = (value: any): value is Category => {
-  return ['work', 'personal', 'school'].includes(value);
+export const isValidCategory = (value: unknown): value is Category => {
+  return (
+    typeof value === 'string' && ['work', 'personal', 'school'].includes(value)
+  );
 };
 
 export const isValidTime = (time: string): boolean => {

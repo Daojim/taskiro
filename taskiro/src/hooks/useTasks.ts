@@ -37,8 +37,9 @@ export const useTasks = (): UseTasksReturn => {
       setError(null);
       const response = await apiService.getTasks();
       setTasks(response.tasks);
-    } catch (err: any) {
-      setError(err.error?.message || 'Failed to fetch tasks');
+    } catch (err: unknown) {
+      const apiError = err as { error?: { message?: string } };
+      setError(apiError.error?.message || 'Failed to fetch tasks');
     } finally {
       setIsLoading(false);
     }
@@ -49,8 +50,9 @@ export const useTasks = (): UseTasksReturn => {
       setError(null);
       const response = await apiService.getCategories();
       setCategories(response.categories);
-    } catch (err: any) {
-      setError(err.error?.message || 'Failed to fetch categories');
+    } catch (err: unknown) {
+      const apiError = err as { error?: { message?: string } };
+      setError(apiError.error?.message || 'Failed to fetch categories');
     }
   }, []);
 
@@ -65,8 +67,9 @@ export const useTasks = (): UseTasksReturn => {
         setTasks((prevTasks) => [newTask, ...prevTasks]);
 
         return newTask;
-      } catch (err: any) {
-        setError(err.error?.message || 'Failed to create task');
+      } catch (err: unknown) {
+        const apiError = err as { error?: { message?: string } };
+        setError(apiError.error?.message || 'Failed to create task');
         return null;
       }
     },
@@ -86,8 +89,9 @@ export const useTasks = (): UseTasksReturn => {
         );
 
         return updatedTask;
-      } catch (err: any) {
-        setError(err.error?.message || 'Failed to update task');
+      } catch (err: unknown) {
+        const apiError = err as { error?: { message?: string } };
+        setError(apiError.error?.message || 'Failed to update task');
         return null;
       }
     },
@@ -103,8 +107,9 @@ export const useTasks = (): UseTasksReturn => {
       setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
 
       return true;
-    } catch (err: any) {
-      setError(err.error?.message || 'Failed to delete task');
+    } catch (err: unknown) {
+      const apiError = err as { error?: { message?: string } };
+      setError(apiError.error?.message || 'Failed to delete task');
       return false;
     }
   }, []);
@@ -122,8 +127,9 @@ export const useTasks = (): UseTasksReturn => {
         );
 
         return updatedTask;
-      } catch (err: any) {
-        setError(err.error?.message || 'Failed to toggle task completion');
+      } catch (err: unknown) {
+        const apiError = err as { error?: { message?: string } };
+        setError(apiError.error?.message || 'Failed to toggle task completion');
         return null;
       }
     },
