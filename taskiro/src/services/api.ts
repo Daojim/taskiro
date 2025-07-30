@@ -293,6 +293,36 @@ class ApiService {
     }
   }
 
+  async updateCategory(
+    id: string,
+    category: { name: string; color?: string }
+  ): Promise<{ message: string; category: Category }> {
+    try {
+      const response = await this.api.put(`/api/categories/${id}`, category);
+      return response.data;
+    } catch (error: unknown) {
+      throw this.handleApiError(error);
+    }
+  }
+
+  async deleteCategory(
+    id: string,
+    options?: { deleteAssociatedTasks?: boolean }
+  ): Promise<{
+    message: string;
+    tasksAffected: number;
+    tasksArchived: boolean;
+  }> {
+    try {
+      const response = await this.api.delete(`/api/categories/${id}`, {
+        data: options,
+      });
+      return response.data;
+    } catch (error: unknown) {
+      throw this.handleApiError(error);
+    }
+  }
+
   // Natural Language Processing API methods
   async parseNaturalLanguage(request: ParseRequest): Promise<ParseResponse> {
     try {
