@@ -1,42 +1,80 @@
+/* Import Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import Design System */
+@import './styles/design-system.css';
+
+/* Global App Styles */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  @apply min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Enhanced focus styles for accessibility */
+:focus-visible {
+  @apply focus-ring;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Enhanced selection styles */
+::selection {
+  @apply bg-primary-100 dark:bg-primary-900/30 text-primary-900 dark:text-primary-100;
 }
 
-.card {
-  padding: 2em;
+/* Enhanced placeholder styles */
+::placeholder {
+  @apply text-gray-400 dark:text-gray-500;
 }
 
-.read-the-docs {
-  color: #888;
+/* Remove default button styles */
+button {
+  @apply focus:outline-none;
+}
+
+/* Enhanced link styles */
+a {
+  @apply text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors duration-150;
+}
+
+/* Enhanced form element styles */
+input[type='checkbox'],
+input[type='radio'] {
+  @apply focus-ring;
+}
+
+/* Enhanced table styles */
+table {
+  @apply w-full border-collapse;
+}
+
+th {
+  @apply text-left font-medium text-gray-900 dark:text-white;
+}
+
+td {
+  @apply text-gray-600 dark:text-gray-400;
+}
+
+/* Enhanced code styles */
+code {
+  @apply bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-1 py-0.5 rounded text-sm font-mono;
+}
+
+pre {
+  @apply bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-4 rounded-lg overflow-x-auto;
+}
+
+/* Enhanced blockquote styles */
+blockquote {
+  @apply border-l-4 border-gray-300 dark:border-gray-600 pl-4 italic text-gray-600 dark:text-gray-400;
+}
+
+/* Enhanced hr styles */
+hr {
+  @apply border-gray-200 dark:border-gray-700;
 }

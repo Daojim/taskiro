@@ -273,11 +273,11 @@ const TaskList: React.FC<TaskListProps> = ({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        <span className="ml-3 text-gray-600 dark:text-gray-400">
-          Loading tasks...
-        </span>
+      <div className="card animate-fade-in">
+        <div className="flex items-center justify-center py-12">
+          <div className="spinner-lg"></div>
+          <span className="ml-3 text-body">Loading tasks...</span>
+        </div>
       </div>
     );
   }
@@ -286,7 +286,7 @@ const TaskList: React.FC<TaskListProps> = ({
     <AnimatedPullDiv
       ref={containerRef}
       {...pullRefreshGesture()}
-      className="bg-white dark:bg-gray-800 shadow rounded-lg relative overflow-hidden pull-refresh-container task-list-mobile sm:task-list-tablet"
+      className="card relative overflow-hidden pull-refresh-container task-list-mobile sm:task-list-tablet animate-fade-in"
       style={{ touchAction: 'pan-x pan-down' }}
     >
       {/* Pull to Refresh Indicator */}
@@ -296,9 +296,9 @@ const TaskList: React.FC<TaskListProps> = ({
         threshold={80}
       />
 
-      <div className="px-4 py-5 sm:p-6 safe-area-inset-left safe-area-inset-right">
+      <div className="p-6 safe-area-inset-left safe-area-inset-right">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+          <h3 className="text-heading-3">
             Tasks ({filteredAndSortedTasks.length})
           </h3>
         </div>
@@ -320,7 +320,7 @@ const TaskList: React.FC<TaskListProps> = ({
 
         {/* Task List */}
         {filteredAndSortedTasks.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="text-center py-12 animate-fade-in">
             <div className="text-gray-400 dark:text-gray-500 mb-4">
               <svg
                 className="mx-auto h-12 w-12"
@@ -337,7 +337,7 @@ const TaskList: React.FC<TaskListProps> = ({
                 />
               </svg>
             </div>
-            <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-1">
+            <h3 className="text-heading-4 mb-2">
               {filters.search ||
               filters.category ||
               filters.priority ||
@@ -345,7 +345,7 @@ const TaskList: React.FC<TaskListProps> = ({
                 ? 'No tasks match your filters'
                 : 'No tasks yet'}
             </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-body">
               {filters.search ||
               filters.category ||
               filters.priority ||
@@ -355,7 +355,7 @@ const TaskList: React.FC<TaskListProps> = ({
             </p>
           </div>
         ) : (
-          <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+          <div className="card border-0 shadow-none overflow-hidden animate-fade-in">
             <List
               ref={listRef}
               height={Math.min(

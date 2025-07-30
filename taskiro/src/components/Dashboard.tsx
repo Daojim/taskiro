@@ -72,30 +72,27 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <nav className="bg-white dark:bg-gray-800 shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-200/50 dark:border-gray-700/50 sticky top-0 z-40">
+        <div className="container-app">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <h1 className="text-heading-3 bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent font-bold">
                 Taskiro
               </h1>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-700 dark:text-gray-300">
+            <div className="flex items-center space-x-3">
+              <span className="text-body hidden sm:block">
                 Welcome, {user?.email}
               </span>
               <ThemeToggle />
               <button
                 onClick={() => setShowCategoryManager(true)}
-                className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="btn-secondary btn-sm"
               >
                 <TagIcon className="h-4 w-4 mr-2" />
                 Categories
               </button>
-              <button
-                onClick={handleLogout}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-              >
+              <button onClick={handleLogout} className="btn-danger btn-sm">
                 Logout
               </button>
             </div>
@@ -103,22 +100,49 @@ const Dashboard: React.FC = () => {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
+      <main className="container-app section-spacing">
+        <div className="content-spacing">
           {/* Notification */}
           {notification && (
             <div
-              className={`mb-4 p-4 rounded-lg ${
+              className={`${
                 notification.type === 'success'
-                  ? 'bg-green-50 border border-green-200 text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200'
-                  : 'bg-red-50 border border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-200'
-              }`}
+                  ? 'toast-success'
+                  : 'toast-error'
+              } relative animate-slide-down`}
             >
               <div className="flex justify-between items-center">
-                <span>{notification.message}</span>
+                <div className="flex items-center">
+                  {notification.type === 'success' ? (
+                    <svg
+                      className="w-5 h-5 text-success-500 mr-3"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      className="w-5 h-5 text-error-500 mr-3"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  )}
+                  <span className="text-body">{notification.message}</span>
+                </div>
                 <button
                   onClick={() => setNotification(null)}
-                  className="text-sm underline hover:no-underline"
+                  className="btn-ghost btn-sm ml-4"
                 >
                   Dismiss
                 </button>
@@ -128,12 +152,25 @@ const Dashboard: React.FC = () => {
 
           {/* Error from useTasks hook */}
           {error && (
-            <div className="mb-4 p-4 rounded-lg bg-red-50 border border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-200">
+            <div className="toast-error relative animate-slide-down">
               <div className="flex justify-between items-center">
-                <span>{error}</span>
+                <div className="flex items-center">
+                  <svg
+                    className="w-5 h-5 text-error-500 mr-3"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <span className="text-body">{error}</span>
+                </div>
                 <button
                   onClick={handleClearError}
-                  className="text-sm underline hover:no-underline"
+                  className="btn-ghost btn-sm ml-4"
                 >
                   Dismiss
                 </button>
@@ -142,7 +179,7 @@ const Dashboard: React.FC = () => {
           )}
 
           {/* Task Input Component */}
-          <div className="mb-8">
+          <div className="card card-elevated animate-fade-in">
             <TaskInput
               onTaskCreated={handleTaskCreated}
               categories={categories}
@@ -151,50 +188,50 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* View Toggle */}
-          <div className="mb-6">
-            <div className="flex items-center justify-center">
-              <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-1 flex">
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={`flex items-center px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                    viewMode === 'list'
-                      ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
-                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
-                  }`}
-                >
-                  <ListBulletIcon className="h-4 w-4 mr-2" />
-                  List
-                </button>
-                <button
-                  onClick={() => setViewMode('calendar')}
-                  className={`flex items-center px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                    viewMode === 'calendar'
-                      ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
-                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
-                  }`}
-                >
-                  <CalendarDaysIcon className="h-4 w-4 mr-2" />
-                  Calendar
-                </button>
-              </div>
+          <div className="flex items-center justify-center">
+            <div className="card p-1 flex animate-fade-in">
+              <button
+                onClick={() => setViewMode('list')}
+                className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-250 ${
+                  viewMode === 'list'
+                    ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 shadow-sm'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                }`}
+              >
+                <ListBulletIcon className="h-4 w-4 mr-2" />
+                List
+              </button>
+              <button
+                onClick={() => setViewMode('calendar')}
+                className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-250 ${
+                  viewMode === 'calendar'
+                    ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 shadow-sm'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                }`}
+              >
+                <CalendarDaysIcon className="h-4 w-4 mr-2" />
+                Calendar
+              </button>
             </div>
           </div>
 
           {/* View Content */}
-          {viewMode === 'list' ? (
-            <TaskList
-              onTaskUpdated={handleTaskUpdated}
-              onTaskDeleted={handleTaskDeleted}
-              onError={handleError}
-            />
-          ) : (
-            <CalendarView
-              onTaskUpdated={handleTaskUpdated}
-              onTaskDeleted={handleTaskDeleted}
-              onTaskCreated={handleTaskCreated}
-              onError={handleError}
-            />
-          )}
+          <div className="animate-fade-in">
+            {viewMode === 'list' ? (
+              <TaskList
+                onTaskUpdated={handleTaskUpdated}
+                onTaskDeleted={handleTaskDeleted}
+                onError={handleError}
+              />
+            ) : (
+              <CalendarView
+                onTaskUpdated={handleTaskUpdated}
+                onTaskDeleted={handleTaskDeleted}
+                onTaskCreated={handleTaskCreated}
+                onError={handleError}
+              />
+            )}
+          </div>
         </div>
       </main>
 

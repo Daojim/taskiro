@@ -228,25 +228,22 @@ const TaskItem: React.FC<TaskItemProps> = ({
     new Date(task.dueDate) < new Date() &&
     task.status !== 'completed';
 
-  const priorityColors = {
-    high: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-200',
-    medium:
-      'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-200',
-    low: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-200',
-  };
-
   return (
     <>
       <AnimatedDiv
         {...swipeGesture()}
         {...tapGesture()}
         style={swipeStyle}
-        className={`p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 last:border-b-0 touch-pan-y select-none relative gesture-active ${
-          isOverdue ? 'bg-red-50 dark:bg-red-900/10' : ''
-        } ${gestureState.isDeleting ? 'pointer-events-none' : ''} 
-        md:hover:bg-gray-50 md:dark:hover:bg-gray-700/50 transition-colors duration-150
-        ${gestureState.isDeleting ? 'swipe-delete-active' : ''}
-        task-item-mobile sm:task-item-tablet`}
+        className={`task-card touch-pan-y select-none relative gesture-active ${
+          task.status === 'completed' ? 'task-card-completed' : ''
+        } ${isOverdue ? 'task-card-overdue' : ''} ${
+          task.priority === 'high'
+            ? 'task-card-priority-high'
+            : task.priority === 'medium'
+              ? 'task-card-priority-medium'
+              : 'task-card-priority-low'
+        } ${gestureState.isDeleting ? 'pointer-events-none swipe-delete-active' : ''} 
+        task-item-mobile sm:task-item-tablet animate-fade-in`}
       >
         {/* Swipe delete indicator */}
         <div className="swipe-delete-indicator">
@@ -293,15 +290,15 @@ const TaskItem: React.FC<TaskItemProps> = ({
                   }
                   onBlur={() => handleSaveEdit('title')}
                   onKeyDown={(e) => handleKeyPress(e, 'title')}
-                  className="w-full px-2 py-1 text-sm font-medium text-gray-900 dark:text-white bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="input text-sm font-medium"
                 />
               ) : (
                 <h4
                   onClick={() => handleStartEdit('title')}
-                  className={`text-sm font-medium cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 px-2 py-1 rounded ${
+                  className={`text-heading-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 px-2 py-1 rounded-lg transition-all duration-250 ${
                     task.status === 'completed'
                       ? 'line-through text-gray-500 dark:text-gray-400'
-                      : 'text-gray-900 dark:text-white'
+                      : 'text-gray-900 dark:text-white hover-lift'
                   }`}
                 >
                   {task.title}
@@ -325,12 +322,12 @@ const TaskItem: React.FC<TaskItemProps> = ({
                     onBlur={() => handleSaveEdit('description')}
                     onKeyDown={(e) => handleKeyPress(e, 'description')}
                     rows={2}
-                    className="w-full px-2 py-1 text-xs text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    className="textarea text-xs"
                   />
                 ) : (
                   <p
                     onClick={() => handleStartEdit('description')}
-                    className="text-xs text-gray-600 dark:text-gray-300 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 px-2 py-1 rounded"
+                    className="text-body cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 px-2 py-1 rounded-lg transition-all duration-250 hover-lift"
                   >
                     {task.description || 'Add description...'}
                   </p>
@@ -354,15 +351,13 @@ const TaskItem: React.FC<TaskItemProps> = ({
                     }
                     onBlur={() => handleSaveEdit('dueDate')}
                     onKeyDown={(e) => handleKeyPress(e, 'dueDate')}
-                    className="text-xs px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="input text-xs"
                   />
                 ) : (
                   <span
                     onClick={() => handleStartEdit('dueDate')}
-                    className={`text-xs px-2 py-1 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 ${
-                      isOverdue
-                        ? 'text-red-600 dark:text-red-400 font-medium'
-                        : 'text-gray-500 dark:text-gray-400'
+                    className={`badge cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale ${
+                      isOverdue ? 'badge-error font-medium' : 'badge-gray'
                     }`}
                   >
                     {task.dueDate ? formatDate(task.dueDate) : 'Set due date'}
@@ -385,12 +380,12 @@ const TaskItem: React.FC<TaskItemProps> = ({
                       }
                       onBlur={() => handleSaveEdit('dueTime')}
                       onKeyDown={(e) => handleKeyPress(e, 'dueTime')}
-                      className="text-xs px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="input text-xs"
                     />
                   ) : (
                     <span
                       onClick={() => handleStartEdit('dueTime')}
-                      className="text-xs text-gray-500 dark:text-gray-400 px-2 py-1 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                      className="badge badge-gray cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale"
                     >
                       {task.dueTime ? formatTime(task.dueTime) : 'Set time'}
                     </span>
@@ -413,7 +408,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
                   }
                   onBlur={() => handleSaveEdit('priority')}
                   onKeyDown={(e) => handleKeyPress(e, 'priority')}
-                  className="text-xs px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="select text-xs"
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -422,7 +417,13 @@ const TaskItem: React.FC<TaskItemProps> = ({
               ) : (
                 <span
                   onClick={() => handleStartEdit('priority')}
-                  className={`px-2 py-1 text-xs font-medium rounded-full cursor-pointer hover:opacity-80 ${priorityColors[task.priority]}`}
+                  className={`badge cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale ${
+                    task.priority === 'high'
+                      ? 'badge-error'
+                      : task.priority === 'medium'
+                        ? 'badge-warning'
+                        : 'badge-success'
+                  }`}
                 >
                   {task.priority.toUpperCase()}
                 </span>
@@ -440,7 +441,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
                   }
                   onBlur={() => handleSaveEdit('categoryId')}
                   onKeyDown={(e) => handleKeyPress(e, 'categoryId')}
-                  className="text-xs px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="select text-xs"
                 >
                   <option value="">No category</option>
                   {categories.map((category) => (
@@ -452,7 +453,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
               ) : task.category ? (
                 <span
                   onClick={() => handleStartEdit('categoryId')}
-                  className="px-2 py-1 text-xs font-medium rounded-full text-white cursor-pointer hover:opacity-80"
+                  className="badge text-white cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale"
                   style={{ backgroundColor: task.category.color }}
                 >
                   {task.category.name}
@@ -460,7 +461,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
               ) : (
                 <span
                   onClick={() => handleStartEdit('categoryId')}
-                  className="px-2 py-1 text-xs text-gray-500 dark:text-gray-400 border border-gray-300 dark:border-gray-600 rounded-full cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  className="badge badge-gray cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale"
                 >
                   Add category
                 </span>
@@ -473,10 +474,10 @@ const TaskItem: React.FC<TaskItemProps> = ({
             {/* Delete Button */}
             <button
               onClick={handleDelete}
-              className={`p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-600 ${
+              className={`p-2 rounded-lg transition-all duration-250 hover-scale ${
                 showDeleteConfirm
-                  ? 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20'
-                  : 'text-gray-400 dark:text-gray-500'
+                  ? 'text-error-600 dark:text-error-400 bg-error-50 dark:bg-error-900/20 hover:bg-error-100 dark:hover:bg-error-900/30'
+                  : 'text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-600 dark:hover:text-gray-300'
               }`}
               title={
                 showDeleteConfirm

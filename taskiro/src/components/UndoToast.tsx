@@ -53,34 +53,36 @@ const UndoToast: React.FC<UndoToastProps> = ({
     <div className="fixed inset-x-0 bottom-0 z-50 px-4 pb-4 sm:px-6 sm:pb-6">
       <animated.div
         style={styles}
-        className="mx-auto max-w-sm bg-gray-900 dark:bg-gray-800 rounded-lg shadow-lg border border-gray-700"
+        className="mx-auto max-w-sm bg-gray-900 dark:bg-gray-800 rounded-xl shadow-elevated border border-gray-700/50 backdrop-blur-sm"
       >
         <div className="p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <svg
-                  className="h-5 w-5 text-green-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+                <div className="w-8 h-8 bg-success-500/20 rounded-full flex items-center justify-center">
+                  <svg
+                    className="h-4 w-4 text-success-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-white">{message}</p>
+                <p className="text-body text-white font-medium">{message}</p>
               </div>
             </div>
             <div className="flex items-center space-x-2">
               <button
                 onClick={onUndo}
-                className="text-sm font-medium text-blue-400 hover:text-blue-300 focus:outline-none focus:underline transition-colors"
+                className="btn-ghost btn-sm text-primary-400 hover:text-primary-300"
               >
                 Undo
               </button>
@@ -92,7 +94,7 @@ const UndoToast: React.FC<UndoToastProps> = ({
                   });
                   setTimeout(onHide, 300);
                 }}
-                className="text-gray-400 hover:text-gray-300 focus:outline-none transition-colors"
+                className="p-1 text-gray-400 hover:text-gray-300 focus-ring rounded-lg transition-colors duration-250 hover-scale"
               >
                 <svg
                   className="h-4 w-4"

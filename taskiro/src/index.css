@@ -1,17 +1,13 @@
 /* Import mobile gesture support styles */
 @import './styles/mobile.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Theme transition styles */
+/* Enhanced theme transition styles */
 @layer base {
-  /* Smooth transitions for theme changes */
+  /* Smooth transitions for theme changes with improved timing */
   html {
     transition:
-      background-color 0.3s ease-in-out,
-      color 0.3s ease-in-out;
+      background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* Ensure smooth transitions for all elements that change with theme */
@@ -29,8 +25,9 @@
   textarea,
   select {
     transition:
-      background-color 0.3s ease-in-out,
-      color 0.3s ease-in-out,
-      border-color 0.3s ease-in-out;
+      background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }

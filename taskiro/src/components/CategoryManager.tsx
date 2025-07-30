@@ -156,17 +156,12 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+    <div className="modal-overlay">
+      <div className="modal-content max-w-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-            Manage Categories
-          </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none"
-          >
+        <div className="modal-header">
+          <h2 className="text-heading-2">Manage Categories</h2>
+          <button onClick={onClose} className="btn-ghost p-2 hover-scale">
             <svg
               className="w-6 h-6"
               fill="none"
@@ -183,107 +178,131 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
           </button>
         </div>
 
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+        <div className="modal-body scrollbar-thin">
           {/* Error Message */}
           {error && (
-            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-              {error}
+            <div className="mb-6 bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800 rounded-lg p-4 animate-slide-down">
+              <div className="flex items-center">
+                <svg
+                  className="w-5 h-5 text-error-500 mr-3"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span className="text-body text-error-700 dark:text-error-200">
+                  {error}
+                </span>
+              </div>
             </div>
           )}
 
           {/* Category Form */}
-          <form onSubmit={handleSubmit} className="mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label
-                  htmlFor="category-name"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                >
-                  Category Name
-                </label>
-                <input
-                  id="category-name"
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, name: e.target.value }))
-                  }
-                  placeholder="Enter category name"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  required
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="category-color"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                >
-                  Color
-                </label>
-                <div className="flex items-center space-x-2">
+          <div className="card mb-6 animate-fade-in">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label
+                    htmlFor="category-name"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  >
+                    Category Name
+                  </label>
                   <input
-                    id="category-color"
-                    type="color"
-                    value={formData.color}
+                    id="category-name"
+                    type="text"
+                    value={formData.name}
                     onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        color: e.target.value,
-                      }))
+                      setFormData((prev) => ({ ...prev, name: e.target.value }))
                     }
-                    className="w-12 h-10 border border-gray-300 dark:border-gray-600 rounded cursor-pointer"
+                    placeholder="Enter category name"
+                    className="input"
+                    required
                   />
-                  <div className="flex flex-wrap gap-1">
-                    {DEFAULT_COLORS.map((color) => (
-                      <button
-                        key={color}
-                        type="button"
-                        onClick={() =>
-                          setFormData((prev) => ({ ...prev, color }))
-                        }
-                        className={`w-6 h-6 rounded-full border-2 ${
-                          formData.color === color
-                            ? 'border-gray-900 dark:border-white'
-                            : 'border-gray-300 dark:border-gray-600'
-                        }`}
-                        style={{ backgroundColor: color }}
-                      />
-                    ))}
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="category-color"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  >
+                    Color
+                  </label>
+                  <div className="flex items-center space-x-3">
+                    <input
+                      id="category-color"
+                      type="color"
+                      value={formData.color}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          color: e.target.value,
+                        }))
+                      }
+                      className="w-12 h-10 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover-scale transition-transform duration-250"
+                    />
+                    <div className="flex flex-wrap gap-2">
+                      {DEFAULT_COLORS.map((color) => (
+                        <button
+                          key={color}
+                          type="button"
+                          onClick={() =>
+                            setFormData((prev) => ({ ...prev, color }))
+                          }
+                          className={`w-8 h-8 rounded-full border-2 hover-scale transition-all duration-250 ${
+                            formData.color === color
+                              ? 'border-gray-900 dark:border-white shadow-md'
+                              : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
+                          }`}
+                          style={{ backgroundColor: color }}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="flex items-center justify-between mt-4">
-              <div className="flex space-x-2">
-                <button
-                  type="submit"
-                  disabled={loading || !formData.name.trim()}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {editingCategory ? 'Update' : 'Create'} Category
-                </button>
-
-                {editingCategory && (
+              <div className="flex items-center justify-between">
+                <div className="flex space-x-3">
                   <button
-                    type="button"
-                    onClick={handleCancelEdit}
-                    className="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                    type="submit"
+                    disabled={loading || !formData.name.trim()}
+                    className="btn-primary"
                   >
-                    Cancel
+                    {loading ? (
+                      <div className="flex items-center">
+                        <div className="spinner-sm mr-2"></div>
+                        {editingCategory ? 'Updating...' : 'Creating...'}
+                      </div>
+                    ) : (
+                      `${editingCategory ? 'Update' : 'Create'} Category`
+                    )}
                   </button>
-                )}
-              </div>
 
-              <button
-                type="button"
-                onClick={() => setShowTemplates(!showTemplates)}
-                className="px-3 py-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 focus:outline-none"
-              >
-                {showTemplates ? 'Hide' : 'Show'} Templates
-              </button>
-            </div>
+                  {editingCategory && (
+                    <button
+                      type="button"
+                      onClick={handleCancelEdit}
+                      className="btn-secondary"
+                    >
+                      Cancel
+                    </button>
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setShowTemplates(!showTemplates)}
+                  className="btn-ghost btn-sm"
+                >
+                  {showTemplates ? 'Hide' : 'Show'} Templates
+                </button>
+              </div>
+            </form>
 
             {/* Template Selection */}
             {showTemplates && (
@@ -311,7 +330,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
                 </div>
               </div>
             )}
-          </form>
+          </div>
 
           {/* Categories List */}
           <div>

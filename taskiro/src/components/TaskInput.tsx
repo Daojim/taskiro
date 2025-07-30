@@ -271,31 +271,16 @@ const TaskInput: React.FC<TaskInputProps> = ({
     return `${displayHour}:${minutes} ${ampm}`;
   };
 
-  const getPriorityColor = (priority: Priority) => {
-    switch (priority) {
-      case 'high':
-        return 'text-red-600 bg-red-50';
-      case 'medium':
-        return 'text-yellow-600 bg-yellow-50';
-      case 'low':
-        return 'text-green-600 bg-green-50';
-      default:
-        return 'text-gray-600 bg-gray-50';
-    }
-  };
-
   return (
     <div className="w-full max-w-2xl mx-auto">
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* Mode Toggle */}
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-            Add New Task
-          </h2>
+          <h2 className="text-heading-3">Add New Task</h2>
           <button
             type="button"
             onClick={() => setIsManualMode(!isManualMode)}
-            className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+            className="btn-ghost btn-sm"
           >
             {isManualMode
               ? 'Switch to Natural Language'
@@ -319,73 +304,79 @@ const TaskInput: React.FC<TaskInputProps> = ({
                   shouldMaintainFocus.current = false;
                 }}
                 placeholder="e.g., 'Buy groceries tomorrow at 3pm' or 'Meeting with John next Tuesday high priority'"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                className="input text-base py-4 pr-12 shadow-sm hover:shadow-md transition-shadow duration-250"
               />
               {isLoading && (
-                <div className="absolute right-3 top-3">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+                <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                  <div className="spinner-md"></div>
                 </div>
               )}
             </div>
 
             {/* Parsing Feedback */}
             {parsedData && (
-              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-                <h3 className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-2">
+              <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-xl p-4 animate-slide-down">
+                <h3 className="text-heading-4 text-primary-900 dark:text-primary-100 mb-3">
                   Parsed Information:
                 </h3>
-                <div className="space-y-2 text-sm">
-                  <div>
-                    <span className="font-medium text-gray-700 dark:text-gray-300">
+                <div className="space-y-3 text-body">
+                  <div className="flex items-start">
+                    <span className="font-medium text-gray-700 dark:text-gray-300 min-w-20">
                       Task:
                     </span>
-                    <span className="ml-2 text-gray-900 dark:text-white">
+                    <span className="ml-3 text-gray-900 dark:text-white font-medium">
                       {parsedData.title}
                     </span>
                   </div>
                   {parsedData.dueDate && (
-                    <div>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">
+                    <div className="flex items-start">
+                      <span className="font-medium text-gray-700 dark:text-gray-300 min-w-20">
                         Due Date:
                       </span>
-                      <span className="ml-2 text-gray-900 dark:text-white">
+                      <span className="ml-3 badge badge-primary">
                         {formatDate(parsedData.dueDate)}
                       </span>
                     </div>
                   )}
                   {parsedData.dueTime && (
-                    <div>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">
+                    <div className="flex items-start">
+                      <span className="font-medium text-gray-700 dark:text-gray-300 min-w-20">
                         Due Time:
                       </span>
-                      <span className="ml-2 text-gray-900 dark:text-white">
+                      <span className="ml-3 badge badge-primary">
                         {formatTime(parsedData.dueTime)}
                       </span>
                     </div>
                   )}
                   {parsedData.priority && (
-                    <div>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">
+                    <div className="flex items-start">
+                      <span className="font-medium text-gray-700 dark:text-gray-300 min-w-20">
                         Priority:
                       </span>
                       <span
-                        className={`ml-2 px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(parsedData.priority)}`}
+                        className={`ml-3 badge ${
+                          parsedData.priority === 'high'
+                            ? 'badge-error'
+                            : parsedData.priority === 'medium'
+                              ? 'badge-warning'
+                              : 'badge-success'
+                        }`}
                       >
                         {parsedData.priority.toUpperCase()}
                       </span>
                     </div>
                   )}
                   {parsedData.category && (
-                    <div>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">
+                    <div className="flex items-start">
+                      <span className="font-medium text-gray-700 dark:text-gray-300 min-w-20">
                         Category:
                       </span>
-                      <span className="ml-2 text-gray-900 dark:text-white">
+                      <span className="ml-3 badge badge-gray">
                         {parsedData.category}
                       </span>
                     </div>
                   )}
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                  <div className="text-body-small text-gray-500 dark:text-gray-400 pt-2 border-t border-primary-200 dark:border-primary-800">
                     Confidence: {Math.round(parsedData.confidence * 100)}%
                   </div>
                 </div>
@@ -395,9 +386,9 @@ const TaskInput: React.FC<TaskInputProps> = ({
         ) : (
           <>
             {/* Manual Entry Form */}
-            <div className="space-y-4">
+            <div className="space-y-5 animate-fade-in">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Task Title *
                 </label>
                 <input
@@ -406,14 +397,14 @@ const TaskInput: React.FC<TaskInputProps> = ({
                   onChange={(e) =>
                     setManualTask({ ...manualTask, title: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                  className="input"
                   placeholder="Enter task title"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Description
                 </label>
                 <textarea
@@ -424,15 +415,15 @@ const TaskInput: React.FC<TaskInputProps> = ({
                       description: e.target.value,
                     })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                  className="textarea"
                   placeholder="Optional description"
-                  rows={2}
+                  rows={3}
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Due Date
                   </label>
                   <input
@@ -441,12 +432,12 @@ const TaskInput: React.FC<TaskInputProps> = ({
                     onChange={(e) =>
                       setManualTask({ ...manualTask, dueDate: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                    className="input"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Due Time
                   </label>
                   <input
@@ -455,14 +446,14 @@ const TaskInput: React.FC<TaskInputProps> = ({
                     onChange={(e) =>
                       setManualTask({ ...manualTask, dueTime: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                    className="input"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Priority
                   </label>
                   <select
@@ -473,7 +464,7 @@ const TaskInput: React.FC<TaskInputProps> = ({
                         priority: e.target.value as Priority,
                       })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                    className="select"
                   >
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -482,7 +473,7 @@ const TaskInput: React.FC<TaskInputProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Category
                   </label>
                   <select
@@ -493,7 +484,7 @@ const TaskInput: React.FC<TaskInputProps> = ({
                         categoryId: e.target.value,
                       })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                    className="select"
                   >
                     <option value="">No Category</option>
                     {categories.map((category) => (
@@ -512,55 +503,62 @@ const TaskInput: React.FC<TaskInputProps> = ({
         <button
           type="submit"
           disabled={isLoading || (!isManualMode && !parsedData?.title)}
-          className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+          className="btn-primary w-full btn-lg"
         >
-          {isLoading ? 'Creating Task...' : 'Create Task'}
+          {isLoading ? (
+            <div className="flex items-center justify-center">
+              <div className="spinner-sm mr-3"></div>
+              Creating Task...
+            </div>
+          ) : (
+            'Create Task'
+          )}
         </button>
       </form>
 
       {/* Date Disambiguation Popup */}
       {showDisambiguation && ambiguousElements.length > 0 && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Clarify Details
-            </h3>
-
-            {ambiguousElements.map((element, elementIndex) => (
-              <div key={elementIndex} className="mb-4">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                  What did you mean by "{element.originalText}"?
-                </p>
-                <div className="space-y-2">
-                  {element.suggestions.map((suggestion, suggestionIndex) => (
-                    <button
-                      key={suggestionIndex}
-                      onClick={() =>
-                        handleDisambiguationSelect(elementIndex, suggestion)
-                      }
-                      className="w-full text-left px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-900 dark:text-white">
-                          {suggestion.display}
-                        </span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
-                          {Math.round(suggestion.confidence * 100)}%
-                        </span>
-                      </div>
-                    </button>
-                  ))}
+        <div className="modal-overlay">
+          <div className="modal-content max-w-md">
+            <div className="modal-header">
+              <h3 className="text-heading-3">Clarify Details</h3>
+            </div>
+            <div className="modal-body">
+              {ambiguousElements.map((element, elementIndex) => (
+                <div key={elementIndex} className="mb-6 last:mb-0">
+                  <p className="text-body mb-3">
+                    What did you mean by "{element.originalText}"?
+                  </p>
+                  <div className="space-y-2">
+                    {element.suggestions.map((suggestion, suggestionIndex) => (
+                      <button
+                        key={suggestionIndex}
+                        onClick={() =>
+                          handleDisambiguationSelect(elementIndex, suggestion)
+                        }
+                        className="w-full text-left px-4 py-3 card hover:shadow-md transition-all duration-250 hover-lift"
+                      >
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-900 dark:text-white font-medium">
+                            {suggestion.display}
+                          </span>
+                          <span className="text-body-small text-gray-500 dark:text-gray-400">
+                            {Math.round(suggestion.confidence * 100)}%
+                          </span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
-
-            <div className="flex justify-end space-x-2 mt-6">
+              ))}
+            </div>
+            <div className="modal-footer">
               <button
                 onClick={() => {
                   setShowDisambiguation(false);
                   setAmbiguousElements([]);
                 }}
-                className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+                className="btn-secondary"
               >
                 Cancel
               </button>

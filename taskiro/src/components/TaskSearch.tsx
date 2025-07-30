@@ -73,9 +73,9 @@ const TaskSearch: React.FC<TaskSearchProps> = ({
         {/* Search Icon */}
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <svg
-            className={`h-5 w-5 transition-colors duration-200 ${
+            className={`h-5 w-5 transition-colors duration-250 ${
               isFocused || value
-                ? 'text-blue-500 dark:text-blue-400'
+                ? 'text-primary-500 dark:text-primary-400'
                 : 'text-gray-400 dark:text-gray-500'
             }`}
             fill="none"
@@ -102,11 +102,7 @@ const TaskSearch: React.FC<TaskSearchProps> = ({
           onFocus={handleFocus}
           onBlur={handleBlur}
           placeholder={placeholder}
-          className={`block w-full pl-10 pr-10 py-2 border rounded-lg text-sm transition-all duration-200 ${
-            isFocused
-              ? 'border-blue-500 dark:border-blue-400 ring-2 ring-blue-500/20 dark:ring-blue-400/20'
-              : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
-          } bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none`}
+          className="input pl-10 pr-10 shadow-sm hover:shadow-md transition-all duration-250"
         />
 
         {/* Clear Button */}
@@ -115,7 +111,7 @@ const TaskSearch: React.FC<TaskSearchProps> = ({
             <button
               type="button"
               onClick={handleClear}
-              className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200 focus:outline-none focus:text-gray-600 dark:focus:text-gray-300"
+              className="p-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-all duration-250 focus-ring rounded-lg hover-scale"
               aria-label="Clear search"
             >
               <svg
@@ -138,10 +134,10 @@ const TaskSearch: React.FC<TaskSearchProps> = ({
 
       {/* Search Hint */}
       {isFocused && !value && (
-        <div className="absolute top-full left-0 right-0 mt-1 p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10">
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+        <div className="dropdown animate-slide-down">
+          <p className="text-body-small px-2 py-1">
             Search by task title or description. Press{' '}
-            <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">
+            <kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
               Esc
             </kbd>{' '}
             to clear.
@@ -152,7 +148,7 @@ const TaskSearch: React.FC<TaskSearchProps> = ({
       {/* Search Results Count */}
       {value && (
         <div className="absolute top-full left-0 right-0 mt-1">
-          <div className="text-xs text-gray-500 dark:text-gray-400 px-1">
+          <div className="text-body-small text-gray-500 dark:text-gray-400 px-1">
             Searching for "{value}"
           </div>
         </div>
