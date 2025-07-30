@@ -33,11 +33,30 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       ).matches;
       setThemeState(systemPrefersDark ? 'dark' : 'light');
     }
+
+    // Listen for system theme changes
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleSystemThemeChange = (e: MediaQueryListEvent) => {
+      // Only update if no theme is saved in localStorage (user hasn't manually set a preference)
+      const savedTheme = localStorage.getItem('taskiro_theme');
+      if (!savedTheme) {
+        setThemeState(e.matches ? 'dark' : 'light');
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleSystemThemeChange);
+
+    return () => {
+      mediaQuery.removeEventListener('change', handleSystemThemeChange);
+    };
   }, []);
 
   // Apply theme to document
   useEffect(() => {
     const root = window.document.documentElement;
+
+    // Add smooth transition class for theme changes
+    root.style.transition = 'background-color 0.3s ease, color 0.3s ease';
 
     if (theme === 'dark') {
       root.classList.add('dark');
@@ -47,6 +66,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
     // Save to localStorage
     localStorage.setItem('taskiro_theme', theme);
+
+    // Clean up transition after animation completes
+    const timeoutId = setTimeout(() => {
+      root.style.transition = '';
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
   }, [theme]);
 
   const toggleTheme = () => {

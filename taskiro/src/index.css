@@ -4,3 +4,33 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Theme transition styles */
+@layer base {
+  /* Smooth transitions for theme changes */
+  html {
+    transition:
+      background-color 0.3s ease-in-out,
+      color 0.3s ease-in-out;
+  }
+
+  /* Ensure smooth transitions for all elements that change with theme */
+  body,
+  div,
+  nav,
+  main,
+  section,
+  article,
+  aside,
+  header,
+  footer,
+  button,
+  input,
+  textarea,
+  select {
+    transition:
+      background-color 0.3s ease-in-out,
+      color 0.3s ease-in-out,
+      border-color 0.3s ease-in-out;
+  }
+}

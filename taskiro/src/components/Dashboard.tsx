@@ -1,22 +1,29 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useTasks } from '../hooks/useTasks';
-import { ListBulletIcon, CalendarDaysIcon } from '@heroicons/react/24/outline';
+import {
+  ListBulletIcon,
+  CalendarDaysIcon,
+  TagIcon,
+} from '@heroicons/react/24/outline';
 import TaskInput from './TaskInput';
 import TaskList from './TaskList';
 import CalendarView from './CalendarView';
+import CategoryManager from './CategoryManager';
+import ThemeToggle from './ThemeToggle';
 import type { Task } from '../types/task';
 
 type ViewMode = 'list' | 'calendar';
 
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
-  const { categories, error, clearError } = useTasks();
+  const { categories, error, clearError, refreshCategories } = useTasks();
   const [notification, setNotification] = useState<{
     type: 'success' | 'error';
     message: string;
   } | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [showCategoryManager, setShowCategoryManager] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -54,6 +61,15 @@ const Dashboard: React.FC = () => {
     setNotification(null);
   };
 
+  const handleCategoryChange = () => {
+    refreshCategories();
+    setNotification({
+      type: 'success',
+      message: 'Categories updated successfully!',
+    });
+    setTimeout(() => setNotification(null), 3000);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <nav className="bg-white dark:bg-gray-800 shadow">
@@ -68,6 +84,14 @@ const Dashboard: React.FC = () => {
               <span className="text-sm text-gray-700 dark:text-gray-300">
                 Welcome, {user?.email}
               </span>
+              <ThemeToggle />
+              <button
+                onClick={() => setShowCategoryManager(true)}
+                className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                <TagIcon className="h-4 w-4 mr-2" />
+                Categories
+              </button>
               <button
                 onClick={handleLogout}
                 className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -173,6 +197,13 @@ const Dashboard: React.FC = () => {
           )}
         </div>
       </main>
+
+      {/* Category Manager Modal */}
+      <CategoryManager
+        isOpen={showCategoryManager}
+        onClose={() => setShowCategoryManager(false)}
+        onCategoryChange={handleCategoryChange}
+      />
     </div>
   );
 };
