@@ -16,6 +16,7 @@ interface UseTasksReturn {
   updateTask: (id: string, task: UpdateTaskRequest) => Promise<Task | null>;
   deleteTask: (id: string) => Promise<boolean>;
   toggleTaskCompletion: (id: string) => Promise<Task | null>;
+  restoreTask: (id: string) => Promise<Task | null>;
   refreshTasks: () => Promise<void>;
   refreshCategories: () => Promise<void>;
   clearError: () => void;
@@ -136,6 +137,23 @@ export const useTasks = (): UseTasksReturn => {
     []
   );
 
+  const restoreTask = useCallback(async (id: string): Promise<Task | null> => {
+    try {
+      setError(null);
+      const response = await apiService.restoreTask(id);
+      const restoredTask = response.task;
+
+      // Add the restored task back to local state
+      setTasks((prevTasks) => [restoredTask, ...prevTasks]);
+
+      return restoredTask;
+    } catch (err: unknown) {
+      const apiError = err as { error?: { message?: string } };
+      setError(apiError.error?.message || 'Failed to restore task');
+      return null;
+    }
+  }, []);
+
   // Load initial data
   useEffect(() => {
     refreshTasks();
@@ -151,6 +169,7 @@ export const useTasks = (): UseTasksReturn => {
     updateTask,
     deleteTask,
     toggleTaskCompletion,
+    restoreTask,
     refreshTasks,
     refreshCategories,
     clearError,

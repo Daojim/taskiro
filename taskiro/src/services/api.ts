@@ -262,6 +262,15 @@ class ApiService {
     }
   }
 
+  async restoreTask(id: string): Promise<{ message: string; task: Task }> {
+    try {
+      const response = await this.api.post(`/api/tasks/${id}/restore`);
+      return response.data;
+    } catch (error: unknown) {
+      throw this.handleApiError(error);
+    }
+  }
+
   // Category API methods
   async getCategories(): Promise<{ categories: Category[] }> {
     try {
@@ -309,9 +318,7 @@ class ApiService {
     }
   }
 
-  async suggestCategory(
-    text: string
-  ): Promise<{
+  async suggestCategory(text: string): Promise<{
     success: boolean;
     suggestion: {
       category?: string;

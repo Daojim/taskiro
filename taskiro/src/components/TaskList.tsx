@@ -8,15 +8,18 @@ import React, {
 import { FixedSizeList as List } from 'react-window';
 import { useTasks } from '../hooks/useTasks';
 import { useTheme } from '../hooks/useTheme';
+import { useMobileGestures } from '../hooks/useMobileGestures';
 import TaskItem from './TaskItem';
 import TaskFilters from './TaskFilters';
 import TaskSearch from './TaskSearch';
+import PullToRefresh from './PullToRefresh';
 import type { Task, Priority, TaskStatus } from '../types/task';
 
 interface TaskListProps {
   onTaskUpdated?: (task: Task) => void;
   onTaskDeleted?: (taskId: string) => void;
   onError?: (error: string) => void;
+  onRefresh?: () => Promise<void>;
 }
 
 export interface FilterState {
@@ -35,6 +38,7 @@ const TaskList: React.FC<TaskListProps> = ({
   onTaskUpdated,
   onTaskDeleted,
   onError,
+  onRefresh,
 }) => {
   const {
     tasks,
@@ -44,9 +48,12 @@ const TaskList: React.FC<TaskListProps> = ({
     updateTask,
     deleteTask,
     toggleTaskCompletion,
+    restoreTask,
+    refreshTasks,
   } = useTasks();
   const { theme } = useTheme();
   const listRef = useRef<List>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Filter and search state
   const [filters, setFilters] = useState<FilterState>({
@@ -56,6 +63,29 @@ const TaskList: React.FC<TaskListProps> = ({
     status: '',
     sortBy: 'dueDate',
     sortOrder: 'asc',
+  });
+
+  // Pull-to-refresh gesture support
+  const {
+    pullRefreshGesture,
+    pullStyle,
+    gestureState: pullGestureState,
+    AnimatedDiv: AnimatedPullDiv,
+  } = useMobileGestures({
+    onPullRefresh: async () => {
+      try {
+        if (onRefresh) {
+          await onRefresh();
+        } else {
+          await refreshTasks();
+        }
+      } catch {
+        if (onError) {
+          onError('Failed to refresh tasks');
+        }
+      }
+    },
+    pullRefreshThreshold: 80,
   });
 
   // Handle errors from useTasks hook
@@ -194,6 +224,23 @@ const TaskList: React.FC<TaskListProps> = ({
     [deleteTask, onTaskDeleted, onError]
   );
 
+  // Handle task restoration
+  const handleTaskRestore = useCallback(
+    async (taskId: string) => {
+      try {
+        const restoredTask = await restoreTask(taskId);
+        if (restoredTask && onTaskUpdated) {
+          onTaskUpdated(restoredTask);
+        }
+      } catch {
+        if (onError) {
+          onError('Failed to restore task');
+        }
+      }
+    },
+    [restoreTask, onTaskUpdated, onError]
+  );
+
   // Render individual task item for virtualized list
   const renderTaskItem = useCallback(
     ({ index, style }: { index: number; style: React.CSSProperties }) => {
@@ -207,6 +254,7 @@ const TaskList: React.FC<TaskListProps> = ({
             onToggleCompletion={handleToggleCompletion}
             onUpdate={handleTaskUpdate}
             onDelete={handleTaskDelete}
+            onRestore={handleTaskRestore}
             onError={onError}
           />
         </div>
@@ -218,6 +266,7 @@ const TaskList: React.FC<TaskListProps> = ({
       handleToggleCompletion,
       handleTaskUpdate,
       handleTaskDelete,
+      handleTaskRestore,
       onError,
     ]
   );
@@ -234,8 +283,20 @@ const TaskList: React.FC<TaskListProps> = ({
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
-      <div className="px-4 py-5 sm:p-6">
+    <AnimatedPullDiv
+      ref={containerRef}
+      {...pullRefreshGesture()}
+      className="bg-white dark:bg-gray-800 shadow rounded-lg relative overflow-hidden pull-refresh-container task-list-mobile sm:task-list-tablet"
+      style={{ touchAction: 'pan-x pan-down' }}
+    >
+      {/* Pull to Refresh Indicator */}
+      <PullToRefresh
+        pullY={pullStyle.pullY.get()}
+        isPulling={pullGestureState.isPulling}
+        threshold={80}
+      />
+
+      <div className="px-4 py-5 sm:p-6 safe-area-inset-left safe-area-inset-right">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
             Tasks ({filteredAndSortedTasks.length})
@@ -311,7 +372,7 @@ const TaskList: React.FC<TaskListProps> = ({
           </div>
         )}
       </div>
-    </div>
+    </AnimatedPullDiv>
   );
 };
 

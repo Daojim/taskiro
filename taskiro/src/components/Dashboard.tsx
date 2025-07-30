@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useTasks } from '../hooks/useTasks';
+import { ListBulletIcon, CalendarDaysIcon } from '@heroicons/react/24/outline';
 import TaskInput from './TaskInput';
 import TaskList from './TaskList';
+import CalendarView from './CalendarView';
 import type { Task } from '../types/task';
+
+type ViewMode = 'list' | 'calendar';
 
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
@@ -12,6 +16,7 @@ const Dashboard: React.FC = () => {
     type: 'success' | 'error';
     message: string;
   } | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
 
   const handleLogout = async () => {
     try {
@@ -121,12 +126,51 @@ const Dashboard: React.FC = () => {
             />
           </div>
 
-          {/* Task List */}
-          <TaskList
-            onTaskUpdated={handleTaskUpdated}
-            onTaskDeleted={handleTaskDeleted}
-            onError={handleError}
-          />
+          {/* View Toggle */}
+          <div className="mb-6">
+            <div className="flex items-center justify-center">
+              <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-1 flex">
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`flex items-center px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    viewMode === 'list'
+                      ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
+                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+                  }`}
+                >
+                  <ListBulletIcon className="h-4 w-4 mr-2" />
+                  List
+                </button>
+                <button
+                  onClick={() => setViewMode('calendar')}
+                  className={`flex items-center px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    viewMode === 'calendar'
+                      ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
+                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+                  }`}
+                >
+                  <CalendarDaysIcon className="h-4 w-4 mr-2" />
+                  Calendar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* View Content */}
+          {viewMode === 'list' ? (
+            <TaskList
+              onTaskUpdated={handleTaskUpdated}
+              onTaskDeleted={handleTaskDeleted}
+              onError={handleError}
+            />
+          ) : (
+            <CalendarView
+              onTaskUpdated={handleTaskUpdated}
+              onTaskDeleted={handleTaskDeleted}
+              onTaskCreated={handleTaskCreated}
+              onError={handleError}
+            />
+          )}
         </div>
       </main>
     </div>
