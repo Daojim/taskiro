@@ -11,13 +11,20 @@ import TaskList from './TaskList';
 import CalendarView from './CalendarView';
 import CategoryManager from './CategoryManager';
 import ThemeToggle from './ThemeToggle';
-import type { Task } from '../types/task';
+import type { Task, CreateTaskRequest } from '../types/task';
 
 type ViewMode = 'list' | 'calendar';
 
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
-  const { categories, error, clearError, refreshCategories } = useTasks();
+  const {
+    categories,
+    error,
+    clearError,
+    refreshCategories,
+    refreshTasks,
+    createTask,
+  } = useTasks();
   const [notification, setNotification] = useState<{
     type: 'success' | 'error';
     message: string;
@@ -27,28 +34,50 @@ const Dashboard: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      await logout();
+      logout();
     } catch (error) {
       console.error('Logout error:', error);
     }
   };
 
-  const handleTaskCreated = (_task: Task) => {
-    setNotification({ type: 'success', message: 'Task created successfully!' });
-    setTimeout(() => setNotification(null), 3000);
+  const handleTaskCreated = async (taskData: CreateTaskRequest) => {
+    try {
+      await createTask(taskData);
+      await refreshTasks(); // Refresh the task list
+      setNotification({
+        type: 'success',
+        message: 'Task created successfully!',
+      });
+      setTimeout(() => setNotification(null), 3000);
+    } catch {
+      handleError('Failed to create task');
+    }
   };
 
-  const handleTaskUpdated = (_task: Task) => {
-    setNotification({ type: 'success', message: 'Task updated successfully!' });
-    setTimeout(() => setNotification(null), 3000);
+  const handleTaskUpdated = async (_task: Task) => {
+    try {
+      await refreshTasks(); // Refresh the task list
+      setNotification({
+        type: 'success',
+        message: 'Task updated successfully!',
+      });
+      setTimeout(() => setNotification(null), 3000);
+    } catch {
+      handleError('Failed to update task');
+    }
   };
 
-  const handleTaskDeleted = (_taskId: string) => {
-    setNotification({
-      type: 'success',
-      message: 'Task archived successfully!',
-    });
-    setTimeout(() => setNotification(null), 3000);
+  const handleTaskDeleted = async (_taskId: string) => {
+    try {
+      await refreshTasks(); // Refresh the task list
+      setNotification({
+        type: 'success',
+        message: 'Task archived successfully!',
+      });
+      setTimeout(() => setNotification(null), 3000);
+    } catch {
+      handleError('Failed to delete task');
+    }
   };
 
   const handleError = (errorMessage: string) => {
@@ -266,6 +295,7 @@ const Dashboard: React.FC = () => {
                 onTaskUpdated={handleTaskUpdated}
                 onTaskDeleted={handleTaskDeleted}
                 onError={handleError}
+                onRefresh={refreshTasks}
               />
             ) : (
               <CalendarView

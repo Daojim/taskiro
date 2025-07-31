@@ -234,6 +234,9 @@ const TaskItem: React.FC<TaskItemProps> = ({
         {...swipeGesture()}
         {...tapGesture()}
         style={swipeStyle}
+        data-status={task.status}
+        data-priority={task.priority}
+        data-task-id={task.id}
         className={`task-card touch-pan-y select-none relative gesture-active ${
           task.status === 'completed' ? 'task-card-completed' : ''
         } ${isOverdue ? 'task-card-overdue' : ''} ${
@@ -268,6 +271,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
             <input
               type="checkbox"
               checked={task.status === 'completed'}
+              data-checked={task.status === 'completed'}
               onChange={handleToggleCompletion}
               className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 mobile-focus"
             />

@@ -5,9 +5,8 @@ import React, {
   useRef,
   useEffect,
 } from 'react';
-import { FixedSizeList as List } from 'react-window';
+
 import { useTasks } from '../hooks/useTasks';
-import { useTheme } from '../hooks/useTheme';
 import { useMobileGestures } from '../hooks/useMobileGestures';
 import TaskItem from './TaskItem';
 import TaskFilters from './TaskFilters';
@@ -31,8 +30,7 @@ export interface FilterState {
   sortOrder: 'asc' | 'desc';
 }
 
-const ITEM_HEIGHT = 120; // Height of each task item in pixels
-const LIST_HEIGHT = 600; // Height of the virtualized list
+// Removed virtualization - tasks now render naturally
 
 const TaskList: React.FC<TaskListProps> = ({
   onTaskUpdated,
@@ -51,8 +49,9 @@ const TaskList: React.FC<TaskListProps> = ({
     restoreTask,
     refreshTasks,
   } = useTasks();
-  const { theme } = useTheme();
-  const listRef = useRef<List>(null);
+  // Theme is available if needed for future enhancements
+  // const { theme } = useTheme();
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Filter and search state
@@ -241,35 +240,7 @@ const TaskList: React.FC<TaskListProps> = ({
     [restoreTask, onTaskUpdated, onError]
   );
 
-  // Render individual task item for virtualized list
-  const renderTaskItem = useCallback(
-    ({ index, style }: { index: number; style: React.CSSProperties }) => {
-      const task = filteredAndSortedTasks[index];
-
-      return (
-        <div style={style}>
-          <TaskItem
-            task={task}
-            categories={categories}
-            onToggleCompletion={handleToggleCompletion}
-            onUpdate={handleTaskUpdate}
-            onDelete={handleTaskDelete}
-            onRestore={handleTaskRestore}
-            onError={onError}
-          />
-        </div>
-      );
-    },
-    [
-      filteredAndSortedTasks,
-      categories,
-      handleToggleCompletion,
-      handleTaskUpdate,
-      handleTaskDelete,
-      handleTaskRestore,
-      onError,
-    ]
-  );
+  // Removed renderTaskItem - now rendering tasks directly
 
   if (isLoading) {
     return (
@@ -355,20 +326,19 @@ const TaskList: React.FC<TaskListProps> = ({
             </p>
           </div>
         ) : (
-          <div className="card border-0 shadow-none overflow-hidden animate-fade-in">
-            <List
-              ref={listRef}
-              height={Math.min(
-                LIST_HEIGHT,
-                filteredAndSortedTasks.length * ITEM_HEIGHT
-              )}
-              width="100%"
-              itemCount={filteredAndSortedTasks.length}
-              itemSize={ITEM_HEIGHT}
-              className={theme === 'dark' ? 'dark' : ''}
-            >
-              {renderTaskItem}
-            </List>
+          <div className="animate-fade-in">
+            {filteredAndSortedTasks.map((task) => (
+              <TaskItem
+                key={task.id}
+                task={task}
+                categories={categories}
+                onToggleCompletion={handleToggleCompletion}
+                onUpdate={handleTaskUpdate}
+                onDelete={handleTaskDelete}
+                onRestore={handleTaskRestore}
+                onError={onError}
+              />
+            ))}
           </div>
         )}
       </div>

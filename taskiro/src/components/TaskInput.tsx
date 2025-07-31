@@ -7,11 +7,10 @@ import type {
   Category,
   Priority,
   CreateTaskRequest,
-  Task,
 } from '../types/task';
 
 interface TaskInputProps {
-  onTaskCreated?: (task: Task) => void;
+  onTaskCreated?: (taskData: CreateTaskRequest) => void;
   categories?: Category[];
   onError?: (error: string) => void;
 }
@@ -162,15 +161,12 @@ const TaskInput: React.FC<TaskInputProps> = ({
         categoryId: categoryId || undefined,
       };
 
-      const response = await apiService.createTask(taskData);
-
-      if (response.task) {
-        onTaskCreated?.(response.task);
-        setInput('');
-        setParsedData(null);
-        setShowDisambiguation(false);
-        setAmbiguousElements([]);
-      }
+      // Call the parent's task creation handler
+      onTaskCreated?.(taskData);
+      setInput('');
+      setParsedData(null);
+      setShowDisambiguation(false);
+      setAmbiguousElements([]);
     } catch (error: unknown) {
       const apiError = error as { error?: { message?: string } };
       onError?.(apiError.error?.message || 'Failed to create task');
@@ -187,20 +183,17 @@ const TaskInput: React.FC<TaskInputProps> = ({
 
     try {
       setIsLoading(true);
-      const response = await apiService.createTask(manualTask);
-
-      if (response.task) {
-        onTaskCreated?.(response.task);
-        setManualTask({
-          title: '',
-          description: '',
-          dueDate: '',
-          dueTime: '',
-          priority: 'medium',
-          categoryId: '',
-        });
-        setIsManualMode(false);
-      }
+      // Call the parent's task creation handler
+      onTaskCreated?.(manualTask);
+      setManualTask({
+        title: '',
+        description: '',
+        dueDate: '',
+        dueTime: '',
+        priority: 'medium',
+        categoryId: '',
+      });
+      setIsManualMode(false);
     } catch (error: unknown) {
       const apiError = error as { error?: { message?: string } };
       onError?.(apiError.error?.message || 'Failed to create task');
