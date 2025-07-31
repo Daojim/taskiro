@@ -315,7 +315,7 @@ const TaskInput: React.FC<TaskInputProps> = ({
 
             {/* Parsing Feedback */}
             {parsedData && (
-              <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-xl p-4 animate-slide-down">
+              <div className="bg-primary-50 dark:bg-primary-900-20 border border-primary-200 dark:border-primary-800 rounded-xl p-4 animate-slide-down">
                 <h3 className="text-heading-4 text-primary-900 dark:text-primary-100 mb-3">
                   Parsed Information:
                 </h3>

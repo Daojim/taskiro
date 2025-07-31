@@ -1,19 +1,19 @@
-/* Import Tailwind CSS */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Import Design System */
-@import './styles/design-system.css';
-
 /* Global App Styles */
 #root {
-  @apply min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white;
+  min-height: 100vh;
+  background-color: #f9fafb;
+  color: #111827;
+}
+
+.dark #root {
+  background-color: #111827;
+  color: #ffffff;
 }
 
 /* Enhanced focus styles for accessibility */
 :focus-visible {
-  @apply focus-ring;
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
 }
 
 /* Smooth scrolling */
@@ -23,58 +23,126 @@ html {
 
 /* Enhanced selection styles */
 ::selection {
-  @apply bg-primary-100 dark:bg-primary-900/30 text-primary-900 dark:text-primary-100;
+  background-color: #dbeafe;
+  color: #1e3a8a;
+}
+
+.dark ::selection {
+  background-color: rgba(30, 58, 138, 0.3);
+  color: #dbeafe;
 }
 
 /* Enhanced placeholder styles */
 ::placeholder {
-  @apply text-gray-400 dark:text-gray-500;
+  color: #9ca3af;
+}
+
+.dark ::placeholder {
+  color: #6b7280;
 }
 
 /* Remove default button styles */
 button {
-  @apply focus:outline-none;
+  outline: none;
 }
 
 /* Enhanced link styles */
 a {
-  @apply text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors duration-150;
+  color: #2563eb;
+  transition: color 0.15s ease-in-out;
+}
+
+a:hover {
+  color: #1d4ed8;
+}
+
+.dark a {
+  color: #60a5fa;
+}
+
+.dark a:hover {
+  color: #93c5fd;
 }
 
 /* Enhanced form element styles */
-input[type='checkbox'],
-input[type='radio'] {
-  @apply focus-ring;
+input[type='checkbox']:focus,
+input[type='radio']:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
 }
 
 /* Enhanced table styles */
 table {
-  @apply w-full border-collapse;
+  width: 100%;
+  border-collapse: collapse;
 }
 
 th {
-  @apply text-left font-medium text-gray-900 dark:text-white;
+  text-align: left;
+  font-weight: 500;
+  color: #111827;
+}
+
+.dark th {
+  color: #ffffff;
 }
 
 td {
-  @apply text-gray-600 dark:text-gray-400;
+  color: #4b5563;
+}
+
+.dark td {
+  color: #9ca3af;
 }
 
 /* Enhanced code styles */
 code {
-  @apply bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-1 py-0.5 rounded text-sm font-mono;
+  background-color: #f3f4f6;
+  color: #111827;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-family:
+    ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo,
+    monospace;
+}
+
+.dark code {
+  background-color: #374151;
+  color: #f3f4f6;
 }
 
 pre {
-  @apply bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-4 rounded-lg overflow-x-auto;
+  background-color: #f3f4f6;
+  color: #111827;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+
+.dark pre {
+  background-color: #374151;
+  color: #f3f4f6;
 }
 
 /* Enhanced blockquote styles */
 blockquote {
-  @apply border-l-4 border-gray-300 dark:border-gray-600 pl-4 italic text-gray-600 dark:text-gray-400;
+  border-left: 4px solid #d1d5db;
+  padding-left: 1rem;
+  font-style: italic;
+  color: #4b5563;
+}
+
+.dark blockquote {
+  border-left-color: #4b5563;
+  color: #9ca3af;
 }
 
 /* Enhanced hr styles */
 hr {
-  @apply border-gray-200 dark:border-gray-700;
+  border-color: #e5e7eb;
+}
+
+.dark hr {
+  border-color: #374151;
 }

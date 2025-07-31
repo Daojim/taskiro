@@ -71,17 +71,48 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <nav className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-200/50 dark:border-gray-700/50 sticky top-0 z-40">
-        <div className="container-app">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <h1 className="text-heading-3 bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent font-bold">
+    <div
+      style={{
+        minHeight: '100vh',
+        backgroundColor: '#f3f4f6',
+        fontFamily: 'system-ui, sans-serif',
+      }}
+    >
+      <nav
+        style={{
+          backgroundColor: 'white',
+          borderBottom: '1px solid #e5e7eb',
+          padding: '0',
+          position: 'sticky',
+          top: 0,
+          zIndex: 40,
+        }}
+      >
+        <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '0 1rem' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              height: '4rem',
+              alignItems: 'center',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <h1
+                style={{
+                  fontSize: '1.5rem',
+                  fontWeight: '600',
+                  color: '#2563eb',
+                  margin: 0,
+                }}
+              >
                 Taskiro
               </h1>
             </div>
-            <div className="flex items-center space-x-3">
-              <span className="text-body hidden sm:block">
+            <div
+              style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}
+            >
+              <span style={{ fontSize: '0.875rem', color: '#4b5563' }}>
                 Welcome, {user?.email}
               </span>
               <ThemeToggle />
@@ -100,8 +131,12 @@ const Dashboard: React.FC = () => {
         </div>
       </nav>
 
-      <main className="container-app section-spacing">
-        <div className="content-spacing">
+      <main
+        style={{ maxWidth: '80rem', margin: '0 auto', padding: '2rem 1rem' }}
+      >
+        <div
+          style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
+        >
           {/* Notification */}
           {notification && (
             <div
@@ -179,7 +214,16 @@ const Dashboard: React.FC = () => {
           )}
 
           {/* Task Input Component */}
-          <div className="card card-elevated animate-fade-in">
+          <div
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '12px',
+              boxShadow:
+                '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+              border: '1px solid #e5e7eb',
+              padding: '1.5rem',
+            }}
+          >
             <TaskInput
               onTaskCreated={handleTaskCreated}
               categories={categories}
@@ -194,8 +238,8 @@ const Dashboard: React.FC = () => {
                 onClick={() => setViewMode('list')}
                 className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-250 ${
                   viewMode === 'list'
-                    ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 shadow-sm'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                    ? 'bg-primary-50 dark:bg-primary-900-20 text-primary-700 dark:text-primary-300 shadow-sm'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700-50'
                 }`}
               >
                 <ListBulletIcon className="h-4 w-4 mr-2" />
@@ -205,8 +249,8 @@ const Dashboard: React.FC = () => {
                 onClick={() => setViewMode('calendar')}
                 className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-250 ${
                   viewMode === 'calendar'
-                    ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 shadow-sm'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                    ? 'bg-primary-50 dark:bg-primary-900-20 text-primary-700 dark:text-primary-300 shadow-sm'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700-50'
                 }`}
               >
                 <CalendarDaysIcon className="h-4 w-4 mr-2" />

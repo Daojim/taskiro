@@ -60,7 +60,7 @@ const LoginForm: React.FC = () => {
 
             <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
               {apiError && (
-                <div className="bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800 rounded-lg p-4 animate-slide-down">
+                <div className="bg-error-50 dark:bg-error-900-20 border border-error-200 dark:border-error-800 rounded-lg p-4 animate-slide-down">
                   <div className="flex items-center">
                     <svg
                       className="w-5 h-5 text-error-500 mr-3"

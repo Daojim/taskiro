@@ -181,7 +181,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
         <div className="modal-body scrollbar-thin">
           {/* Error Message */}
           {error && (
-            <div className="mb-6 bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800 rounded-lg p-4 animate-slide-down">
+            <div className="mb-6 bg-error-50 dark:bg-error-900-20 border border-error-200 dark:border-error-800 rounded-lg p-4 animate-slide-down">
               <div className="flex items-center">
                 <svg
                   className="w-5 h-5 text-error-500 mr-3"

@@ -295,7 +295,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
               ) : (
                 <h4
                   onClick={() => handleStartEdit('title')}
-                  className={`text-heading-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 px-2 py-1 rounded-lg transition-all duration-250 ${
+                  className={`text-heading-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700-50 px-2 py-1 rounded-lg transition-all duration-250 ${
                     task.status === 'completed'
                       ? 'line-through text-gray-500 dark:text-gray-400'
                       : 'text-gray-900 dark:text-white hover-lift'
@@ -327,7 +327,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
                 ) : (
                   <p
                     onClick={() => handleStartEdit('description')}
-                    className="text-body cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 px-2 py-1 rounded-lg transition-all duration-250 hover-lift"
+                    className="text-body cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700-50 px-2 py-1 rounded-lg transition-all duration-250 hover-lift"
                   >
                     {task.description || 'Add description...'}
                   </p>
@@ -476,7 +476,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
               onClick={handleDelete}
               className={`p-2 rounded-lg transition-all duration-250 hover-scale ${
                 showDeleteConfirm
-                  ? 'text-error-600 dark:text-error-400 bg-error-50 dark:bg-error-900/20 hover:bg-error-100 dark:hover:bg-error-900/30'
+                  ? 'text-error-600 dark:text-error-400 bg-error-50 dark:bg-error-900-20 hover:bg-error-100 dark:hover:bg-error-900-30'
                   : 'text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-600 dark:hover:text-gray-300'
               }`}
               title={
