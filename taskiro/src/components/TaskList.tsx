@@ -12,9 +12,12 @@ import TaskItem from './TaskItem';
 import TaskFilters from './TaskFilters';
 import TaskSearch from './TaskSearch';
 import PullToRefresh from './PullToRefresh';
-import type { Task, Priority, TaskStatus } from '../types/task';
+import type { Task, Category, Priority, TaskStatus } from '../types/task';
 
 interface TaskListProps {
+  tasks?: Task[];
+  categories?: Category[];
+  isLoading?: boolean;
   onTaskUpdated?: (task: Task) => void;
   onTaskDeleted?: (taskId: string) => void;
   onError?: (error: string) => void;
@@ -33,21 +36,21 @@ export interface FilterState {
 // Removed virtualization - tasks now render naturally
 
 const TaskList: React.FC<TaskListProps> = ({
+  tasks = [],
+  categories = [],
+  isLoading = false,
   onTaskUpdated,
   onTaskDeleted,
   onError,
   onRefresh,
 }) => {
   const {
-    tasks,
-    categories,
-    isLoading,
-    error,
     updateTask,
     deleteTask,
     toggleTaskCompletion,
     restoreTask,
     refreshTasks,
+    error,
   } = useTasks();
   // Theme is available if needed for future enhancements
   // const { theme } = useTheme();

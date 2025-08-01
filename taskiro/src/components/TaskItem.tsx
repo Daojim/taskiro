@@ -56,12 +56,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
       setDeletedTask(task);
       onDelete(task.id);
     },
-    onTap: () => {
-      // Only toggle completion on tap if not editing
-      if (!editingField) {
-        handleToggleCompletion();
-      }
-    },
+    // Removed onTap - only checkbox and title should toggle completion
     swipeThreshold: 100,
   });
 
@@ -266,48 +261,51 @@ const TaskItem: React.FC<TaskItemProps> = ({
         </div>
 
         <div className="flex items-start space-x-3 sm:space-x-4">
-          {/* Completion Checkbox */}
-          <div className="flex-shrink-0 pt-1 mobile-tap-target haptic-feedback">
-            <input
-              type="checkbox"
-              checked={task.status === 'completed'}
-              data-checked={task.status === 'completed'}
-              onChange={handleToggleCompletion}
-              className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 mobile-focus"
-            />
-          </div>
-
           {/* Task Content */}
           <div className="flex-1 min-w-0">
-            {/* Title */}
-            <div className="mb-2">
-              {editingField === 'title' ? (
+            {/* Title with Checkbox */}
+            <div className="mb-2 flex items-center space-x-2">
+              {/* Completion Checkbox */}
+              <div className="flex-shrink-0">
                 <input
-                  ref={titleInputRef}
-                  type="text"
-                  value={editValues.title}
-                  onChange={(e) =>
-                    setEditValues((prev) => ({
-                      ...prev,
-                      title: e.target.value,
-                    }))
-                  }
-                  onBlur={() => handleSaveEdit('title')}
-                  onKeyDown={(e) => handleKeyPress(e, 'title')}
-                  className="input text-sm font-medium"
+                  type="checkbox"
+                  checked={task.status === 'completed'}
+                  data-checked={task.status === 'completed'}
+                  onChange={handleToggleCompletion}
+                  className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 mobile-focus"
                 />
-              ) : (
-                <h4
-                  onClick={() => handleStartEdit('title')}
-                  className={`text-heading-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700-50 px-2 py-1 rounded-lg transition-all duration-250 ${
-                    task.status === 'completed'
-                      ? 'line-through text-gray-500 dark:text-gray-400'
-                      : 'text-gray-900 dark:text-white hover-lift'
-                  }`}
-                >
-                  {task.title}
-                </h4>
-              )}
+              </div>
+
+              {/* Title */}
+              <div className="flex-1">
+                {editingField === 'title' ? (
+                  <input
+                    ref={titleInputRef}
+                    type="text"
+                    value={editValues.title}
+                    onChange={(e) =>
+                      setEditValues((prev) => ({
+                        ...prev,
+                        title: e.target.value,
+                      }))
+                    }
+                    onBlur={() => handleSaveEdit('title')}
+                    onKeyDown={(e) => handleKeyPress(e, 'title')}
+                    className="input text-sm font-medium"
+                  />
+                ) : (
+                  <h4
+                    onClick={handleToggleCompletion}
+                    className={`text-heading-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700-50 px-2 py-1 rounded-lg transition-all duration-250 ${
+                      task.status === 'completed'
+                        ? 'line-through text-gray-500 dark:text-gray-400'
+                        : 'text-gray-900 dark:text-white hover-lift'
+                    }`}
+                  >
+                    {task.title}
+                  </h4>
+                )}
+              </div>
             </div>
 
             {/* Description */}

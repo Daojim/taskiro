@@ -18,7 +18,9 @@ type ViewMode = 'list' | 'calendar';
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
   const {
+    tasks,
     categories,
+    isLoading,
     error,
     clearError,
     refreshCategories,
@@ -292,6 +294,9 @@ const Dashboard: React.FC = () => {
           <div className="animate-fade-in">
             {viewMode === 'list' ? (
               <TaskList
+                tasks={tasks}
+                categories={categories}
+                isLoading={isLoading}
                 onTaskUpdated={handleTaskUpdated}
                 onTaskDeleted={handleTaskDeleted}
                 onError={handleError}
