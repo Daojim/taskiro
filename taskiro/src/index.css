@@ -141,3 +141,24 @@ nav {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
   transform: translateY(-2px) !important;
 }
+
+/* Task completion styles */
+.line-through {
+  text-decoration: line-through !important;
+}
+
+.text-gray-500 {
+  color: #6b7280 !important;
+}
+
+.dark .text-gray-400 {
+  color: #9ca3af !important;
+}
+
+.text-gray-900 {
+  color: #111827 !important;
+}
+
+.dark .text-white {
+  color: #ffffff !important;
+}

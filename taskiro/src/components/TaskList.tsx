@@ -125,8 +125,11 @@ const TaskList: React.FC<TaskListProps> = ({
         return false;
       }
 
-      // Status filter
-      if (filters.status && task.status !== filters.status) {
+      // Status filter - convert to lowercase for comparison
+      if (
+        filters.status &&
+        task.status.toLowerCase() !== filters.status.toLowerCase()
+      ) {
         return false;
       }
 

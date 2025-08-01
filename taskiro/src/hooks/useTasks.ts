@@ -22,6 +22,12 @@ interface UseTasksReturn {
   clearError: () => void;
 }
 
+/**
+ * Custom hook for managing tasks and categories
+ * Provides CRUD operations, optimistic updates, and centralized error handling
+ *
+ * @returns {UseTasksReturn} Object containing tasks, categories, loading state, and CRUD functions
+ */
 export const useTasks = (): UseTasksReturn => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -32,19 +38,82 @@ export const useTasks = (): UseTasksReturn => {
     setError(null);
   }, []);
 
-  const refreshTasks = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      const response = await apiService.getTasks();
-      setTasks(response.tasks);
-    } catch (err: unknown) {
-      const apiError = err as { error?: { message?: string } };
-      setError(apiError.error?.message || 'Failed to fetch tasks');
-    } finally {
-      setIsLoading(false);
+  // Centralized error handler with better type safety
+  const handleError = useCallback((err: unknown, defaultMessage: string) => {
+    let errorMessage = defaultMessage;
+
+    if (err && typeof err === 'object') {
+      const apiError = err as {
+        error?: { message?: string };
+        message?: string;
+      };
+      errorMessage =
+        apiError.error?.message || apiError.message || defaultMessage;
+    } else if (typeof err === 'string') {
+      errorMessage = err;
     }
+
+    setError(errorMessage);
+    console.error(defaultMessage, err);
+    return errorMessage;
   }, []);
+
+  const refreshTasks = useCallback(
+    async (retryCount = 0) => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        // Fetch both active and completed tasks since backend defaults to active only
+        const [activeResponse, completedResponse] = await Promise.all([
+          apiService.getTasks({ status: 'active' }),
+          apiService.getTasks({ status: 'completed' }),
+        ]);
+
+        // Combine both arrays and sort by creation date for consistent ordering
+        const allTasks = [
+          ...activeResponse.tasks,
+          ...completedResponse.tasks,
+        ].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+
+        // Only log in development mode
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Fetched tasks:', {
+            active: activeResponse.tasks.length,
+            completed: completedResponse.tasks.length,
+            total: allTasks.length,
+            statuses: allTasks.map((t) => t.status),
+          });
+        }
+
+        setTasks(allTasks);
+      } catch (err: unknown) {
+        // Retry logic for network errors
+        if (retryCount < 2 && err && typeof err === 'object') {
+          const apiError = err as { message?: string };
+          if (
+            apiError.message?.toLowerCase().includes('network') ||
+            apiError.message?.toLowerCase().includes('fetch')
+          ) {
+            console.log(`Retrying task fetch (attempt ${retryCount + 1})`);
+            setTimeout(
+              () => refreshTasks(retryCount + 1),
+              1000 * (retryCount + 1)
+            );
+            return;
+          }
+        }
+
+        handleError(err, 'Failed to fetch tasks');
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [handleError]
+  );
 
   const refreshCategories = useCallback(async () => {
     try {
@@ -52,10 +121,9 @@ export const useTasks = (): UseTasksReturn => {
       const response = await apiService.getCategories();
       setCategories(response.categories);
     } catch (err: unknown) {
-      const apiError = err as { error?: { message?: string } };
-      setError(apiError.error?.message || 'Failed to fetch categories');
+      handleError(err, 'Failed to fetch categories');
     }
-  }, []);
+  }, [handleError]);
 
   const createTask = useCallback(
     async (taskData: CreateTaskRequest): Promise<Task | null> => {
@@ -69,12 +137,11 @@ export const useTasks = (): UseTasksReturn => {
 
         return newTask;
       } catch (err: unknown) {
-        const apiError = err as { error?: { message?: string } };
-        setError(apiError.error?.message || 'Failed to create task');
+        handleError(err, 'Failed to create task');
         return null;
       }
     },
-    []
+    [handleError]
   );
 
   const updateTask = useCallback(
@@ -91,68 +158,92 @@ export const useTasks = (): UseTasksReturn => {
 
         return updatedTask;
       } catch (err: unknown) {
-        const apiError = err as { error?: { message?: string } };
-        setError(apiError.error?.message || 'Failed to update task');
+        handleError(err, 'Failed to update task');
         return null;
       }
     },
-    []
+    [handleError]
   );
 
-  const deleteTask = useCallback(async (id: string): Promise<boolean> => {
-    try {
-      setError(null);
-      await apiService.deleteTask(id);
+  const deleteTask = useCallback(
+    async (id: string): Promise<boolean> => {
+      try {
+        setError(null);
+        await apiService.deleteTask(id);
 
-      // Remove the task from local state (it's archived, not deleted)
-      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+        // Remove the task from local state (it's archived, not deleted)
+        setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
 
-      return true;
-    } catch (err: unknown) {
-      const apiError = err as { error?: { message?: string } };
-      setError(apiError.error?.message || 'Failed to delete task');
-      return false;
-    }
-  }, []);
+        return true;
+      } catch (err: unknown) {
+        handleError(err, 'Failed to delete task');
+        return false;
+      }
+    },
+    [handleError]
+  );
 
   const toggleTaskCompletion = useCallback(
     async (id: string): Promise<Task | null> => {
+      // Optimistic update
+      let originalTask: Task | undefined;
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => {
+          if (task.id === id) {
+            originalTask = task;
+            return {
+              ...task,
+              status: task.status === 'completed' ? 'active' : 'completed',
+            } as Task;
+          }
+          return task;
+        })
+      );
+
       try {
         setError(null);
         const response = await apiService.toggleTaskCompletion(id);
         const updatedTask = response.task;
 
-        // Update the task in local state
+        // Update with actual server response
         setTasks((prevTasks) =>
           prevTasks.map((task) => (task.id === id ? updatedTask : task))
         );
 
         return updatedTask;
       } catch (err: unknown) {
-        const apiError = err as { error?: { message?: string } };
-        setError(apiError.error?.message || 'Failed to toggle task completion');
+        // Revert optimistic update on error
+        if (originalTask) {
+          setTasks((prevTasks) =>
+            prevTasks.map((task) => (task.id === id ? originalTask! : task))
+          );
+        }
+
+        handleError(err, 'Failed to toggle task completion');
         return null;
       }
     },
-    []
+    [handleError]
   );
 
-  const restoreTask = useCallback(async (id: string): Promise<Task | null> => {
-    try {
-      setError(null);
-      const response = await apiService.restoreTask(id);
-      const restoredTask = response.task;
+  const restoreTask = useCallback(
+    async (id: string): Promise<Task | null> => {
+      try {
+        setError(null);
+        const response = await apiService.restoreTask(id);
+        const restoredTask = response.task;
 
-      // Add the restored task back to local state
-      setTasks((prevTasks) => [restoredTask, ...prevTasks]);
+        // Add the restored task back to local state
+        setTasks((prevTasks) => [restoredTask, ...prevTasks]);
 
-      return restoredTask;
-    } catch (err: unknown) {
-      const apiError = err as { error?: { message?: string } };
-      setError(apiError.error?.message || 'Failed to restore task');
-      return null;
-    }
-  }, []);
+        return restoredTask;
+      } catch (err: unknown) {
+        handleError(err, 'Failed to restore task');
+        return null;
+      }
+    },
+    [handleError]
+  );
 
   // Load initial data
   useEffect(() => {
