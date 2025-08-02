@@ -58,7 +58,6 @@ const Dashboard: React.FC = () => {
 
   const handleTaskUpdated = async (_task: Task) => {
     try {
-      // No refresh needed - shared context updates all components automatically
       setNotification({
         type: 'success',
         message: 'Task updated successfully!',
@@ -168,54 +167,6 @@ const Dashboard: React.FC = () => {
         <div
           style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
         >
-          {/* Notification */}
-          {notification && (
-            <div
-              className={`${
-                notification.type === 'success'
-                  ? 'toast-success'
-                  : 'toast-error'
-              } relative animate-slide-down`}
-            >
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  {notification.type === 'success' ? (
-                    <svg
-                      className="w-5 h-5 text-success-500 mr-3"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      className="w-5 h-5 text-error-500 mr-3"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  )}
-                  <span className="text-body">{notification.message}</span>
-                </div>
-                <button
-                  onClick={() => setNotification(null)}
-                  className="btn-ghost btn-sm ml-4"
-                >
-                  Dismiss
-                </button>
-              </div>
-            </div>
-          )}
-
           {/* Error from useTasks hook */}
           {error && (
             <div className="toast-error relative animate-slide-down">
@@ -313,6 +264,72 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       </main>
+
+      {/* Fixed Toast Notification */}
+      {notification && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            zIndex: 9999,
+            backgroundColor:
+              notification.type === 'success' ? '#f0f9ff' : '#fef2f2',
+            border: `3px solid ${notification.type === 'success' ? '#10b981' : '#ef4444'}`,
+            borderRadius: '8px',
+            padding: '16px',
+            minWidth: '300px',
+            boxShadow:
+              '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+            color: '#1f2937',
+          }}
+        >
+          <div className="flex justify-between items-center">
+            <div className="flex items-center">
+              {notification.type === 'success' ? (
+                <svg
+                  className="w-5 h-5 text-green-500 mr-3"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  className="w-5 h-5 text-red-500 mr-3"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              )}
+              <span className="text-gray-800 dark:text-gray-200 font-medium">
+                {notification.message}
+              </span>
+            </div>
+            <button
+              onClick={() => setNotification(null)}
+              className="ml-4 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Category Manager Modal */}
       <CategoryManager
