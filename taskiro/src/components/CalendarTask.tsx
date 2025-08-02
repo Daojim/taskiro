@@ -74,7 +74,7 @@ const CalendarTask: React.FC<CalendarTaskProps> = ({
     [task.id, onUpdate]
   );
 
-  const isCompleted = task.status === 'completed';
+  const isCompleted = task.status.toLowerCase() === 'completed';
   const taskStyles = getPriorityStyles(task.priority, isCompleted);
 
   return (

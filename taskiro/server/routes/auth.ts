@@ -38,13 +38,14 @@ const PROFILE_USER_SELECT = {
   updatedAt: true,
 } as const;
 
-// Rate limiting for auth endpoints (relaxed for development)
+// Rate limiting for auth endpoints - disabled for development
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // increased limit for development testing
+  max: 10000, // very high limit for development
   message: 'Too many authentication attempts, please try again later.',
   standardHeaders: true,
   legacyHeaders: false,
+  skip: () => process.env.NODE_ENV === 'development', // Skip in development
 });
 
 // User registration

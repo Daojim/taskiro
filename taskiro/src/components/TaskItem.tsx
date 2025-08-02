@@ -11,7 +11,7 @@ import type {
 interface TaskItemProps {
   task: Task;
   categories: Category[];
-  onToggleCompletion: (taskId: string) => void;
+  onToggleCompletion: (taskId: string) => Promise<void>;
   onUpdate: (taskId: string, updates: UpdateTaskRequest) => void;
   onDelete: (taskId: string) => void;
   onError?: (error: string) => void;
@@ -38,6 +38,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
   });
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deletedTask, setDeletedTask] = useState<Task | null>(null);
+  const [isToggling, setIsToggling] = useState(false);
 
   const titleInputRef = useRef<HTMLInputElement>(null);
   const descriptionInputRef = useRef<HTMLTextAreaElement>(null);
@@ -45,7 +46,6 @@ const TaskItem: React.FC<TaskItemProps> = ({
   // Mobile gesture support
   const {
     swipeGesture,
-    tapGesture,
     swipeStyle,
     gestureState,
     handleUndo,
@@ -154,9 +154,65 @@ const TaskItem: React.FC<TaskItemProps> = ({
     [handleSaveEdit, handleCancelEdit]
   );
 
-  const handleToggleCompletion = useCallback(() => {
-    onToggleCompletion(task.id);
-  }, [task.id, onToggleCompletion]);
+  const handleToggleCompletion = useCallback(
+    async (e: React.MouseEvent<HTMLDivElement>) => {
+      // Prevent all possible default behaviors
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.nativeEvent) {
+        e.nativeEvent.preventDefault();
+        e.nativeEvent.stopImmediatePropagation();
+      }
+
+      // Prevent any potential form submission or navigation
+      if (e.currentTarget.closest('form')) {
+        return false;
+      }
+
+      if (isToggling) return; // Prevent rapid clicking
+
+      setIsToggling(true);
+      try {
+        await onToggleCompletion(task.id);
+      } finally {
+        // Add a small delay to make the transition feel smoother
+        setTimeout(() => setIsToggling(false), 200);
+      }
+
+      return false; // Extra prevention
+    },
+    [task.id, onToggleCompletion, isToggling]
+  );
+
+  const handleTitleClick = useCallback(
+    async (e: React.MouseEvent) => {
+      // Prevent all possible default behaviors
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.nativeEvent) {
+        e.nativeEvent.preventDefault();
+        e.nativeEvent.stopImmediatePropagation();
+      }
+
+      // Prevent any potential form submission or navigation
+      if (e.currentTarget.closest('form')) {
+        return false;
+      }
+
+      if (isToggling) return; // Prevent rapid clicking
+
+      setIsToggling(true);
+      try {
+        await onToggleCompletion(task.id);
+      } finally {
+        // Add a small delay to make the transition feel smoother
+        setTimeout(() => setIsToggling(false), 200);
+      }
+
+      return false; // Extra prevention
+    },
+    [task.id, onToggleCompletion, isToggling]
+  );
 
   // Handle undo delete
   const handleUndoDelete = useCallback(() => {
@@ -221,20 +277,21 @@ const TaskItem: React.FC<TaskItemProps> = ({
   const isOverdue =
     task.dueDate &&
     new Date(task.dueDate) < new Date() &&
-    task.status !== 'completed';
+    task.status.toLowerCase() !== 'completed';
 
   return (
     <>
       <AnimatedDiv
         {...swipeGesture()}
-        {...tapGesture()}
         style={swipeStyle}
         data-status={task.status}
         data-priority={task.priority}
         data-task-id={task.id}
         className={`task-card touch-pan-y select-none relative gesture-active ${
-          task.status === 'completed' ? 'task-card-completed' : ''
+          task.status.toLowerCase() === 'completed' ? 'task-card-completed' : ''
         } ${isOverdue ? 'task-card-overdue' : ''} ${
+          isToggling ? 'task-toggling' : ''
+        } ${
           task.priority === 'high'
             ? 'task-card-priority-high'
             : task.priority === 'medium'
@@ -266,13 +323,21 @@ const TaskItem: React.FC<TaskItemProps> = ({
             {/* Title with Checkbox */}
             <div className="mb-2 flex items-center space-x-2">
               {/* Completion Checkbox */}
-              <div className="flex-shrink-0">
+              <div
+                className="flex-shrink-0 cursor-pointer"
+                onClick={handleToggleCompletion}
+                onMouseDown={(e) => e.preventDefault()}
+                onTouchStart={(e) => e.preventDefault()}
+              >
                 <input
                   type="checkbox"
-                  checked={task.status === 'completed'}
-                  data-checked={task.status === 'completed'}
-                  onChange={handleToggleCompletion}
-                  className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 mobile-focus"
+                  checked={task.status.toLowerCase() === 'completed'}
+                  data-checked={task.status.toLowerCase() === 'completed'}
+                  disabled={isToggling}
+                  readOnly
+                  className={`h-4 w-4 sm:h-5 sm:w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 mobile-focus transition-opacity duration-200 pointer-events-none ${
+                    isToggling ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
                 />
               </div>
 
@@ -295,9 +360,9 @@ const TaskItem: React.FC<TaskItemProps> = ({
                   />
                 ) : (
                   <h4
-                    onClick={handleToggleCompletion}
+                    onClick={handleTitleClick}
                     className={`text-heading-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700-50 px-2 py-1 rounded-lg transition-all duration-250 ${
-                      task.status === 'completed'
+                      task.status.toLowerCase() === 'completed'
                         ? 'line-through text-gray-500 dark:text-gray-400'
                         : 'text-gray-900 dark:text-white hover-lift'
                     }`}
@@ -517,4 +582,21 @@ const TaskItem: React.FC<TaskItemProps> = ({
   );
 };
 
-export default TaskItem;
+export default React.memo(TaskItem, (prevProps, nextProps) => {
+  // Only re-render if the task data has actually changed
+  const prevTask = prevProps.task;
+  const nextTask = nextProps.task;
+
+  return (
+    prevTask.id === nextTask.id &&
+    prevTask.status === nextTask.status &&
+    prevTask.title === nextTask.title &&
+    prevTask.description === nextTask.description &&
+    prevTask.dueDate === nextTask.dueDate &&
+    prevTask.dueTime === nextTask.dueTime &&
+    prevTask.priority === nextTask.priority &&
+    prevTask.categoryId === nextTask.categoryId &&
+    prevTask.updatedAt === nextTask.updatedAt &&
+    prevProps.categories.length === nextProps.categories.length
+  );
+});

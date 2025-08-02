@@ -6,7 +6,7 @@ import React, {
   useEffect,
 } from 'react';
 
-import { useTasks } from '../hooks/useTasks';
+import { useTaskContext } from '../contexts/TaskContext';
 import { useMobileGestures } from '../hooks/useMobileGestures';
 import TaskItem from './TaskItem';
 import TaskFilters from './TaskFilters';
@@ -51,7 +51,7 @@ const TaskList: React.FC<TaskListProps> = ({
     restoreTask,
     refreshTasks,
     error,
-  } = useTasks();
+  } = useTaskContext();
   // Theme is available if needed for future enhancements
   // const { theme } = useTheme();
 
@@ -335,7 +335,7 @@ const TaskList: React.FC<TaskListProps> = ({
           <div className="animate-fade-in">
             {filteredAndSortedTasks.map((task) => (
               <TaskItem
-                key={task.id}
+                key={`${task.id}-${task.updatedAt || task.createdAt}`}
                 task={task}
                 categories={categories}
                 onToggleCompletion={handleToggleCompletion}

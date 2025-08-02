@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { apiService } from '../services/api';
 import type {
   Task,
@@ -33,6 +33,9 @@ export const useTasks = (): UseTasksReturn => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Prevent duplicate calls
+  const pendingCallsRef = useRef<Set<string>>(new Set());
 
   const clearError = useCallback(() => {
     setError(null);
@@ -185,42 +188,69 @@ export const useTasks = (): UseTasksReturn => {
 
   const toggleTaskCompletion = useCallback(
     async (id: string): Promise<Task | null> => {
-      // Optimistic update
+      // Prevent duplicate calls for the same task
+      if (pendingCallsRef.current.has(id)) {
+        console.log(`Skipping duplicate toggle call for task ${id}`);
+        return null;
+      }
+
+      pendingCallsRef.current.add(id);
+
+      // Optimistic update - create new task object to minimize re-renders
       let originalTask: Task | undefined;
-      setTasks((prevTasks) =>
-        prevTasks.map((task) => {
-          if (task.id === id) {
-            originalTask = task;
-            return {
-              ...task,
-              status: task.status === 'completed' ? 'active' : 'completed',
-            } as Task;
-          }
-          return task;
-        })
-      );
+      setTasks((prevTasks) => {
+        const taskIndex = prevTasks.findIndex((task) => task.id === id);
+        if (taskIndex === -1) return prevTasks;
+
+        originalTask = prevTasks[taskIndex];
+        const newTask = {
+          ...originalTask,
+          status:
+            originalTask.status.toLowerCase() === 'completed'
+              ? 'active'
+              : 'completed',
+        } as Task;
+
+        // Create new array with only the changed task replaced
+        const newTasks = [...prevTasks];
+        newTasks[taskIndex] = newTask;
+        return newTasks;
+      });
 
       try {
         setError(null);
         const response = await apiService.toggleTaskCompletion(id);
         const updatedTask = response.task;
 
-        // Update with actual server response
-        setTasks((prevTasks) =>
-          prevTasks.map((task) => (task.id === id ? updatedTask : task))
-        );
+        // Update with actual server response - targeted update
+        setTasks((prevTasks) => {
+          const taskIndex = prevTasks.findIndex((task) => task.id === id);
+          if (taskIndex === -1) return prevTasks;
+
+          const newTasks = [...prevTasks];
+          newTasks[taskIndex] = updatedTask;
+          return newTasks;
+        });
 
         return updatedTask;
       } catch (err: unknown) {
-        // Revert optimistic update on error
+        // Revert optimistic update on error - targeted update
         if (originalTask) {
-          setTasks((prevTasks) =>
-            prevTasks.map((task) => (task.id === id ? originalTask! : task))
-          );
+          setTasks((prevTasks) => {
+            const taskIndex = prevTasks.findIndex((task) => task.id === id);
+            if (taskIndex === -1) return prevTasks;
+
+            const newTasks = [...prevTasks];
+            newTasks[taskIndex] = originalTask!;
+            return newTasks;
+          });
         }
 
         handleError(err, 'Failed to toggle task completion');
         return null;
+      } finally {
+        // Remove from pending calls
+        pendingCallsRef.current.delete(id);
       }
     },
     [handleError]

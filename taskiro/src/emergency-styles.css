@@ -1943,11 +1943,13 @@ input[type='checkbox']:focus {
 .task-card-completed {
   opacity: 0.75 !important;
   background-color: #f9fafb !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .task-card-completed h4 {
   text-decoration: line-through !important;
   color: #6b7280 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .task-card-completed p {

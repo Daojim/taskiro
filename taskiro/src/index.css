@@ -142,23 +142,47 @@ nav {
   transform: translateY(-2px) !important;
 }
 
-/* Task completion styles */
+/* Task completion styles with smooth transitions */
 .line-through {
   text-decoration: line-through !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .text-gray-500 {
   color: #6b7280 !important;
+  transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .dark .text-gray-400 {
   color: #9ca3af !important;
+  transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .text-gray-900 {
   color: #111827 !important;
+  transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .dark .text-white {
   color: #ffffff !important;
+  transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Smooth task state transitions */
+.task-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  touch-action: none !important; /* Fix gesture warnings */
+}
+
+.task-card h4 {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Task toggling state */
+.task-toggling {
+  pointer-events: none !important;
+}
+
+.task-toggling * {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }

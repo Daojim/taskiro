@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { useTasks } from '../hooks/useTasks';
+import { useTaskContext } from '../contexts/TaskContext';
 import CalendarGrid from './CalendarGrid';
 import CalendarHeader from './CalendarHeader';
 import type { Task, CreateTaskRequest } from '../types/task';
@@ -26,7 +26,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
     deleteTask,
     createTask,
     toggleTaskCompletion,
-  } = useTasks();
+  } = useTaskContext();
 
   // Current month/year state
   const [currentDate, setCurrentDate] = useState(new Date());

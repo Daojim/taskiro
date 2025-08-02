@@ -26,13 +26,16 @@ app.use(
   })
 );
 
-// Rate limiting
+// Rate limiting - disabled for development
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: 10000, // very high limit for development
   message: 'Too many requests from this IP, please try again later.',
 });
-app.use(limiter);
+// Disable rate limiting in development
+if (process.env.NODE_ENV !== 'development') {
+  app.use(limiter);
+}
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));

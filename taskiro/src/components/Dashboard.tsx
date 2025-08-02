@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { useTasks } from '../hooks/useTasks';
+import { useTaskContext } from '../contexts/TaskContext';
 import {
   ListBulletIcon,
   CalendarDaysIcon,
@@ -26,7 +26,7 @@ const Dashboard: React.FC = () => {
     refreshCategories,
     refreshTasks,
     createTask,
-  } = useTasks();
+  } = useTaskContext();
   const [notification, setNotification] = useState<{
     type: 'success' | 'error';
     message: string;
@@ -45,7 +45,7 @@ const Dashboard: React.FC = () => {
   const handleTaskCreated = async (taskData: CreateTaskRequest) => {
     try {
       await createTask(taskData);
-      await refreshTasks(); // Refresh the task list
+      // No refresh needed - shared context updates all components automatically
       setNotification({
         type: 'success',
         message: 'Task created successfully!',
@@ -58,7 +58,7 @@ const Dashboard: React.FC = () => {
 
   const handleTaskUpdated = async (_task: Task) => {
     try {
-      await refreshTasks(); // Refresh the task list
+      // No refresh needed - shared context updates all components automatically
       setNotification({
         type: 'success',
         message: 'Task updated successfully!',
@@ -71,7 +71,7 @@ const Dashboard: React.FC = () => {
 
   const handleTaskDeleted = async (_taskId: string) => {
     try {
-      await refreshTasks(); // Refresh the task list
+      // No refresh needed - shared context updates all components automatically
       setNotification({
         type: 'success',
         message: 'Task archived successfully!',
