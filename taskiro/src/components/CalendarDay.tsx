@@ -69,21 +69,49 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
   return (
     <>
       <div
-        className={`
-          min-h-[120px] bg-white dark:bg-gray-800 p-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors relative group
-          ${!isCurrentMonth ? 'text-gray-400 dark:text-gray-600' : ''}
-          ${isToday ? 'ring-2 ring-blue-500 ring-inset' : ''}
-        `}
+        style={{
+          minHeight: '120px',
+          backgroundColor: '#ffffff',
+          padding: '8px',
+          cursor: 'pointer',
+          position: 'relative',
+          border: isToday ? '2px solid #3b82f6' : 'none',
+          opacity: !isCurrentMonth ? 0.5 : 1,
+        }}
         onClick={handleDayClick}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = '#f9fafb';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = '#ffffff';
+        }}
       >
         {/* Day number */}
-        <div className="flex items-center justify-between mb-1">
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '4px',
+          }}
+        >
           <span
-            className={`
-              text-sm font-medium
-              ${isToday ? 'bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center' : ''}
-              ${!isCurrentMonth ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-white'}
-            `}
+            style={{
+              fontSize: '14px',
+              fontWeight: '500',
+              backgroundColor: isToday ? '#3b82f6' : 'transparent',
+              color: isToday
+                ? '#ffffff'
+                : !isCurrentMonth
+                  ? '#9ca3af'
+                  : '#111827',
+              borderRadius: isToday ? '50%' : '0',
+              width: isToday ? '24px' : 'auto',
+              height: isToday ? '24px' : 'auto',
+              display: isToday ? 'flex' : 'inline',
+              alignItems: isToday ? 'center' : 'normal',
+              justifyContent: isToday ? 'center' : 'normal',
+            }}
           >
             {dayNumber}
           </span>
