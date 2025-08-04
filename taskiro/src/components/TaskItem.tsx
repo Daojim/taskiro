@@ -97,14 +97,14 @@ const TaskItem: React.FC<TaskItemProps> = ({
       categoryId: task.categoryId || '',
     });
   }, [
-    task.id,
-    task.title,
+    editingField,
+    task.categoryId,
     task.description,
     task.dueDate,
     task.dueTime,
+    task.id,
     task.priority,
-    task.categoryId,
-    editingField, // Include editingField to prevent resets during editing
+    task.title,
   ]);
 
   // Handle inline editing
@@ -173,7 +173,14 @@ const TaskItem: React.FC<TaskItemProps> = ({
 
         // Always include dueTime if the task has one (preserve existing time when updating date)
         if (editValues.dueTime || task.dueTime) {
-          updates.dueTime = editValues.dueTime || task.dueTime;
+          const timeValue = editValues.dueTime || task.dueTime;
+          // Extract just the HH:MM part if it's a full ISO string
+          if (timeValue && timeValue.includes('T')) {
+            const timeMatch = timeValue.match(/T(\d{2}:\d{2})/);
+            updates.dueTime = timeMatch ? timeMatch[1] : timeValue;
+          } else {
+            updates.dueTime = timeValue || '';
+          }
         }
 
         // Handle dueDate conversion
@@ -182,11 +189,6 @@ const TaskItem: React.FC<TaskItemProps> = ({
           const dateStr = editValues.dueDate + 'T00:00:00.000Z';
           const date = new Date(dateStr);
           updates.dueDate = date.toISOString();
-          console.log('Date conversion:', {
-            input: editValues.dueDate,
-            utcDate: date.toString(),
-            output: updates.dueDate,
-          });
         }
 
         // Validate title if we're editing it
@@ -203,7 +205,17 @@ const TaskItem: React.FC<TaskItemProps> = ({
         }
       }
     },
-    [editValues, task.id, onUpdate, onError]
+    [
+      task.id,
+      task.title,
+      task.dueDate,
+      task.dueTime,
+      task.priority,
+      task.categoryId,
+      editValues,
+      onUpdate,
+      onError,
+    ]
   );
 
   const handleKeyPress = useCallback(
