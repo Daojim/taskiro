@@ -23,6 +23,26 @@ const CalendarTask: React.FC<CalendarTaskProps> = ({
   const [showEditModal, setShowEditModal] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
+  // Format time for display (same as TaskItem)
+  const formatTime = (timeString: string) => {
+    if (timeString.includes('T')) {
+      // Extract time from datetime string
+      const time = timeString.split('T')[1].split(':');
+      const hours = parseInt(time[0]);
+      const minutes = time[1];
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const displayHour = hours % 12 || 12;
+      return `${displayHour}:${minutes} ${ampm}`;
+    } else {
+      // Handle HH:MM format
+      const [hours, minutes] = timeString.split(':');
+      const hour = parseInt(hours);
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const displayHour = hour % 12 || 12;
+      return `${displayHour}:${minutes} ${ampm}`;
+    }
+  };
+
   // Get priority-based styling
   const getPriorityStyles = (priority: string, isCompleted: boolean) => {
     const baseStyles = 'border-l-2 pl-2 pr-1 py-1 text-xs rounded-r';
@@ -90,7 +110,9 @@ const CalendarTask: React.FC<CalendarTaskProps> = ({
           <div className="flex-1 min-w-0">
             <div className="truncate font-medium">{task.title}</div>
             {task.dueTime && (
-              <div className="text-xs opacity-75 mt-0.5">{task.dueTime}</div>
+              <div className="text-xs opacity-75 mt-0.5">
+                {formatTime(task.dueTime)}
+              </div>
             )}
           </div>
 
