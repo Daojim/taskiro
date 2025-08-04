@@ -178,6 +178,107 @@ const Dashboard: React.FC = () => {
             />
           </div>
 
+          {/* Date Picker Test Section */}
+          <div
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '12px',
+              boxShadow:
+                '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+              border: '1px solid #e5e7eb',
+              padding: '1.5rem',
+            }}
+          >
+            <h3
+              style={{
+                marginBottom: '1rem',
+                fontSize: '1.125rem',
+                fontWeight: '600',
+              }}
+            >
+              🧪 Date Picker Test Section
+            </h3>
+            <div
+              style={{
+                display: 'flex',
+                gap: '1rem',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+              }}
+            >
+              <div>
+                <label
+                  style={{
+                    display: 'block',
+                    marginBottom: '0.5rem',
+                    fontSize: '0.875rem',
+                    fontWeight: '500',
+                  }}
+                >
+                  Test 1: Tailwind Classes (like modal)
+                </label>
+                <input
+                  type="date"
+                  defaultValue="2025-08-05"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                  style={{ width: '140px' }}
+                />
+              </div>
+              <div>
+                <label
+                  style={{
+                    display: 'block',
+                    marginBottom: '0.5rem',
+                    fontSize: '0.875rem',
+                    fontWeight: '500',
+                  }}
+                >
+                  Test 2: Minimal Inline Styles
+                </label>
+                <input
+                  type="date"
+                  defaultValue="2025-08-05"
+                  style={{
+                    fontSize: '12px',
+                    width: '140px',
+                    padding: '4px 8px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '4px',
+                    backgroundColor: '#ffffff',
+                    color: '#111827',
+                  }}
+                />
+              </div>
+              <div>
+                <label
+                  style={{
+                    display: 'block',
+                    marginBottom: '0.5rem',
+                    fontSize: '0.875rem',
+                    fontWeight: '500',
+                  }}
+                >
+                  Test 3: Browser Default
+                </label>
+                <input
+                  type="date"
+                  defaultValue="2025-08-05"
+                  style={{ all: 'revert', width: '140px' }}
+                />
+              </div>
+            </div>
+            <p
+              style={{
+                marginTop: '1rem',
+                fontSize: '0.875rem',
+                color: '#6b7280',
+              }}
+            >
+              Test which calendar buttons work here vs. in the task list. This
+              helps isolate the issue.
+            </p>
+          </div>
+
           {/* View Toggle */}
           <div className="flex items-center justify-center">
             <div className="card p-1 flex animate-fade-in">

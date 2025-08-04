@@ -489,31 +489,46 @@ const TaskItem: React.FC<TaskItemProps> = ({
               {/* Due Date */}
               <div className="flex items-center space-x-1">
                 {editingField === 'dueDate' ? (
-                  <input
-                    type="date"
-                    value={editValues.dueDate}
-                    onChange={(e) => {
-                      setEditValues((prev) => ({
-                        ...prev,
-                        dueDate: e.target.value,
-                      }));
-                    }}
-                    onBlur={() => {
-                      // Always save on blur, let the server handle validation
-                      handleSaveEdit('dueDate');
-                    }}
-                    onKeyDown={(e) => handleKeyPress(e, 'dueDate')}
+                  <div
                     style={{
-                      fontSize: '12px',
-                      padding: '4px 8px',
-                      border: '1px solid #d1d5db',
-                      borderRadius: '4px',
-                      backgroundColor: '#ffffff',
-                      color: '#111827',
-                      width: '140px',
+                      position: 'relative',
+                      zIndex: 1000,
+                      // Completely isolate from gesture system
+                      pointerEvents: 'auto',
+                      touchAction: 'auto',
                     }}
-                    autoFocus
-                  />
+                    onMouseDown={(e) => e.stopPropagation()}
+                    onTouchStart={(e) => e.stopPropagation()}
+                    onTouchMove={(e) => e.stopPropagation()}
+                    onTouchEnd={(e) => e.stopPropagation()}
+                    onClick={(e) => e.stopPropagation()}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onPointerMove={(e) => e.stopPropagation()}
+                    onPointerUp={(e) => e.stopPropagation()}
+                  >
+                    <input
+                      type="date"
+                      value={editValues.dueDate}
+                      onChange={(e) => {
+                        setEditValues((prev) => ({
+                          ...prev,
+                          dueDate: e.target.value,
+                        }));
+                      }}
+                      onBlur={() => {
+                        // Always save on blur, let the server handle validation
+                        handleSaveEdit('dueDate');
+                      }}
+                      onKeyDown={(e) => handleKeyPress(e, 'dueDate')}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                      style={{
+                        width: '140px',
+                        pointerEvents: 'auto',
+                        touchAction: 'auto',
+                      }}
+                      autoFocus
+                    />
+                  </div>
                 ) : (
                   <span
                     onClick={() => handleStartEdit('dueDate')}
