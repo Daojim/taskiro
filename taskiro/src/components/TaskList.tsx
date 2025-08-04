@@ -69,7 +69,6 @@ const TaskList: React.FC<TaskListProps> = ({
 
   // Pull-to-refresh gesture support
   const {
-    pullRefreshGesture,
     pullStyle,
     gestureState: pullGestureState,
     AnimatedDiv: AnimatedPullDiv,

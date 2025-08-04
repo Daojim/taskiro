@@ -60,24 +60,21 @@ const TaskItem: React.FC<TaskItemProps> = ({
   const descriptionInputRef = useRef<HTMLTextAreaElement>(null);
 
   // Mobile gesture support
-  const {
-    swipeGesture,
-    swipeStyle,
-    gestureState,
-    handleUndo,
-    hideUndo,
-    AnimatedDiv,
-  } = useMobileGestures({
-    onSwipeDelete: () => {
-      setDeletedTask(task);
-      onDelete(task.id);
-    },
-    // Removed onTap - only checkbox and title should toggle completion
-    swipeThreshold: 100,
-  });
+  const { swipeStyle, gestureState, handleUndo, hideUndo, AnimatedDiv } =
+    useMobileGestures({
+      onSwipeDelete: () => {
+        setDeletedTask(task);
+        onDelete(task.id);
+      },
+      // Removed onTap - only checkbox and title should toggle completion
+      swipeThreshold: 100,
+    });
 
   // Reset edit values when task changes
   useEffect(() => {
+    // Don't reset edit values while actively editing to prevent infinite loops
+    if (editingField) return;
+
     const formatDate = (dateString: string) => {
       if (!dateString) return '';
       try {
@@ -107,6 +104,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
     task.dueTime,
     task.priority,
     task.categoryId,
+    editingField, // Include editingField to prevent resets during editing
   ]);
 
   // Handle inline editing
@@ -173,8 +171,9 @@ const TaskItem: React.FC<TaskItemProps> = ({
           updates.categoryId = editValues.categoryId;
         }
 
-        if (editValues.dueTime) {
-          updates.dueTime = editValues.dueTime;
+        // Always include dueTime if the task has one (preserve existing time when updating date)
+        if (editValues.dueTime || task.dueTime) {
+          updates.dueTime = editValues.dueTime || task.dueTime;
         }
 
         // Handle dueDate conversion
@@ -232,7 +231,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
       }
 
       // Prevent any potential form submission or navigation
-      if (e.currentTarget.closest('form')) {
+      if (e && e.currentTarget.closest('form')) {
         return false;
       }
 
@@ -264,7 +263,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
       }
 
       // Prevent any potential form submission or navigation
-      if (e.currentTarget.closest('form')) {
+      if (e && e.currentTarget.closest('form')) {
         return false;
       }
 
