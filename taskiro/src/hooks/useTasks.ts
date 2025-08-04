@@ -153,6 +153,7 @@ export const useTasks = (): UseTasksReturn => {
         setError(null);
         const response = await apiService.updateTask(id, taskData);
         const updatedTask = response.task;
+        console.log('useTasks updateTask success:', { id, updatedTask });
 
         // Update the task in local state
         setTasks((prevTasks) =>

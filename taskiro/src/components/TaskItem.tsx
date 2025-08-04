@@ -28,13 +28,29 @@ const TaskItem: React.FC<TaskItemProps> = ({
   onRestore,
 }) => {
   const [editingField, setEditingField] = useState<string | null>(null);
-  const [editValues, setEditValues] = useState({
-    title: task.title,
-    description: task.description || '',
-    dueDate: task.dueDate || '',
-    dueTime: task.dueTime || '',
-    priority: task.priority,
-    categoryId: task.categoryId || '',
+  // Initialize edit values with stable function to prevent re-render loops
+  const [editValues, setEditValues] = useState(() => {
+    const formatDate = (dateString: string) => {
+      if (!dateString) return '';
+      try {
+        const date = new Date(dateString);
+        // Use UTC to be consistent with how we save dates
+        const year = date.getUTCFullYear();
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(date.getUTCDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      } catch {
+        return '';
+      }
+    };
+    return {
+      title: task.title,
+      description: task.description || '',
+      dueDate: formatDate(task.dueDate || ''),
+      dueTime: task.dueTime || '',
+      priority: task.priority,
+      categoryId: task.categoryId || '',
+    };
   });
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deletedTask, setDeletedTask] = useState<Task | null>(null);
@@ -62,15 +78,36 @@ const TaskItem: React.FC<TaskItemProps> = ({
 
   // Reset edit values when task changes
   useEffect(() => {
+    const formatDate = (dateString: string) => {
+      if (!dateString) return '';
+      try {
+        const date = new Date(dateString);
+        // Use UTC to be consistent with how we save dates
+        const year = date.getUTCFullYear();
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(date.getUTCDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      } catch {
+        return '';
+      }
+    };
     setEditValues({
       title: task.title,
       description: task.description || '',
-      dueDate: task.dueDate || '',
+      dueDate: formatDate(task.dueDate || ''),
       dueTime: task.dueTime || '',
       priority: task.priority,
       categoryId: task.categoryId || '',
     });
-  }, [task]);
+  }, [
+    task.id,
+    task.title,
+    task.description,
+    task.dueDate,
+    task.dueTime,
+    task.priority,
+    task.categoryId,
+  ]);
 
   // Handle inline editing
   const handleStartEdit = useCallback((field: string) => {
@@ -90,45 +127,73 @@ const TaskItem: React.FC<TaskItemProps> = ({
 
   const handleCancelEdit = useCallback(() => {
     setEditingField(null);
-    // Reset to original values
+    // Reset to original values with proper date formatting
+    const formatDate = (dateString: string) => {
+      if (!dateString) return '';
+      try {
+        const date = new Date(dateString);
+        // Use UTC to be consistent with how we save dates
+        const year = date.getUTCFullYear();
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(date.getUTCDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      } catch {
+        return '';
+      }
+    };
     setEditValues({
       title: task.title,
       description: task.description || '',
-      dueDate: task.dueDate || '',
+      dueDate: formatDate(task.dueDate || ''),
       dueTime: task.dueTime || '',
       priority: task.priority,
       categoryId: task.categoryId || '',
     });
-  }, [task]);
+  }, [
+    task.categoryId,
+    task.description,
+    task.dueDate,
+    task.dueTime,
+    task.priority,
+    task.title,
+  ]); // Only depend on task.id to prevent infinite loops
 
   const handleSaveEdit = useCallback(
     async (field: string) => {
       try {
-        const updates: UpdateTaskRequest = {};
+        // Always include required fields for server validation
+        const updates: UpdateTaskRequest = {
+          title: editValues.title.trim(),
+          description: editValues.description.trim() || undefined,
+          priority: editValues.priority,
+        };
 
-        switch (field) {
-          case 'title':
-            if (editValues.title.trim() === '') {
-              if (onError) onError('Task title cannot be empty');
-              return;
-            }
-            updates.title = editValues.title.trim();
-            break;
-          case 'description':
-            updates.description = editValues.description.trim() || undefined;
-            break;
-          case 'dueDate':
-            updates.dueDate = editValues.dueDate || undefined;
-            break;
-          case 'dueTime':
-            updates.dueTime = editValues.dueTime || undefined;
-            break;
-          case 'priority':
-            updates.priority = editValues.priority;
-            break;
-          case 'categoryId':
-            updates.categoryId = editValues.categoryId || undefined;
-            break;
+        // Add optional fields
+        if (editValues.categoryId) {
+          updates.categoryId = editValues.categoryId;
+        }
+
+        if (editValues.dueTime) {
+          updates.dueTime = editValues.dueTime;
+        }
+
+        // Handle dueDate conversion
+        if (editValues.dueDate) {
+          // Create date in UTC to avoid timezone issues
+          const dateStr = editValues.dueDate + 'T00:00:00.000Z';
+          const date = new Date(dateStr);
+          updates.dueDate = date.toISOString();
+          console.log('Date conversion:', {
+            input: editValues.dueDate,
+            utcDate: date.toString(),
+            output: updates.dueDate,
+          });
+        }
+
+        // Validate title if we're editing it
+        if (field === 'title' && updates.title === '') {
+          if (onError) onError('Task title cannot be empty');
+          return;
         }
 
         await onUpdate(task.id, updates);
@@ -246,12 +311,29 @@ const TaskItem: React.FC<TaskItemProps> = ({
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    if (date.toDateString() === today.toDateString()) {
+    // Compare UTC dates to avoid timezone issues
+    const dateUTC = new Date(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate()
+    );
+    const todayUTC = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    );
+    const tomorrowUTC = new Date(
+      tomorrow.getFullYear(),
+      tomorrow.getMonth(),
+      tomorrow.getDate()
+    );
+
+    if (dateUTC.getTime() === todayUTC.getTime()) {
       return 'Today';
-    } else if (date.toDateString() === tomorrow.toDateString()) {
+    } else if (dateUTC.getTime() === tomorrowUTC.getTime()) {
       return 'Tomorrow';
     } else {
-      return date.toLocaleDateString();
+      return dateUTC.toLocaleDateString();
     }
   };
 
@@ -410,15 +492,27 @@ const TaskItem: React.FC<TaskItemProps> = ({
                   <input
                     type="date"
                     value={editValues.dueDate}
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setEditValues((prev) => ({
                         ...prev,
                         dueDate: e.target.value,
-                      }))
-                    }
-                    onBlur={() => handleSaveEdit('dueDate')}
+                      }));
+                    }}
+                    onBlur={() => {
+                      // Always save on blur, let the server handle validation
+                      handleSaveEdit('dueDate');
+                    }}
                     onKeyDown={(e) => handleKeyPress(e, 'dueDate')}
-                    className="input text-xs"
+                    style={{
+                      fontSize: '12px',
+                      padding: '4px 8px',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '4px',
+                      backgroundColor: '#ffffff',
+                      color: '#111827',
+                      width: '140px',
+                    }}
+                    autoFocus
                   />
                 ) : (
                   <span

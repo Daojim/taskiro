@@ -235,9 +235,16 @@ class ApiService {
     task: UpdateTaskRequest
   ): Promise<{ message: string; task: Task }> {
     try {
+      console.log('Updating task:', { id, task });
       const response = await this.api.put(`/api/tasks/${id}`, task);
+      console.log('Update task success:', response.data);
       return response.data;
     } catch (error: unknown) {
+      console.error('Update task error:', error);
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response?: { data?: any } };
+        console.error('Server response:', axiosError.response?.data);
+      }
       throw this.handleApiError(error);
     }
   }

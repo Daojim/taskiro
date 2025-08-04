@@ -17,10 +17,22 @@ const TaskEditModal: React.FC<TaskEditModalProps> = ({
   onClose,
   onError,
 }) => {
+  // Helper function to format date for input field
+  const formatDateForInput = (dateString: string) => {
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString);
+      // Format as YYYY-MM-DD for HTML date input
+      return date.toISOString().split('T')[0];
+    } catch {
+      return '';
+    }
+  };
+
   const [formData, setFormData] = useState({
     title: task.title,
     description: task.description || '',
-    dueDate: task.dueDate || '',
+    dueDate: formatDateForInput(task.dueDate || ''),
     dueTime: task.dueTime || '',
     priority: task.priority,
     categoryId: task.categoryId || '',
@@ -33,7 +45,7 @@ const TaskEditModal: React.FC<TaskEditModalProps> = ({
     setFormData({
       title: task.title,
       description: task.description || '',
-      dueDate: task.dueDate || '',
+      dueDate: formatDateForInput(task.dueDate || ''),
       dueTime: task.dueTime || '',
       priority: task.priority,
       categoryId: task.categoryId || '',
