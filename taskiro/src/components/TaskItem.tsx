@@ -168,6 +168,34 @@ const TaskItem: React.FC<TaskItemProps> = ({
     task.title,
   ]); // Only depend on task.id to prevent infinite loops
 
+  // Handle removing time specifically
+  const handleRemoveTime = useCallback(async () => {
+    try {
+      const updates: UpdateTaskRequest = {
+        title: task.title,
+        description: task.description || undefined,
+        priority: task.priority,
+      };
+
+      // Add optional fields
+      if (task.categoryId) {
+        updates.categoryId = task.categoryId;
+      }
+
+      // Preserve existing date
+      if (task.dueDate) {
+        updates.dueDate = task.dueDate;
+      }
+      await onUpdate(task.id, updates);
+      setEditingField(null);
+      setEditValues((prev) => ({ ...prev, dueTime: '' }));
+    } catch {
+      if (onError) {
+        onError('Failed to remove time');
+      }
+    }
+  }, [task, onUpdate, onError]);
+
   const handleSaveEdit = useCallback(
     async (field: string) => {
       try {
@@ -183,15 +211,30 @@ const TaskItem: React.FC<TaskItemProps> = ({
           updates.categoryId = editValues.categoryId;
         }
 
-        // Always include dueTime if the task has one (preserve existing time when updating date)
-        if (editValues.dueTime || task.dueTime) {
-          const timeValue = editValues.dueTime || task.dueTime;
-          // Extract just the HH:MM part if it's a full ISO string
-          if (timeValue && timeValue.includes('T')) {
+        // Handle dueTime - allow adding, updating, or removing
+        if (field === 'dueTime') {
+          // When editing time specifically
+          if (editValues.dueTime) {
+            // Adding or updating time
+            const timeValue = editValues.dueTime;
+            if (timeValue.includes('T')) {
+              const timeMatch = timeValue.match(/T(\d{2}:\d{2})/);
+              updates.dueTime = timeMatch ? timeMatch[1] : timeValue;
+            } else {
+              updates.dueTime = timeValue;
+            }
+          } else {
+            // Removing time (empty string)
+            updates.dueTime = '';
+          }
+        } else if (task.dueTime) {
+          // Preserve existing time when updating other fields
+          const timeValue = task.dueTime;
+          if (timeValue.includes('T')) {
             const timeMatch = timeValue.match(/T(\d{2}:\d{2})/);
             updates.dueTime = timeMatch ? timeMatch[1] : timeValue;
           } else {
-            updates.dueTime = timeValue || '';
+            updates.dueTime = timeValue;
           }
         }
 
@@ -217,17 +260,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
         }
       }
     },
-    [
-      task.id,
-      task.title,
-      task.dueDate,
-      task.dueTime,
-      task.priority,
-      task.categoryId,
-      editValues,
-      onUpdate,
-      onError,
-    ]
+    [task.id, task.dueTime, editValues, onUpdate, onError]
   );
 
   const handleKeyPress = useCallback(
@@ -597,9 +630,9 @@ const TaskItem: React.FC<TaskItemProps> = ({
               </div>
 
               {/* Due Time */}
-              {(task.dueTime || editingField === 'dueTime') && (
-                <div className="flex items-center space-x-1">
-                  {editingField === 'dueTime' ? (
+              <div className="flex items-center space-x-1">
+                {editingField === 'dueTime' ? (
+                  <>
                     <input
                       type="time"
                       value={editValues.dueTime}
@@ -613,16 +646,34 @@ const TaskItem: React.FC<TaskItemProps> = ({
                       onKeyDown={(e) => handleKeyPress(e, 'dueTime')}
                       className="input text-xs"
                     />
-                  ) : (
+                    <button
+                      onClick={handleRemoveTime}
+                      className="text-gray-400 hover:text-red-500 text-xs px-1"
+                      title="Remove time"
+                    >
+                      ×
+                    </button>
+                  </>
+                ) : (
+                  <>
                     <span
                       onClick={() => handleStartEdit('dueTime')}
                       className="badge badge-gray cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale"
                     >
                       {task.dueTime ? formatTime(task.dueTime) : 'Set time'}
                     </span>
-                  )}
-                </div>
-              )}
+                    {task.dueTime && (
+                      <button
+                        onClick={handleRemoveTime}
+                        className="text-gray-400 hover:text-red-500 text-xs px-1 ml-1"
+                        title="Remove time"
+                      >
+                        ×
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
 
             {/* Priority and Category */}
