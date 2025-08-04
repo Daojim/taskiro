@@ -27,6 +27,18 @@ const TaskItem: React.FC<TaskItemProps> = ({
   onError,
   onRestore,
 }) => {
+  // Helper function to format time for input field
+  const formatTimeForInput = (timeString: string) => {
+    if (!timeString) return '';
+    if (timeString.includes('T')) {
+      // Extract HH:MM from ISO string like "1970-01-01T11:00:00.000Z"
+      const timeMatch = timeString.match(/T(\d{2}:\d{2})/);
+      return timeMatch ? timeMatch[1] : '';
+    }
+    // Already in HH:MM format
+    return timeString;
+  };
+
   const [editingField, setEditingField] = useState<string | null>(null);
   // Initialize edit values with stable function to prevent re-render loops
   const [editValues, setEditValues] = useState(() => {
@@ -47,7 +59,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
       title: task.title,
       description: task.description || '',
       dueDate: formatDate(task.dueDate || ''),
-      dueTime: task.dueTime || '',
+      dueTime: formatTimeForInput(task.dueTime || ''),
       priority: task.priority,
       categoryId: task.categoryId || '',
     };
@@ -92,7 +104,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
       title: task.title,
       description: task.description || '',
       dueDate: formatDate(task.dueDate || ''),
-      dueTime: task.dueTime || '',
+      dueTime: formatTimeForInput(task.dueTime || ''),
       priority: task.priority,
       categoryId: task.categoryId || '',
     });
