@@ -99,6 +99,8 @@ const TaskList: React.FC<TaskListProps> = ({
 
   // Filter and sort tasks based on current filters
   const filteredAndSortedTasks = useMemo(() => {
+    // Debug: Filtering tasks
+
     const filtered = tasks.filter((task) => {
       // Search filter
       if (filters.search) {
@@ -120,17 +122,24 @@ const TaskList: React.FC<TaskListProps> = ({
         }
       }
 
-      // Priority filter
-      if (filters.priority && task.priority !== filters.priority) {
-        return false;
+      // Priority filter - add debugging and ensure case-insensitive comparison
+      if (filters.priority) {
+        const taskPriority = task.priority?.toLowerCase();
+        const filterPriority = filters.priority.toLowerCase();
+        // Debug: Priority filter check
+        if (taskPriority !== filterPriority) {
+          return false;
+        }
       }
 
-      // Status filter - convert to lowercase for comparison
-      if (
-        filters.status &&
-        task.status.toLowerCase() !== filters.status.toLowerCase()
-      ) {
-        return false;
+      // Status filter - ensure case-insensitive comparison
+      if (filters.status) {
+        const taskStatus = task.status?.toLowerCase();
+        const filterStatus = filters.status.toLowerCase();
+        // Debug: Status filter check
+        if (taskStatus !== filterStatus) {
+          return false;
+        }
       }
 
       return true;
@@ -169,6 +178,8 @@ const TaskList: React.FC<TaskListProps> = ({
 
       return filters.sortOrder === 'desc' ? -comparison : comparison;
     });
+
+    // Debug: Filtered and sorted results
 
     return filtered;
   }, [tasks, filters]);
@@ -262,9 +273,8 @@ const TaskList: React.FC<TaskListProps> = ({
   return (
     <AnimatedPullDiv
       ref={containerRef}
-      {...pullRefreshGesture()}
       className="card relative overflow-hidden pull-refresh-container task-list-mobile sm:task-list-tablet animate-fade-in"
-      style={{ touchAction: 'pan-x pan-down' }}
+      style={{ touchAction: 'auto' }}
     >
       {/* Pull to Refresh Indicator */}
       <PullToRefresh
@@ -335,7 +345,7 @@ const TaskList: React.FC<TaskListProps> = ({
           <div className="animate-fade-in">
             {filteredAndSortedTasks.map((task) => (
               <TaskItem
-                key={`${task.id}-${task.updatedAt || task.createdAt}`}
+                key={task.id}
                 task={task}
                 categories={categories}
                 onToggleCompletion={handleToggleCompletion}

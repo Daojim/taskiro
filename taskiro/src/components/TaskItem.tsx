@@ -220,13 +220,15 @@ const TaskItem: React.FC<TaskItemProps> = ({
   );
 
   const handleToggleCompletion = useCallback(
-    async (e: React.MouseEvent<HTMLDivElement>) => {
+    async (e?: React.MouseEvent<HTMLDivElement> | React.PointerEvent) => {
       // Prevent all possible default behaviors
-      e.preventDefault();
-      e.stopPropagation();
-      if (e.nativeEvent) {
-        e.nativeEvent.preventDefault();
-        e.nativeEvent.stopImmediatePropagation();
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.nativeEvent) {
+          e.nativeEvent.preventDefault();
+          e.nativeEvent.stopImmediatePropagation();
+        }
       }
 
       // Prevent any potential form submission or navigation
@@ -250,13 +252,15 @@ const TaskItem: React.FC<TaskItemProps> = ({
   );
 
   const handleTitleClick = useCallback(
-    async (e: React.MouseEvent) => {
+    async (e?: React.MouseEvent | React.PointerEvent) => {
       // Prevent all possible default behaviors
-      e.preventDefault();
-      e.stopPropagation();
-      if (e.nativeEvent) {
-        e.nativeEvent.preventDefault();
-        e.nativeEvent.stopImmediatePropagation();
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.nativeEvent) {
+          e.nativeEvent.preventDefault();
+          e.nativeEvent.stopImmediatePropagation();
+        }
       }
 
       // Prevent any potential form submission or navigation
@@ -364,12 +368,11 @@ const TaskItem: React.FC<TaskItemProps> = ({
   return (
     <>
       <AnimatedDiv
-        {...swipeGesture()}
         style={swipeStyle}
         data-status={task.status}
         data-priority={task.priority}
         data-task-id={task.id}
-        className={`task-card touch-pan-y select-none relative gesture-active ${
+        className={`task-card touch-pan-y select-none relative ${
           task.status.toLowerCase() === 'completed' ? 'task-card-completed' : ''
         } ${isOverdue ? 'task-card-overdue' : ''} ${
           isToggling ? 'task-toggling' : ''
@@ -382,6 +385,8 @@ const TaskItem: React.FC<TaskItemProps> = ({
         } ${gestureState.isDeleting ? 'pointer-events-none swipe-delete-active' : ''} 
         task-item-mobile sm:task-item-tablet animate-fade-in`}
       >
+        {/* Gesture system temporarily disabled to test click responsiveness */}
+
         {/* Swipe delete indicator */}
         <div className="swipe-delete-indicator">
           <svg
@@ -410,6 +415,17 @@ const TaskItem: React.FC<TaskItemProps> = ({
                 onClick={handleToggleCompletion}
                 onMouseDown={(e) => e.preventDefault()}
                 onTouchStart={(e) => e.preventDefault()}
+                onPointerDown={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                }}
+                onPointerUp={(e) => {
+                  e.stopPropagation();
+                  // Trigger action immediately without going through the click handler
+                  if (!isToggling) {
+                    onToggleCompletion(task.id);
+                  }
+                }}
               >
                 <input
                   type="checkbox"
@@ -443,6 +459,17 @@ const TaskItem: React.FC<TaskItemProps> = ({
                 ) : (
                   <h4
                     onClick={handleTitleClick}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onPointerUp={(e) => {
+                      e.stopPropagation();
+                      // Trigger action immediately without going through the click handler
+                      if (!isToggling) {
+                        setIsToggling(true);
+                        onToggleCompletion(task.id).finally(() =>
+                          setIsToggling(false)
+                        );
+                      }
+                    }}
                     className={`text-heading-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700-50 px-2 py-1 rounded-lg transition-all duration-250 ${
                       task.status.toLowerCase() === 'completed'
                         ? 'line-through text-gray-500 dark:text-gray-400'
@@ -476,6 +503,11 @@ const TaskItem: React.FC<TaskItemProps> = ({
                 ) : (
                   <p
                     onClick={() => handleStartEdit('description')}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onPointerUp={(e) => {
+                      e.stopPropagation();
+                      handleStartEdit('description');
+                    }}
                     className="text-body cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700-50 px-2 py-1 rounded-lg transition-all duration-250 hover-lift"
                   >
                     {task.description || 'Add description...'}
@@ -593,6 +625,11 @@ const TaskItem: React.FC<TaskItemProps> = ({
               ) : (
                 <span
                   onClick={() => handleStartEdit('priority')}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onPointerUp={(e) => {
+                    e.stopPropagation();
+                    handleStartEdit('priority');
+                  }}
                   className={`badge cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale ${
                     task.priority === 'high'
                       ? 'badge-error'
@@ -650,6 +687,11 @@ const TaskItem: React.FC<TaskItemProps> = ({
             {/* Delete Button */}
             <button
               onClick={handleDelete}
+              onPointerDown={(e) => e.stopPropagation()}
+              onPointerUp={(e) => {
+                e.stopPropagation();
+                handleDelete();
+              }}
               className={`p-2 rounded-lg transition-all duration-250 hover-scale ${
                 showDeleteConfirm
                   ? 'text-error-600 dark:text-error-400 bg-error-50 dark:bg-error-900-20 hover:bg-error-100 dark:hover:bg-error-900-30'

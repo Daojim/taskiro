@@ -61,9 +61,13 @@ export const useMobileGestures = ({
         movement: [mx],
         direction: [xDir],
         velocity: [vx],
+        first,
       }) => {
         // Only handle left swipes (negative x direction)
         if (mx > 0) return;
+
+        // Require minimum movement before starting gesture to avoid interfering with clicks
+        if (first && Math.abs(mx) < 10) return;
 
         const trigger =
           Math.abs(mx) > swipeThreshold || (Math.abs(vx) > 0.5 && xDir < 0);
@@ -104,6 +108,8 @@ export const useMobileGestures = ({
         axis: 'x',
         filterTaps: true,
         rubberband: true,
+        threshold: 10, // Require 10px movement before starting gesture
+        preventScroll: false, // Don't prevent scroll
       },
     }
   );
@@ -132,9 +138,13 @@ export const useMobileGestures = ({
         movement: [, my],
         direction: [, yDir],
         velocity: [, vy],
+        first,
       }) => {
         // Only handle downward pulls at the top of the container
         if (my < 0 || window.scrollY > 10) return;
+
+        // Require minimum movement before starting gesture to avoid interfering with clicks
+        if (first && Math.abs(my) < 15) return;
 
         const trigger = my > pullRefreshThreshold || (vy > 0.5 && yDir > 0);
 
@@ -171,6 +181,8 @@ export const useMobileGestures = ({
         axis: 'y',
         filterTaps: true,
         rubberband: true,
+        threshold: 15, // Require 15px movement before starting gesture
+        preventScroll: false, // Don't prevent scroll
       },
     }
   );

@@ -61,8 +61,19 @@ export const useTasks = (): UseTasksReturn => {
     return errorMessage;
   }, []);
 
+  // Use ref to prevent duplicate calls
+  const isRefreshingRef = useRef(false);
+
   const refreshTasks = useCallback(
     async (retryCount = 0) => {
+      // Prevent duplicate calls
+      if (isRefreshingRef.current) {
+        console.log('⚠️ Skipping duplicate refreshTasks call');
+        return;
+      }
+
+      isRefreshingRef.current = true;
+
       try {
         setIsLoading(true);
         setError(null);
@@ -113,6 +124,7 @@ export const useTasks = (): UseTasksReturn => {
         handleError(err, 'Failed to fetch tasks');
       } finally {
         setIsLoading(false);
+        isRefreshingRef.current = false;
       }
     },
     [handleError]
@@ -276,11 +288,20 @@ export const useTasks = (): UseTasksReturn => {
     [handleError]
   );
 
-  // Load initial data
+  // Use ref to ensure initial load only happens once
+  const hasInitializedRef = useRef(false);
+
+  // Load initial data - only run once on mount
   useEffect(() => {
+    if (hasInitializedRef.current) {
+      console.log('⚠️ Skipping duplicate initial load');
+      return;
+    }
+
+    hasInitializedRef.current = true;
     refreshTasks();
     refreshCategories();
-  }, [refreshTasks, refreshCategories]);
+  }, []); // Empty dependency array - only run on mount
 
   return {
     tasks,
