@@ -70,6 +70,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
 
   const titleInputRef = useRef<HTMLInputElement>(null);
   const descriptionInputRef = useRef<HTMLTextAreaElement>(null);
+  const timeInputRef = useRef<HTMLInputElement>(null);
 
   // Mobile gesture support
   const { swipeStyle, gestureState, handleUndo, hideUndo, AnimatedDiv } =
@@ -168,6 +169,35 @@ const TaskItem: React.FC<TaskItemProps> = ({
     task.title,
   ]); // Only depend on task.id to prevent infinite loops
 
+  // Helper function to normalize incomplete time inputs
+  const getActualTimeValue = (reactValue: string): string => {
+    // If React state has a valid value, use it
+    if (reactValue && /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(reactValue)) {
+      return reactValue;
+    }
+
+    // Debug: Check what's actually in the DOM element
+    if (timeInputRef.current) {
+      console.log('DOM input debug:', {
+        value: timeInputRef.current.value,
+        valueAsDate: timeInputRef.current.valueAsDate,
+        validity: timeInputRef.current.validity,
+        validationMessage: timeInputRef.current.validationMessage,
+      });
+    }
+
+    // Otherwise, try to get the actual value from the specific time input ref
+    if (timeInputRef.current && timeInputRef.current.value) {
+      const domValue = timeInputRef.current.value;
+      if (/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(domValue)) {
+        console.log('Got actual time from DOM ref:', domValue);
+        return domValue;
+      }
+    }
+
+    return reactValue;
+  };
+
   // Handle removing time specifically
   const handleRemoveTime = useCallback(async () => {
     try {
@@ -213,19 +243,56 @@ const TaskItem: React.FC<TaskItemProps> = ({
 
         // Handle dueTime - allow adding, updating, or removing
         if (field === 'dueTime') {
-          // When editing time specifically
-          if (editValues.dueTime) {
+          console.log('Time field debug:', {
+            editValues: editValues.dueTime,
+            length: editValues.dueTime?.length,
+            raw: JSON.stringify(editValues.dueTime),
+          });
+
+          // When editing time specifically - handle both valid input and empty input from browser
+          const rawTimeValue = editValues.dueTime;
+          const actualTimeValue = getActualTimeValue(rawTimeValue);
+
+          console.log('Time value resolution:', {
+            raw: rawTimeValue,
+            actual: actualTimeValue,
+          });
+
+          if (actualTimeValue && actualTimeValue.trim() !== '') {
             // Adding or updating time
-            const timeValue = editValues.dueTime;
-            if (timeValue.includes('T')) {
-              const timeMatch = timeValue.match(/T(\d{2}:\d{2})/);
-              updates.dueTime = timeMatch ? timeMatch[1] : timeValue;
+            const timeValue = actualTimeValue;
+
+            // Validate that we have a proper HH:MM format
+            const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+            if (timeRegex.test(timeValue)) {
+              if (timeValue.includes('T')) {
+                const timeMatch = timeValue.match(/T(\d{2}:\d{2})/);
+                updates.dueTime = timeMatch ? timeMatch[1] : timeValue;
+              } else {
+                updates.dueTime = timeValue;
+              }
+              console.log('Sending valid time value:', updates.dueTime);
             } else {
-              updates.dueTime = timeValue;
+              console.log(
+                'Invalid time format after normalization:',
+                timeValue
+              );
+              if (onError) {
+                onError('Please enter a valid time');
+              }
+              return; // Don't proceed with invalid time
             }
           } else {
-            // Removing time (empty string)
-            updates.dueTime = '';
+            // Only remove time if user explicitly cleared it, not if input is invalid
+            console.log(
+              'Empty time input - skipping update to prevent accidental removal'
+            );
+            if (onError) {
+              onError(
+                'Please enter a valid time or use the × button to remove'
+              );
+            }
+            return; // Don't proceed with empty input when trying to set time
           }
         } else if (task.dueTime) {
           // Preserve existing time when updating other fields
@@ -267,12 +334,50 @@ const TaskItem: React.FC<TaskItemProps> = ({
     (e: React.KeyboardEvent, field: string) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        handleSaveEdit(field);
+
+        // For time fields, force browser to complete formatting by triggering blur
+        if (field === 'dueTime') {
+          const timeInput = e.target as HTMLInputElement;
+
+          console.log(
+            'Enter pressed on time field, forcing blur to complete formatting'
+          );
+
+          // Force the browser to complete formatting by blurring and refocusing
+          timeInput.blur();
+
+          // Small delay to let the blur event complete, then check the value
+          setTimeout(() => {
+            console.log('After blur, checking time input:', {
+              domValue: timeInput.value,
+              validity: timeInput.validity.valid,
+              validationMessage: timeInput.validationMessage,
+            });
+
+            if (timeInput.validity.valid && timeInput.value) {
+              // Input is now valid, update state and save
+              console.log(
+                'Valid time found after blur, saving:',
+                timeInput.value
+              );
+              setEditValues((prev) => ({ ...prev, dueTime: timeInput.value }));
+              setTimeout(() => handleSaveEdit(field), 0);
+            } else {
+              // Still invalid, show error
+              console.log('Time input still invalid after blur');
+              if (onError) {
+                onError('Please enter a valid time (e.g., 09:00)');
+              }
+            }
+          }, 10); // Very short delay just to let blur complete
+        } else {
+          handleSaveEdit(field);
+        }
       } else if (e.key === 'Escape') {
         handleCancelEdit();
       }
     },
-    [handleSaveEdit, handleCancelEdit]
+    [handleSaveEdit, handleCancelEdit, onError]
   );
 
   const handleToggleCompletion = useCallback(
@@ -634,6 +739,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
                 {editingField === 'dueTime' ? (
                   <div className="flex items-center gap-1">
                     <input
+                      ref={timeInputRef}
                       type="time"
                       value={editValues.dueTime}
                       onChange={(e) =>
