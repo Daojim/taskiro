@@ -69,49 +69,23 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
   return (
     <>
       <div
-        style={{
-          minHeight: '120px',
-          backgroundColor: '#ffffff',
-          padding: '8px',
-          cursor: 'pointer',
-          position: 'relative',
-          border: isToday ? '2px solid #3b82f6' : 'none',
-          opacity: !isCurrentMonth ? 0.5 : 1,
-        }}
+        className={`min-h-[120px] p-2 cursor-pointer relative group transition-colors ${
+          isToday ? 'border-2 border-blue-500' : 'border-none'
+        } ${
+          !isCurrentMonth ? 'opacity-50' : 'opacity-100'
+        } bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700`}
         onClick={handleDayClick}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = '#f9fafb';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = '#ffffff';
-        }}
       >
         {/* Day number */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: '4px',
-          }}
-        >
+        <div className="flex items-center justify-between mb-1">
           <span
-            style={{
-              fontSize: '14px',
-              fontWeight: '500',
-              backgroundColor: isToday ? '#3b82f6' : 'transparent',
-              color: isToday
-                ? '#ffffff'
+            className={`text-sm font-medium ${
+              isToday
+                ? 'bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center'
                 : !isCurrentMonth
-                  ? '#9ca3af'
-                  : '#111827',
-              borderRadius: isToday ? '50%' : '0',
-              width: isToday ? '24px' : 'auto',
-              height: isToday ? '24px' : 'auto',
-              display: isToday ? 'flex' : 'inline',
-              alignItems: isToday ? 'center' : 'normal',
-              justifyContent: isToday ? 'center' : 'normal',
-            }}
+                  ? 'text-gray-400 dark:text-gray-500'
+                  : 'text-gray-900 dark:text-gray-100'
+            }`}
           >
             {dayNumber}
           </span>

@@ -37,7 +37,7 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
     currentDate.getFullYear() === today.getFullYear();
 
   return (
-    <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+    <div className="px-8 py-4 border-b border-gray-200 dark:border-gray-700">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">

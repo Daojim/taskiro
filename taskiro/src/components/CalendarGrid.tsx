@@ -74,26 +74,13 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
   }, [currentDate, tasks]);
 
   return (
-    <div style={{ padding: '24px' }}>
+    <div className="p-8">
       {/* Day headers */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(7, 1fr)',
-          gap: '1px',
-          marginBottom: '8px',
-        }}
-      >
+      <div className="grid grid-cols-7 gap-px mb-2">
         {dayNames.map((day) => (
           <div
             key={day}
-            style={{
-              padding: '8px',
-              textAlign: 'center',
-              fontSize: '14px',
-              fontWeight: '500',
-              color: '#6b7280',
-            }}
+            className="p-2 text-center text-sm font-medium text-gray-600 dark:text-gray-400"
           >
             {day}
           </div>
@@ -101,17 +88,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
       </div>
 
       {/* Calendar grid */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(7, 1fr)',
-          gap: '1px',
-          backgroundColor: '#e5e7eb',
-          border: '1px solid #e5e7eb',
-          borderRadius: '8px',
-          overflow: 'hidden',
-        }}
-      >
+      <div className="grid grid-cols-7 gap-px bg-gray-300 dark:bg-gray-600 border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
         {calendarDays.map((day) => (
           <CalendarDay
             key={`${day.date.getFullYear()}-${day.date.getMonth()}-${day.date.getDate()}`}
