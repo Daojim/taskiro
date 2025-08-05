@@ -104,16 +104,16 @@ const CalendarTask: React.FC<CalendarTaskProps> = ({
         onClick={handleTaskClick}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        onMouseDown={(e) => e.stopPropagation()}
+        onMouseUp={(e) => e.stopPropagation()}
         title={`${task.title}${task.description ? ` - ${task.description}` : ''}`}
       >
         <div className="flex items-center justify-between">
           <div className="flex-1 min-w-0">
             <div className="truncate font-medium">{task.title}</div>
-            {task.dueTime && (
-              <div className="text-xs opacity-75 mt-0.5">
-                {formatTime(task.dueTime)}
-              </div>
-            )}
+            <div className="text-xs opacity-75 mt-0.5">
+              {task.dueTime ? formatTime(task.dueTime) : 'No time set'}
+            </div>
           </div>
 
           {/* Action buttons (visible on hover) */}
