@@ -167,20 +167,7 @@ body {
   padding: 32px 0 !important;
 }
 
-/* Navigation styles with dark mode support */
-nav {
-  background-color: white;
-  border-bottom: 1px solid #e5e7eb;
-  padding: 0 !important;
-  transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease;
-}
-
-.dark nav {
-  background-color: #1f2937;
-  border-bottom-color: #374151;
-}
+/* Navigation styles removed - using Tailwind classes instead */
 
 /* Task specific styles with dark mode support */
 .task-card {

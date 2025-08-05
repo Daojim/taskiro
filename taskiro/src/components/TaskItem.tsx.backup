@@ -549,18 +549,17 @@ const TaskItem: React.FC<TaskItemProps> = ({
         data-status={task.status}
         data-priority={task.priority}
         data-task-id={task.id}
-        className={`task-card touch-pan-y select-none relative ${
-          task.status.toLowerCase() === 'completed' ? 'task-card-completed' : ''
-        } ${isOverdue ? 'task-card-overdue' : ''} ${
-          isToggling ? 'task-toggling' : ''
+        className={`bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-200 p-4 w-full max-w-sm min-h-[160px] flex flex-col justify-between ${
+          task.status.toLowerCase() === 'completed' ? 'opacity-75' : ''
+        } ${isOverdue ? 'border-l-4 border-l-red-500 bg-red-50/50 dark:bg-red-900/10' : ''} ${
+          isToggling ? 'opacity-50' : ''
         } ${
           task.priority === 'high'
-            ? 'task-card-priority-high'
+            ? 'border-l-4 border-l-red-500'
             : task.priority === 'medium'
-              ? 'task-card-priority-medium'
-              : 'task-card-priority-low'
-        } ${gestureState.isDeleting ? 'pointer-events-none swipe-delete-active' : ''} 
-        task-item-mobile sm:task-item-tablet animate-fade-in`}
+              ? 'border-l-4 border-l-yellow-500'
+              : 'border-l-4 border-l-green-500'
+        } ${gestureState.isDeleting ? 'pointer-events-none' : ''}`}
       >
         {/* Gesture system temporarily disabled to test click responsiveness */}
 
@@ -581,123 +580,120 @@ const TaskItem: React.FC<TaskItemProps> = ({
           </svg>
         </div>
 
-        <div className="flex items-start space-x-3 sm:space-x-4">
-          {/* Task Content */}
+        {/* Card Header - Title with Checkbox */}
+        <div className="flex items-start space-x-2 mb-3">
+          <div
+            className="flex-shrink-0 cursor-pointer"
+            onClick={handleToggleCompletion}
+          >
+            <input
+              type="checkbox"
+              checked={task.status.toLowerCase() === 'completed'}
+              disabled={isToggling}
+              readOnly
+              className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 transition-opacity duration-200 pointer-events-none"
+            />
+          </div>
+          
           <div className="flex-1 min-w-0">
-            {/* Title with Checkbox */}
-            <div className="mb-2 flex items-center space-x-2">
-              {/* Completion Checkbox */}
-              <div
-                className="flex-shrink-0 cursor-pointer"
-                onClick={handleToggleCompletion}
-                onMouseDown={(e) => e.preventDefault()}
-                onTouchStart={(e) => e.preventDefault()}
-                onPointerDown={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                }}
-                onPointerUp={(e) => {
-                  e.stopPropagation();
-                  // Trigger action immediately without going through the click handler
-                  if (!isToggling) {
-                    onToggleCompletion(task.id);
-                  }
-                }}
+            {editingField === 'title' ? (
+              <input
+                ref={titleInputRef}
+                type="text"
+                value={editValues.title}
+                onChange={(e) =>
+                  setEditValues((prev) => ({
+                    ...prev,
+                    title: e.target.value,
+                  }))
+                }
+                onBlur={() => handleSaveEdit('title')}
+                onKeyDown={(e) => handleKeyPress(e, 'title')}
+                className="w-full text-sm font-medium bg-transparent border-none outline-none"
+              />
+            ) : (
+              <h3
+                onClick={() => handleStartEdit('title')}
+                className={`text-sm font-medium cursor-pointer ${
+                  task.status.toLowerCase() === 'completed'
+                    ? 'line-through text-gray-500 dark:text-gray-400'
+                    : 'text-gray-900 dark:text-white'
+                }`}
               >
-                <input
-                  type="checkbox"
-                  checked={task.status.toLowerCase() === 'completed'}
-                  data-checked={task.status.toLowerCase() === 'completed'}
-                  disabled={isToggling}
-                  readOnly
-                  className={`h-4 w-4 sm:h-5 sm:w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 mobile-focus transition-opacity duration-200 pointer-events-none ${
-                    isToggling ? 'opacity-50 cursor-not-allowed' : ''
-                  }`}
-                />
-              </div>
-
-              {/* Title */}
-              <div className="flex-1">
-                {editingField === 'title' ? (
-                  <input
-                    ref={titleInputRef}
-                    type="text"
-                    value={editValues.title}
-                    onChange={(e) =>
-                      setEditValues((prev) => ({
-                        ...prev,
-                        title: e.target.value,
-                      }))
-                    }
-                    onBlur={() => handleSaveEdit('title')}
-                    onKeyDown={(e) => handleKeyPress(e, 'title')}
-                    className="input text-sm font-medium"
-                  />
-                ) : (
-                  <h4
-                    onClick={handleTitleClick}
-                    onPointerDown={(e) => e.stopPropagation()}
-                    onPointerUp={(e) => {
-                      e.stopPropagation();
-                      // Trigger action immediately without going through the click handler
-                      if (!isToggling) {
-                        setIsToggling(true);
-                        onToggleCompletion(task.id).finally(() =>
-                          setIsToggling(false)
-                        );
-                      }
-                    }}
-                    className={`text-heading-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700-50 px-2 py-1 rounded-lg transition-all duration-250 ${
-                      task.status.toLowerCase() === 'completed'
-                        ? 'line-through text-gray-500 dark:text-gray-400'
-                        : 'text-gray-900 dark:text-white hover-lift'
-                    }`}
-                  >
-                    {task.title}
-                  </h4>
-                )}
-              </div>
-            </div>
-
-            {/* Description */}
-            {(task.description || editingField === 'description') && (
-              <div className="mb-2">
-                {editingField === 'description' ? (
-                  <textarea
-                    ref={descriptionInputRef}
-                    value={editValues.description}
-                    onChange={(e) =>
-                      setEditValues((prev) => ({
-                        ...prev,
-                        description: e.target.value,
-                      }))
-                    }
-                    onBlur={() => handleSaveEdit('description')}
-                    onKeyDown={(e) => handleKeyPress(e, 'description')}
-                    rows={2}
-                    className="textarea text-xs"
-                  />
-                ) : (
-                  <p
-                    onClick={() => handleStartEdit('description')}
-                    onPointerDown={(e) => e.stopPropagation()}
-                    onPointerUp={(e) => {
-                      e.stopPropagation();
-                      handleStartEdit('description');
-                    }}
-                    className="text-body cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700-50 px-2 py-1 rounded-lg transition-all duration-250 hover-lift"
-                  >
-                    {task.description || 'Add description...'}
-                  </p>
-                )}
-              </div>
+                {task.title}
+              </h3>
             )}
+          </div>
+        </div>
 
-            {/* Due Date and Time */}
-            <div className="flex items-center space-x-4 mb-2">
-              {/* Due Date */}
-              <div className="flex items-center space-x-1">
-                {editingField === 'dueDate' ? (
+        {/* Card Body - Description */}
+        <div className="flex-1 mb-3">
+          {task.description && (
+            <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2">
+              {task.description}
+            </p>
+          )}
+        </div>
+
+        {/* Card Meta - Date, Time, Priority, Category */}
+        <div className="space-y-2 mb-3">
+          {task.dueDate && (
+            <div className="text-xs text-gray-500 dark:text-gray-400">
+              📅 {formatDate(task.dueDate)}
+              {task.dueTime && (
+                <span className="ml-2">🕐 {formatTime(task.dueTime)}</span>
+              )}
+            </div>
+          )}
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-1">
+              {task.priority && (
+                <span className={`text-xs px-2 py-1 rounded-full ${
+                  task.priority === 'high' 
+                    ? 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-300'
+                    : task.priority === 'medium'
+                    ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300'
+                    : 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-300'
+                }`}>
+                  {task.priority.toUpperCase()}
+                </span>
+              )}
+              
+              {task.category && (
+                <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300">
+                  {task.category.name}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Card Footer - Delete Button */}
+        <div className="flex justify-end">
+          <button
+            onClick={handleDelete}
+            className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
+            title="Delete task"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+      </AnimatedDiv>
+
+      {/* Undo Toast */}
+      <UndoToast
+        show={gestureState.showUndo && deletedTask !== null}
+        message={`Task "${deletedTask?.title || 'Task'}" deleted`}
+        onUndo={handleUndoDelete}
+        onHide={handleHideUndo}
+      />
+    </>
+  );
+};
+
+export default React.memo(TaskItem);
                   <div
                     style={{
                       position: 'relative',

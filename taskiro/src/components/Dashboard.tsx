@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useTaskContext } from '../contexts/TaskContext';
+import { useTheme } from '../hooks/useTheme';
 import {
   ListBulletIcon,
   CalendarDaysIcon,
@@ -17,6 +18,7 @@ type ViewMode = 'list' | 'calendar';
 
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
+  const { theme } = useTheme();
   const {
     tasks,
     categories,
@@ -95,8 +97,28 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 font-sans transition-colors duration-300">
-      <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 transition-colors duration-300">
-        <div className="max-w-7xl mx-auto px-4">
+      <nav
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          width: '100%',
+          backgroundColor: theme === 'dark' ? '#1f2937' : 'white',
+          borderBottom: `1px solid ${theme === 'dark' ? '#374151' : '#e5e7eb'}`,
+          zIndex: 40,
+          display: 'block',
+        }}
+      >
+        <div
+          className="mx-auto px-4 sm:px-6 lg:px-8"
+          style={{
+            width: '75%',
+            minWidth: '320px',
+            maxWidth: '1400px',
+            margin: '0 auto',
+          }}
+        >
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center">
               <h1 className="text-2xl font-semibold text-blue-600 dark:text-blue-400 m-0">
@@ -123,7 +145,15 @@ const Dashboard: React.FC = () => {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto p-8">
+      <main
+        className="mx-auto px-4 sm:px-6 lg:px-8 py-8"
+        style={{
+          paddingTop: '80px',
+          width: '75%',
+          minWidth: '320px',
+          maxWidth: '1400px',
+        }}
+      >
         <div className="flex flex-col gap-6">
           {/* Task Input Component */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 transition-colors duration-300">

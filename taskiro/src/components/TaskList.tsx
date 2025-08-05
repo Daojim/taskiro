@@ -8,7 +8,7 @@ import React, {
 
 import { useTaskContext } from '../contexts/TaskContext';
 import { useMobileGestures } from '../hooks/useMobileGestures';
-import TaskItem from './TaskItem';
+import TaskItemCompact from './TaskItemCompact';
 import TaskFilters from './TaskFilters';
 import TaskSearch from './TaskSearch';
 import PullToRefresh from './PullToRefresh';
@@ -48,7 +48,7 @@ const TaskList: React.FC<TaskListProps> = ({
     updateTask,
     deleteTask,
     toggleTaskCompletion,
-    restoreTask,
+
     refreshTasks,
     error,
   } = useTaskContext();
@@ -239,23 +239,6 @@ const TaskList: React.FC<TaskListProps> = ({
     [deleteTask, onTaskDeleted, onError]
   );
 
-  // Handle task restoration
-  const handleTaskRestore = useCallback(
-    async (taskId: string) => {
-      try {
-        const restoredTask = await restoreTask(taskId);
-        if (restoredTask && onTaskUpdated) {
-          onTaskUpdated(restoredTask);
-        }
-      } catch {
-        if (onError) {
-          onError('Failed to restore task');
-        }
-      }
-    },
-    [restoreTask, onTaskUpdated, onError]
-  );
-
   // Removed renderTaskItem - now rendering tasks directly
 
   if (isLoading) {
@@ -341,16 +324,15 @@ const TaskList: React.FC<TaskListProps> = ({
             </p>
           </div>
         ) : (
-          <div className="animate-fade-in">
+          <div className="animate-fade-in flex flex-wrap gap-4 justify-start">
             {filteredAndSortedTasks.map((task) => (
-              <TaskItem
+              <TaskItemCompact
                 key={task.id}
                 task={task}
                 categories={categories}
                 onToggleCompletion={handleToggleCompletion}
                 onUpdate={handleTaskUpdate}
                 onDelete={handleTaskDelete}
-                onRestore={handleTaskRestore}
                 onError={onError}
               />
             ))}
