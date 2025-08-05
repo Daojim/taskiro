@@ -132,6 +132,22 @@ const TaskItem: React.FC<TaskItemProps> = ({
       } else if (field === 'description' && descriptionInputRef.current) {
         descriptionInputRef.current.focus();
         descriptionInputRef.current.select();
+      } else if (field === 'dueTime' && timeInputRef.current) {
+        timeInputRef.current.focus();
+        // For time inputs, select the hour portion (first 2 characters)
+        // This allows users to immediately start typing to replace the hour
+        try {
+          // Only try to set selection if the input has a value and is ready
+          if (
+            timeInputRef.current.value &&
+            timeInputRef.current.value.length >= 2
+          ) {
+            timeInputRef.current.setSelectionRange(0, 2);
+          }
+        } catch (error) {
+          // Silently handle the error - focus is still working
+          console.log('Could not set selection range on time input:', error);
+        }
       }
     }, 0);
   }, []);
