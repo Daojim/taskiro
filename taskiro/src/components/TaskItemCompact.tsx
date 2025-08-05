@@ -522,7 +522,7 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
           <div className="flex items-center space-x-1">
             {editingField === 'priority' ? (
               <select
-                value={editValues.priority}
+                value={editValues.priority.toLowerCase()}
                 onChange={(e) =>
                   setEditValues((prev) => ({
                     ...prev,
