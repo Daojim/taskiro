@@ -94,48 +94,17 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        backgroundColor: '#f3f4f6',
-        fontFamily: 'system-ui, sans-serif',
-      }}
-    >
-      <nav
-        style={{
-          backgroundColor: 'white',
-          borderBottom: '1px solid #e5e7eb',
-          padding: '0',
-          position: 'sticky',
-          top: 0,
-          zIndex: 40,
-        }}
-      >
-        <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '0 1rem' }}>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              height: '4rem',
-              alignItems: 'center',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <h1
-                style={{
-                  fontSize: '1.5rem',
-                  fontWeight: '600',
-                  color: '#2563eb',
-                  margin: 0,
-                }}
-              >
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 font-sans transition-colors duration-300">
+      <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 transition-colors duration-300">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between h-16 items-center">
+            <div className="flex items-center">
+              <h1 className="text-2xl font-semibold text-blue-600 dark:text-blue-400 m-0">
                 Taskiro
               </h1>
             </div>
-            <div
-              style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}
-            >
-              <span style={{ fontSize: '0.875rem', color: '#4b5563' }}>
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-gray-600 dark:text-gray-300">
                 Welcome, {user?.email}
               </span>
               <ThemeToggle />
@@ -154,23 +123,10 @@ const Dashboard: React.FC = () => {
         </div>
       </nav>
 
-      <main
-        style={{ maxWidth: '80rem', margin: '0 auto', padding: '2rem 1rem' }}
-      >
-        <div
-          style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
-        >
+      <main className="max-w-7xl mx-auto p-8">
+        <div className="flex flex-col gap-6">
           {/* Task Input Component */}
-          <div
-            style={{
-              backgroundColor: 'white',
-              borderRadius: '12px',
-              boxShadow:
-                '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-              border: '1px solid #e5e7eb',
-              padding: '1.5rem',
-            }}
-          >
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 transition-colors duration-300">
             <TaskInput
               onTaskCreated={handleTaskCreated}
               categories={categories}
@@ -233,21 +189,11 @@ const Dashboard: React.FC = () => {
       {/* Fixed Toast Notification */}
       {notification && (
         <div
-          style={{
-            position: 'fixed',
-            top: '20px',
-            right: '20px',
-            zIndex: 9999,
-            backgroundColor:
-              notification.type === 'success' ? '#f0f9ff' : '#fef2f2',
-            border: `3px solid ${notification.type === 'success' ? '#10b981' : '#ef4444'}`,
-            borderRadius: '8px',
-            padding: '16px',
-            minWidth: '300px',
-            boxShadow:
-              '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-            color: '#1f2937',
-          }}
+          className={`fixed top-5 right-5 z-50 rounded-lg p-4 min-w-80 shadow-lg transition-colors duration-300 ${
+            notification.type === 'success'
+              ? 'bg-sky-50 dark:bg-sky-900/20 border-3 border-green-500 dark:border-green-400'
+              : 'bg-red-50 dark:bg-red-900/20 border-3 border-red-500 dark:border-red-400'
+          }`}
         >
           <div className="flex justify-between items-center">
             <div className="flex items-center">

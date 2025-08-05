@@ -13,20 +13,11 @@ const ThemeToggle: React.FC = () => {
       title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >
       <div className="relative w-5 h-5">
-        <SunIcon
-          className={`absolute inset-0 w-5 h-5 text-warning-500 transition-all duration-350 ease-bounce-in ${
-            theme === 'light'
-              ? 'opacity-100 rotate-0 scale-100'
-              : 'opacity-0 rotate-90 scale-75'
-          }`}
-        />
-        <MoonIcon
-          className={`absolute inset-0 w-5 h-5 text-primary-400 transition-all duration-350 ease-bounce-in ${
-            theme === 'dark'
-              ? 'opacity-100 rotate-0 scale-100'
-              : 'opacity-0 -rotate-90 scale-75'
-          }`}
-        />
+        {theme === 'light' ? (
+          <SunIcon className="w-5 h-5 text-yellow-500 transition-all duration-200 ease-in-out" />
+        ) : (
+          <MoonIcon className="w-5 h-5 text-blue-400 transition-all duration-200 ease-in-out" />
+        )}
       </div>
     </button>
   );

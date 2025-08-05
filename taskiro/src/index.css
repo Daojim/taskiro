@@ -1,10 +1,15 @@
-/* Basic CSS Test - This should make the background blue if CSS is working */
+/* Basic CSS with dark mode support */
 body {
-  background-color: #f3f4f6 !important;
   font-family:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
   margin: 0 !important;
   padding: 0 !important;
+  background-color: #f3f4f6;
+  transition: background-color 0.3s ease;
+}
+
+.dark body {
+  background-color: #111827;
 }
 
 /* Import mobile gesture support styles */
@@ -44,14 +49,22 @@ body {
   }
 }
 
-/* Direct CSS styles to ensure they load */
+/* Direct CSS styles with dark mode support */
 .card {
-  background-color: white !important;
+  background-color: white;
   border-radius: 12px !important;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
-  border: 1px solid #e5e7eb !important;
+  border: 1px solid #e5e7eb;
   padding: 16px !important;
   margin: 8px 0 !important;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.dark .card {
+  background-color: #1f2937;
+  border-color: #374151;
 }
 
 .btn {
@@ -77,13 +90,27 @@ body {
 }
 
 .btn-secondary {
-  background-color: white !important;
-  color: #374151 !important;
+  background-color: white;
+  color: #374151;
   border: 1px solid #d1d5db !important;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .btn-secondary:hover {
-  background-color: #f9fafb !important;
+  background-color: #f9fafb;
+}
+
+.dark .btn-secondary {
+  background-color: #374151;
+  color: #f3f4f6;
+  border-color: #4b5563;
+}
+
+.dark .btn-secondary:hover {
+  background-color: #4b5563;
 }
 
 .input {
@@ -91,9 +118,14 @@ body {
   width: 100% !important;
   padding: 8px 12px !important;
   font-size: 14px !important;
-  border: 1px solid #d1d5db !important;
+  border: 1px solid #d1d5db;
   border-radius: 8px !important;
-  background-color: white !important;
+  background-color: white;
+  color: #111827;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .input:focus {
@@ -102,11 +134,27 @@ body {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
 }
 
+.dark .input {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #f3f4f6;
+}
+
+.dark .input:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1) !important;
+}
+
 .text-heading-3 {
   font-size: 20px !important;
   font-weight: 600 !important;
-  color: #111827 !important;
+  color: #111827;
   margin: 0 0 16px 0 !important;
+  transition: color 0.3s ease;
+}
+
+.dark .text-heading-3 {
+  color: #f3f4f6;
 }
 
 .container-app {
@@ -119,19 +167,27 @@ body {
   padding: 32px 0 !important;
 }
 
-/* Navigation styles */
+/* Navigation styles with dark mode support */
 nav {
-  background-color: white !important;
-  border-bottom: 1px solid #e5e7eb !important;
+  background-color: white;
+  border-bottom: 1px solid #e5e7eb;
   padding: 0 !important;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
-/* Task specific styles */
+.dark nav {
+  background-color: #1f2937;
+  border-bottom-color: #374151;
+}
+
+/* Task specific styles with dark mode support */
 .task-card {
-  background-color: white !important;
+  background-color: white;
   border-radius: 12px !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
-  border: 1px solid #e5e7eb !important;
+  border: 1px solid #e5e7eb;
   padding: 16px !important;
   margin: 8px 0 !important;
   transition: all 0.2s ease !important;
@@ -140,6 +196,16 @@ nav {
 .task-card:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
   transform: translateY(-2px) !important;
+}
+
+.dark .task-card {
+  background-color: #1f2937;
+  border-color: #374151;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark .task-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4) !important;
 }
 
 /* Task completion styles with smooth transitions */
