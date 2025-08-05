@@ -25,6 +25,7 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
 }) => {
   const [isToggling, setIsToggling] = useState(false);
   const [editingField, setEditingField] = useState<string | null>(null);
+  const [isProcessingTimeEnter, setIsProcessingTimeEnter] = useState(false);
 
   // Helper function to format time for input field
   const formatTimeForInput = (timeString: string) => {
@@ -147,6 +148,12 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
 
   const handleSaveEdit = useCallback(
     async (field: string) => {
+      console.log(
+        'handleSaveEdit called with field:',
+        field,
+        'editValues.dueTime:',
+        editValues.dueTime
+      );
       try {
         const updates: UpdateTaskRequest = {
           title: editValues.title.trim(),
@@ -160,8 +167,16 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
 
         // Handle dueTime
         if (field === 'dueTime') {
-          if (editValues.dueTime && editValues.dueTime.trim() !== '') {
-            updates.dueTime = editValues.dueTime;
+          // Get the actual value from the DOM input if available
+          const actualTimeValue =
+            timeInputRef.current?.value || editValues.dueTime;
+          console.log('Time save debug:', {
+            actualTimeValue,
+            editValues: editValues.dueTime,
+          });
+
+          if (actualTimeValue && actualTimeValue.trim() !== '') {
+            updates.dueTime = actualTimeValue;
           }
         } else if (task.dueTime) {
           updates.dueTime = formatTimeForInput(task.dueTime);
@@ -195,12 +210,55 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
     (e: React.KeyboardEvent, field: string) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        handleSaveEdit(field);
+
+        // For time fields, force browser to complete formatting by triggering blur
+        if (field === 'dueTime') {
+          const timeInput = e.target as HTMLInputElement;
+          setIsProcessingTimeEnter(true);
+
+          console.log(
+            'Enter pressed on time field, forcing blur to complete formatting'
+          );
+
+          // Force the browser to complete formatting by blurring and refocusing
+          timeInput.blur();
+
+          // Small delay to let the blur event complete, then check the value
+          setTimeout(() => {
+            console.log('After blur, checking time input:', {
+              domValue: timeInput.value,
+              validity: timeInput.validity.valid,
+              validationMessage: timeInput.validationMessage,
+            });
+
+            if (timeInput.validity.valid && timeInput.value) {
+              // Input is now valid, update state and save
+              console.log(
+                'Valid time found after blur, saving:',
+                timeInput.value
+              );
+              setEditValues((prev) => ({ ...prev, dueTime: timeInput.value }));
+              setTimeout(() => {
+                handleSaveEdit(field);
+                setIsProcessingTimeEnter(false);
+              }, 0);
+            } else {
+              // Still invalid, show error
+              console.log('Time input still invalid after blur');
+              if (onError) {
+                onError('Please enter a valid time (e.g., 09:00)');
+              }
+              setIsProcessingTimeEnter(false);
+            }
+          }, 10); // Very short delay just to let blur complete
+        } else {
+          handleSaveEdit(field);
+        }
       } else if (e.key === 'Escape') {
         handleCancelEdit();
       }
     },
-    [handleSaveEdit, handleCancelEdit]
+    [handleSaveEdit, handleCancelEdit, onError]
   );
 
   const handleRemoveTime = useCallback(async () => {
@@ -414,7 +472,11 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
                       dueTime: e.target.value,
                     }))
                   }
-                  onBlur={() => handleSaveEdit('dueTime')}
+                  onBlur={() => {
+                    if (!isProcessingTimeEnter) {
+                      handleSaveEdit('dueTime');
+                    }
+                  }}
                   onKeyDown={(e) => handleKeyPress(e, 'dueTime')}
                   className="text-xs px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 dark:text-white"
                 />
