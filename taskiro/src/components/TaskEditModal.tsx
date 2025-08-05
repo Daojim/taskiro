@@ -29,11 +29,29 @@ const TaskEditModal: React.FC<TaskEditModalProps> = ({
     }
   };
 
+  // Helper function to format time for input field
+  const formatTimeForInput = (timeString: string) => {
+    if (!timeString) return '';
+
+    // If it's already in HH:MM format, return as is
+    if (/^\d{2}:\d{2}$/.test(timeString)) {
+      return timeString;
+    }
+
+    // If it contains 'T' (datetime format), extract time part
+    if (timeString.includes('T')) {
+      const timeMatch = timeString.match(/T(\d{2}:\d{2})/);
+      return timeMatch ? timeMatch[1] : '';
+    }
+
+    return timeString;
+  };
+
   const [formData, setFormData] = useState({
     title: task.title,
     description: task.description || '',
     dueDate: formatDateForInput(task.dueDate || ''),
-    dueTime: task.dueTime || '',
+    dueTime: formatTimeForInput(task.dueTime || ''),
     priority: task.priority,
     categoryId: task.categoryId || '',
   });
@@ -46,7 +64,7 @@ const TaskEditModal: React.FC<TaskEditModalProps> = ({
       title: task.title,
       description: task.description || '',
       dueDate: formatDateForInput(task.dueDate || ''),
-      dueTime: task.dueTime || '',
+      dueTime: formatTimeForInput(task.dueTime || ''),
       priority: task.priority,
       categoryId: task.categoryId || '',
     });
@@ -119,7 +137,10 @@ const TaskEditModal: React.FC<TaskEditModalProps> = ({
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+      <div
+        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <div>
@@ -210,6 +231,9 @@ const TaskEditModal: React.FC<TaskEditModalProps> = ({
               id="dueTime"
               value={formData.dueTime}
               onChange={(e) => handleInputChange('dueTime', e.target.value)}
+              onClick={(e) => e.stopPropagation()}
+              onMouseDown={(e) => e.stopPropagation()}
+              onMouseUp={(e) => e.stopPropagation()}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
             />
           </div>
