@@ -632,7 +632,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
               {/* Due Time */}
               <div className="flex items-center space-x-1">
                 {editingField === 'dueTime' ? (
-                  <>
+                  <div className="flex items-center gap-1">
                     <input
                       type="time"
                       value={editValues.dueTime}
@@ -648,30 +648,36 @@ const TaskItem: React.FC<TaskItemProps> = ({
                     />
                     <button
                       onClick={handleRemoveTime}
-                      className="text-gray-400 hover:text-red-500 text-xs px-1"
+                      className="text-gray-400 hover:text-red-500 text-xs opacity-60 hover:opacity-100 transition-all duration-200"
                       title="Remove time"
                     >
                       ×
                     </button>
-                  </>
+                  </div>
                 ) : (
-                  <>
-                    <span
-                      onClick={() => handleStartEdit('dueTime')}
-                      className="badge badge-gray cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale"
-                    >
-                      {task.dueTime ? formatTime(task.dueTime) : 'Set time'}
-                    </span>
-                    {task.dueTime && (
-                      <button
-                        onClick={handleRemoveTime}
-                        className="text-gray-400 hover:text-red-500 text-xs px-1 ml-1"
-                        title="Remove time"
+                  <div className="relative inline-block">
+                    {task.dueTime ? (
+                      <div className="badge badge-gray cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale flex items-center gap-1">
+                        <span onClick={() => handleStartEdit('dueTime')}>
+                          {formatTime(task.dueTime)}
+                        </span>
+                        <button
+                          onClick={handleRemoveTime}
+                          className="text-gray-400 hover:text-red-500 text-xs opacity-60 hover:opacity-100 transition-all duration-200 ml-1"
+                          title="Remove time"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ) : (
+                      <span
+                        onClick={() => handleStartEdit('dueTime')}
+                        className="badge badge-gray cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale"
                       >
-                        ×
-                      </button>
+                        Set time
+                      </span>
                     )}
-                  </>
+                  </div>
                 )}
               </div>
             </div>
