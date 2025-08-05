@@ -69,23 +69,45 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
   return (
     <>
       <div
-        className={`min-h-[120px] p-2 cursor-pointer relative group transition-colors ${
-          isToday ? 'border-2 border-blue-500' : 'border-none'
-        } ${
-          !isCurrentMonth ? 'opacity-50' : 'opacity-100'
-        } bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700`}
+        style={{
+          minHeight: '120px',
+          padding: '8px',
+          cursor: 'pointer',
+          position: 'relative',
+          border: isToday ? '2px solid #3b82f6' : 'none',
+          opacity: !isCurrentMonth ? 0.5 : 1,
+        }}
+        className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group"
         onClick={handleDayClick}
       >
         {/* Day number */}
-        <div className="flex items-center justify-between mb-1">
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '4px',
+          }}
+        >
           <span
-            className={`text-sm font-medium ${
+            style={{
+              fontSize: '14px',
+              fontWeight: '500',
+              backgroundColor: isToday ? '#3b82f6' : 'transparent',
+              borderRadius: isToday ? '50%' : '0',
+              width: isToday ? '24px' : 'auto',
+              height: isToday ? '24px' : 'auto',
+              display: isToday ? 'flex' : 'inline',
+              alignItems: isToday ? 'center' : 'normal',
+              justifyContent: isToday ? 'center' : 'normal',
+            }}
+            className={
               isToday
-                ? 'bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center'
+                ? 'text-white'
                 : !isCurrentMonth
                   ? 'text-gray-400 dark:text-gray-500'
                   : 'text-gray-900 dark:text-gray-100'
-            }`}
+            }
           >
             {dayNumber}
           </span>
