@@ -173,7 +173,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
         {hasActiveFilters && (
           <button
             onClick={handleClearFilters}
-            className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium focus:outline-none focus:underline"
+            className="btn btn-ghost text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium focus:outline-none focus:underline"
           >
             Clear filters
           </button>
@@ -196,7 +196,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
                   'Unknown'}
               <button
                 onClick={() => onChange({ category: '' })}
-                className="ml-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
+                className="filter-tag-remove ml-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
               >
                 ×
               </button>
@@ -210,7 +210,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
                 filters.priority.slice(1)}
               <button
                 onClick={() => onChange({ priority: '' })}
-                className="ml-1 text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-300"
+                className="filter-tag-remove ml-1 text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-300"
               >
                 ×
               </button>
@@ -223,7 +223,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
               {filters.status.charAt(0).toUpperCase() + filters.status.slice(1)}
               <button
                 onClick={() => onChange({ status: '' })}
-                className="ml-1 text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300"
+                className="filter-tag-remove ml-1 text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300"
               >
                 ×
               </button>
@@ -240,7 +240,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
 
         <button
           onClick={() => onChange({ status: 'active', priority: 'high' })}
-          className="px-3 py-1 text-xs font-medium rounded-full border border-red-200 text-red-700 hover:bg-red-50 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-900/20 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+          className="quick-filter-button px-3 py-1 text-xs font-medium rounded-full border border-red-200 text-red-700 hover:bg-red-50 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-900/20 focus:outline-none focus:ring-2 focus:ring-red-500/20"
         >
           High Priority Active
         </button>
@@ -249,7 +249,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
           onClick={() =>
             onChange({ status: 'active', sortBy: 'dueDate', sortOrder: 'asc' })
           }
-          className="px-3 py-1 text-xs font-medium rounded-full border border-blue-200 text-blue-700 hover:bg-blue-50 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900/20 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+          className="quick-filter-button px-3 py-1 text-xs font-medium rounded-full border border-blue-200 text-blue-700 hover:bg-blue-50 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900/20 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
         >
           Due Soon
         </button>
@@ -262,7 +262,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
               sortOrder: 'desc',
             })
           }
-          className="px-3 py-1 text-xs font-medium rounded-full border border-green-200 text-green-700 hover:bg-green-50 dark:border-green-800 dark:text-green-300 dark:hover:bg-green-900/20 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+          className="quick-filter-button px-3 py-1 text-xs font-medium rounded-full border border-green-200 text-green-700 hover:bg-green-50 dark:border-green-800 dark:text-green-300 dark:hover:bg-green-900/20 focus:outline-none focus:ring-2 focus:ring-green-500/20"
         >
           Recently Completed
         </button>

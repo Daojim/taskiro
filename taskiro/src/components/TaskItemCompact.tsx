@@ -355,13 +355,18 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
     >
       {/* Card Header - Title with Checkbox */}
       <div className="flex items-center space-x-2 mb-3">
-        <input
-          type="checkbox"
-          checked={task.status.toLowerCase() === 'completed'}
-          disabled={isToggling}
-          onChange={handleToggleCompletion}
-          className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 flex-shrink-0"
-        />
+        <div
+          className="checkbox-touch-wrapper"
+          onClick={handleToggleCompletion}
+        >
+          <input
+            type="checkbox"
+            checked={task.status.toLowerCase() === 'completed'}
+            disabled={isToggling}
+            readOnly
+            className="h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 flex-shrink-0"
+          />
+        </div>
         <div className="flex-1">
           {editingField === 'title' ? (
             <input
@@ -381,7 +386,7 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
           ) : (
             <h3
               onClick={() => handleStartEdit('title')}
-              className={`text-sm font-medium cursor-pointer hover:bg-white/20 px-1 py-0.5 rounded transition-colors ${
+              className={`editable-field text-sm font-medium cursor-pointer hover:bg-white/20 rounded transition-colors ${
                 task.status.toLowerCase() === 'completed'
                   ? 'line-through text-gray-500 dark:text-gray-400'
                   : 'text-gray-900 dark:text-white'
@@ -416,7 +421,7 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
             ) : (
               <p
                 onClick={() => handleStartEdit('description')}
-                className="text-xs text-gray-600 dark:text-gray-400 cursor-pointer hover:bg-white/20 px-1 py-0.5 rounded transition-colors line-clamp-2"
+                className="editable-field text-xs text-gray-600 dark:text-gray-400 cursor-pointer hover:bg-white/20 rounded transition-colors line-clamp-2"
               >
                 {task.description || 'Add description...'}
               </p>
@@ -449,7 +454,7 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
             ) : (
               <span
                 onClick={() => handleStartEdit('dueDate')}
-                className={`badge cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale ${
+                className={`badge clickable cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale ${
                   isOverdue ? 'badge-error font-medium' : 'badge-gray'
                 }`}
               >
@@ -482,7 +487,7 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
                 />
                 <button
                   onClick={handleRemoveTime}
-                  className="text-gray-400 hover:text-red-500 text-xs opacity-60 hover:opacity-100 transition-all duration-200"
+                  className="icon-button text-gray-400 hover:text-red-500 text-xs opacity-60 hover:opacity-100 transition-all duration-200"
                   title="Remove time"
                 >
                   ×
@@ -491,13 +496,13 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
             ) : (
               <div className="relative inline-block">
                 {task.dueTime ? (
-                  <div className="badge badge-gray cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale flex items-center gap-1">
+                  <div className="badge clickable badge-gray cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale flex items-center gap-1">
                     <span onClick={() => handleStartEdit('dueTime')}>
                       {formatTime(task.dueTime)}
                     </span>
                     <button
                       onClick={handleRemoveTime}
-                      className="text-gray-400 hover:text-red-500 text-xs opacity-60 hover:opacity-100 transition-all duration-200 ml-1"
+                      className="icon-button text-gray-400 hover:text-red-500 text-xs opacity-60 hover:opacity-100 transition-all duration-200 ml-1"
                       title="Remove time"
                     >
                       ×
@@ -506,7 +511,7 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
                 ) : (
                   <span
                     onClick={() => handleStartEdit('dueTime')}
-                    className="badge badge-gray cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale"
+                    className="badge clickable badge-gray cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale"
                   >
                     Set time
                   </span>
@@ -541,7 +546,7 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
             ) : (
               <span
                 onClick={() => handleStartEdit('priority')}
-                className={`badge cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale ${
+                className={`badge clickable cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale ${
                   task.priority === 'high'
                     ? 'badge-error'
                     : task.priority === 'medium'
@@ -580,14 +585,14 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
             ) : task.category ? (
               <span
                 onClick={() => handleStartEdit('categoryId')}
-                className="badge badge-primary cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale"
+                className="badge clickable badge-primary cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale"
               >
                 {task.category.name}
               </span>
             ) : (
               <span
                 onClick={() => handleStartEdit('categoryId')}
-                className="badge badge-gray cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale"
+                className="badge clickable badge-gray cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale"
               >
                 Set category
               </span>
@@ -600,7 +605,7 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
       <div className="flex justify-end">
         <button
           onClick={handleDelete}
-          className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-white/50 rounded-full transition-all duration-200 hover:scale-110"
+          className="action-button text-gray-500 hover:text-red-600 hover:bg-white/50 rounded-full transition-all duration-200 hover:scale-110"
           title="Delete task"
         >
           <svg

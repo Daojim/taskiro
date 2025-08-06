@@ -102,7 +102,7 @@ const TaskSearch: React.FC<TaskSearchProps> = ({
           onFocus={handleFocus}
           onBlur={handleBlur}
           placeholder={placeholder}
-          className="input pl-10 pr-10 shadow-sm hover:shadow-md transition-all duration-250"
+          className="search-input input pl-10 pr-10 shadow-sm hover:shadow-md transition-all duration-250"
         />
 
         {/* Clear Button */}
@@ -111,7 +111,7 @@ const TaskSearch: React.FC<TaskSearchProps> = ({
             <button
               type="button"
               onClick={handleClear}
-              className="p-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-all duration-250 focus-ring rounded-lg hover-scale"
+              className="search-clear-button p-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-all duration-250 focus-ring rounded-lg hover-scale"
               aria-label="Clear search"
             >
               <svg

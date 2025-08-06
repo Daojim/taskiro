@@ -161,7 +161,10 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
         {/* Header */}
         <div className="modal-header">
           <h2 className="text-heading-2">Manage Categories</h2>
-          <button onClick={onClose} className="btn-ghost p-2 hover-scale">
+          <button
+            onClick={onClose}
+            className="close-button btn-ghost p-2 hover-scale"
+          >
             <svg
               className="w-6 h-6"
               fill="none"

@@ -15,6 +15,9 @@ body {
 /* Import mobile gesture support styles */
 @import './styles/mobile.css';
 
+/* Import mobile touch target optimizations */
+@import './styles/mobile-touch-targets.css';
+
 /* Import Simplified Design System */
 @import './styles/design-system-simple.css';
 

@@ -104,7 +104,7 @@ const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+            className="close-button text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
           >
             <XMarkIcon className="h-6 w-6" />
           </button>

@@ -100,7 +100,7 @@ const CalendarTask: React.FC<CalendarTaskProps> = ({
   return (
     <>
       <div
-        className={`${taskStyles} cursor-pointer hover:shadow-sm transition-shadow relative group`}
+        className={`calendar-task ${taskStyles} cursor-pointer hover:shadow-sm transition-shadow relative group`}
         onClick={handleTaskClick}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -118,16 +118,14 @@ const CalendarTask: React.FC<CalendarTaskProps> = ({
 
           {/* Action buttons (visible on hover) */}
           {isHovered && (
-            <div className="flex items-center space-x-1 ml-2">
+            <div className="task-actions flex items-center space-x-1 ml-2">
               <button
                 onClick={handleToggleCompletion}
+                className="task-action-button"
                 style={{
-                  padding: '4px',
-                  borderRadius: '4px',
                   backgroundColor: 'rgba(255, 255, 255, 0.1)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
                   color: isCompleted ? '#10b981' : '#6b7280',
-                  cursor: 'pointer',
                 }}
                 title={
                   isCompleted ? '✓ Mark as incomplete' : '✓ Mark as complete'
@@ -146,13 +144,11 @@ const CalendarTask: React.FC<CalendarTaskProps> = ({
 
               <button
                 onClick={handleTaskClick}
+                className="task-action-button"
                 style={{
-                  padding: '4px',
-                  borderRadius: '4px',
                   backgroundColor: 'rgba(255, 255, 255, 0.1)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
                   color: '#6b7280',
-                  cursor: 'pointer',
                 }}
                 title="✏️ Edit task"
                 onMouseEnter={(e) => {
@@ -169,13 +165,11 @@ const CalendarTask: React.FC<CalendarTaskProps> = ({
 
               <button
                 onClick={handleDelete}
+                className="task-action-button"
                 style={{
-                  padding: '4px',
-                  borderRadius: '4px',
                   backgroundColor: 'rgba(255, 255, 255, 0.1)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
                   color: '#ef4444',
-                  cursor: 'pointer',
                 }}
                 title="🗑️ Delete task"
                 onMouseEnter={(e) => {
