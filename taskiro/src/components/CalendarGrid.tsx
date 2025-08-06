@@ -50,10 +50,11 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
       const dayTasks = tasks.filter((task) => {
         if (!task.dueDate) return false;
         const taskDate = new Date(task.dueDate);
+        // Use UTC methods to avoid timezone conversion issues
         return (
-          taskDate.getFullYear() === currentDay.getFullYear() &&
-          taskDate.getMonth() === currentDay.getMonth() &&
-          taskDate.getDate() === currentDay.getDate()
+          taskDate.getUTCFullYear() === currentDay.getFullYear() &&
+          taskDate.getUTCMonth() === currentDay.getMonth() &&
+          taskDate.getUTCDate() === currentDay.getDate()
         );
       });
 

@@ -105,21 +105,49 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   const handleTaskCreate = useCallback(
     async (taskData: Partial<Task>) => {
       try {
-        // Convert to CreateTaskRequest format
+        // Convert to CreateTaskRequest format - only include defined values
         const createRequest: CreateTaskRequest = {
           title: taskData.title || '',
-          description: taskData.description,
-          dueDate: taskData.dueDate,
-          dueTime: taskData.dueTime,
-          priority: taskData.priority,
-          categoryId: taskData.categoryId,
+          priority: taskData.priority || 'medium',
         };
 
-        const newTask = await createTask(createRequest);
-        if (newTask && onTaskCreated) {
-          onTaskCreated(newTask);
+        // Only add optional fields if they have values
+        if (taskData.description && taskData.description.trim()) {
+          createRequest.description = taskData.description.trim();
         }
-      } catch {
+        if (taskData.dueDate) {
+          // Convert YYYY-MM-DD to proper ISO8601 format at noon UTC to avoid timezone issues
+          createRequest.dueDate = `${taskData.dueDate}T12:00:00.000Z`;
+        }
+        if (taskData.dueTime) {
+          createRequest.dueTime = taskData.dueTime;
+        }
+        if (taskData.categoryId) {
+          createRequest.categoryId = taskData.categoryId;
+        }
+
+        console.log('Creating task with data:', createRequest);
+        const newTask = await createTask(createRequest);
+        // Don't call onTaskCreated as it might be causing the double call
+        // The task is already added to state in the createTask function
+        console.log('Task created successfully:', newTask);
+      } catch (error) {
+        console.error('Task creation error details:', error);
+        // Log the full error response to understand what's failing
+        if (error && typeof error === 'object') {
+          const axiosError = error as any;
+          if (axiosError.response) {
+            console.error(
+              'Server response status:',
+              axiosError.response.status
+            );
+            console.error('Server response data:', axiosError.response.data);
+            console.error(
+              'Server response headers:',
+              axiosError.response.headers
+            );
+          }
+        }
         if (onError) {
           onError('Failed to create task');
         }

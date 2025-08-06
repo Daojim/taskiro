@@ -49,7 +49,22 @@ export const useTasks = (): UseTasksReturn => {
       const apiError = err as {
         error?: { message?: string };
         message?: string;
+        response?: { data?: any };
       };
+
+      // Log the full error details for debugging
+      console.error('Full error object:', err);
+      if (apiError.response?.data) {
+        console.error('Server response data:', apiError.response.data);
+      }
+      // Try to extract more error details
+      try {
+        const errorStr = JSON.stringify(err, null, 2);
+        console.error('Error as JSON:', errorStr);
+      } catch (e) {
+        console.error('Could not stringify error');
+      }
+
       errorMessage =
         apiError.error?.message || apiError.message || defaultMessage;
     } else if (typeof err === 'string') {
@@ -144,6 +159,17 @@ export const useTasks = (): UseTasksReturn => {
     async (taskData: CreateTaskRequest): Promise<Task | null> => {
       try {
         setError(null);
+
+        // Debug: Check if taskData has unexpected properties
+        if ('id' in taskData || 'userId' in taskData) {
+          console.error(
+            'ERROR: createTask called with full task object instead of CreateTaskRequest:',
+            taskData
+          );
+          return null;
+        }
+
+        console.log('About to call apiService.createTask with:', taskData);
         const response = await apiService.createTask(taskData);
         const newTask = response.task;
 
@@ -152,6 +178,7 @@ export const useTasks = (): UseTasksReturn => {
 
         return newTask;
       } catch (err: unknown) {
+        console.log('createTask caught error:', err);
         handleError(err, 'Failed to create task');
         return null;
       }
