@@ -26,6 +26,10 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
   const [isToggling, setIsToggling] = useState(false);
   const [editingField, setEditingField] = useState<string | null>(null);
   const [isProcessingTimeEnter, setIsProcessingTimeEnter] = useState(false);
+  const [completionAnimation, setCompletionAnimation] = useState<
+    'completing' | 'uncompleting' | null
+  >(null);
+  const [showCompletionFeedback, setShowCompletionFeedback] = useState(false);
 
   // Helper function to format time for input field
   const formatTimeForInput = (timeString: string) => {
@@ -68,12 +72,30 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
   const handleToggleCompletion = useCallback(async () => {
     if (isToggling) return;
     setIsToggling(true);
+
+    const wasCompleted = task.status.toLowerCase() === 'completed';
+    const animationType = wasCompleted ? 'uncompleting' : 'completing';
+
+    // Start visual feedback
+    setCompletionAnimation(animationType);
+    setShowCompletionFeedback(true);
+
     try {
       await onToggleCompletion(task.id);
+
+      // Show success feedback briefly
+      setTimeout(() => {
+        setShowCompletionFeedback(false);
+        setCompletionAnimation(null);
+      }, 600);
+    } catch (error) {
+      // Reset animation on error
+      setCompletionAnimation(null);
+      setShowCompletionFeedback(false);
     } finally {
       setIsToggling(false);
     }
-  }, [task.id, onToggleCompletion, isToggling]);
+  }, [task.id, task.status, onToggleCompletion, isToggling]);
 
   const handleDelete = useCallback(() => {
     onDelete(task.id);
@@ -338,290 +360,448 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
     new Date(task.dueDate) < new Date() &&
     task.status.toLowerCase() !== 'completed';
 
+  // Determine if task is urgent (high priority and due today or overdue)
+  const isUrgent =
+    task.priority.toLowerCase() === 'high' &&
+    (isOverdue ||
+      (task.dueDate &&
+        new Date(task.dueDate).toDateString() === new Date().toDateString()));
+
+  // Generate CSS classes for priority-based visual system
+  const getTaskCardClasses = () => {
+    const baseClasses =
+      'relative p-4 rounded-lg w-full max-w-[250px] min-h-[180px] flex flex-col justify-between';
+    const priorityClass = `task-card-priority-${task.priority}`;
+    const completedClass =
+      task.status.toLowerCase() === 'completed' ? 'task-card-completed' : '';
+    const overdueClass = isOverdue ? `task-card-overdue` : '';
+    const urgentClass = isUrgent ? 'task-card-urgent' : '';
+    const completingClass = completionAnimation
+      ? `task-card-${completionAnimation}`
+      : '';
+    const feedbackClass = showCompletionFeedback
+      ? 'task-card-completion-feedback completing'
+      : 'task-card-completion-feedback';
+
+    const finalClasses =
+      `${baseClasses} ${priorityClass} ${completedClass} ${overdueClass} ${urgentClass} ${completingClass} ${feedbackClass}`.trim();
+
+    // Debug logging
+    console.log(
+      'Task:',
+      task.title,
+      'Priority:',
+      task.priority,
+      'Status:',
+      task.status,
+      'Classes:',
+      finalClasses
+    );
+
+    return finalClasses;
+  };
+
+  // Get inline styles for priority (fallback if CSS doesn't load)
+  const getInlineStyles = () => {
+    const isCompleted = task.status.toLowerCase() === 'completed';
+
+    console.log(
+      'DEBUG - Task:',
+      task.title,
+      'Priority:',
+      task.priority,
+      'Completed:',
+      isCompleted
+    );
+
+    if (isCompleted) {
+      const completedStyle = {
+        background: 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)',
+        borderLeft: '4px solid #9ca3af',
+        opacity: 0.7,
+      };
+      console.log('DEBUG - Applying completed style:', completedStyle);
+      return completedStyle;
+    }
+
+    const priorityStyles = {
+      high: {
+        background: 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)',
+        borderLeft: '4px solid #ef4444',
+        borderColor: '#fecaca',
+        boxShadow:
+          '0 4px 6px -1px rgba(239, 68, 68, 0.1), 0 2px 4px -1px rgba(239, 68, 68, 0.06)',
+      },
+      medium: {
+        background: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)',
+        borderLeft: '4px solid #f59e0b',
+        borderColor: '#fed7aa',
+        boxShadow:
+          '0 4px 6px -1px rgba(245, 158, 11, 0.1), 0 2px 4px -1px rgba(245, 158, 11, 0.06)',
+      },
+      low: {
+        background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
+        borderLeft: '4px solid #10b981',
+        borderColor: '#bbf7d0',
+        boxShadow:
+          '0 4px 6px -1px rgba(16, 185, 129, 0.1), 0 2px 4px -1px rgba(16, 185, 129, 0.06)',
+      },
+    };
+
+    // Convert priority to lowercase for lookup since priorities come as UPPERCASE
+    const priorityKey =
+      task.priority.toLowerCase() as keyof typeof priorityStyles;
+    const selectedStyle = priorityStyles[priorityKey] || {};
+    console.log(
+      'DEBUG - Applying priority style for',
+      task.priority,
+      'using key',
+      priorityKey,
+      ':',
+      selectedStyle
+    );
+    return selectedStyle;
+  };
+
   return (
     <div
-      className={`relative p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 w-full max-w-[250px] min-h-[180px] flex flex-col justify-between ${
-        task.status.toLowerCase() === 'completed'
-          ? 'bg-gray-200 dark:bg-gray-600 opacity-75'
-          : task.priority === 'high'
-            ? 'bg-red-100 dark:bg-red-900/30 border-l-4 border-red-500'
-            : task.priority === 'medium'
-              ? 'bg-yellow-100 dark:bg-yellow-900/30 border-l-4 border-yellow-500'
-              : 'bg-blue-100 dark:bg-blue-900/30 border-l-4 border-blue-500'
-      } ${isOverdue ? 'border-2 border-red-500 animate-pulse' : ''}`}
+      className={getTaskCardClasses()}
       style={{
-        boxShadow: '0 4px 8px rgba(0,0,0,0.1), 0 6px 20px rgba(0,0,0,0.1)',
+        ...getInlineStyles(),
+        transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+        transform: completionAnimation ? 'scale(0.98)' : 'scale(1)',
       }}
     >
-      {/* Card Header - Title with Checkbox */}
-      <div className="flex items-center space-x-2 mb-3">
-        <div
-          className="checkbox-touch-wrapper"
-          onClick={handleToggleCompletion}
-        >
-          <input
-            type="checkbox"
-            checked={task.status.toLowerCase() === 'completed'}
-            disabled={isToggling}
-            readOnly
-            className="h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 flex-shrink-0"
-          />
-        </div>
-        <div className="flex-1">
-          {editingField === 'title' ? (
+      <div className="task-card-content">
+        {/* Card Header - Title with Checkbox */}
+        <div className="task-card-header">
+          <div
+            className="task-checkbox-wrapper"
+            onClick={handleToggleCompletion}
+          >
             <input
-              ref={titleInputRef}
-              type="text"
-              value={editValues.title}
-              onChange={(e) =>
-                setEditValues((prev) => ({
-                  ...prev,
-                  title: e.target.value,
-                }))
-              }
-              onBlur={() => handleSaveEdit('title')}
-              onKeyDown={(e) => handleKeyPress(e, 'title')}
-              className="w-full text-sm font-medium bg-transparent border-none outline-none"
-            />
-          ) : (
-            <h3
-              onClick={() => handleStartEdit('title')}
-              className={`editable-field text-sm font-medium cursor-pointer hover:bg-white/20 rounded transition-colors ${
+              type="checkbox"
+              checked={task.status.toLowerCase() === 'completed'}
+              disabled={isToggling}
+              readOnly
+              className={`task-checkbox ${
+                isToggling ? 'task-checkbox-loading' : ''
+              } ${
                 task.status.toLowerCase() === 'completed'
-                  ? 'line-through text-gray-500 dark:text-gray-400'
-                  : 'text-gray-900 dark:text-white'
-              }`}
-            >
-              {task.title}
-            </h3>
-          )}
-        </div>
-      </div>
-
-      {/* Card Body - Description */}
-      <div className="flex-1 mb-3">
-        {(task.description || editingField === 'description') && (
-          <div>
-            {editingField === 'description' ? (
-              <textarea
-                ref={descriptionInputRef}
-                value={editValues.description}
+                  ? 'task-checkbox-completed'
+                  : ''
+              } ${completionAnimation ? 'task-checkbox-completing' : ''}`}
+            />
+            {showCompletionFeedback && (
+              <div
+                className={`task-completion-success ${showCompletionFeedback ? 'show' : 'hide'}`}
+              >
+                ✓
+              </div>
+            )}
+          </div>
+          <div className="flex-1">
+            {editingField === 'title' ? (
+              <input
+                ref={titleInputRef}
+                type="text"
+                value={editValues.title}
                 onChange={(e) =>
                   setEditValues((prev) => ({
                     ...prev,
-                    description: e.target.value,
+                    title: e.target.value,
                   }))
                 }
-                onBlur={() => handleSaveEdit('description')}
-                onKeyDown={(e) => handleKeyPress(e, 'description')}
-                rows={2}
-                className="w-full text-xs bg-transparent border border-gray-300 dark:border-gray-600 rounded px-2 py-1 resize-none"
-                placeholder="Add description..."
+                onBlur={() => handleSaveEdit('title')}
+                onKeyDown={(e) => handleKeyPress(e, 'title')}
+                className="w-full task-input-title bg-transparent border-none outline-none"
               />
             ) : (
-              <p
-                onClick={() => handleStartEdit('description')}
-                className="editable-field text-xs text-gray-600 dark:text-gray-400 cursor-pointer hover:bg-white/20 rounded transition-colors line-clamp-2"
-              >
-                {task.description || 'Add description...'}
-              </p>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Card Meta - Date, Time, Priority, Category */}
-      <div className="space-y-2 mb-3">
-        {/* Due Date and Time */}
-        <div className="flex flex-wrap items-center gap-1">
-          {/* Due Date */}
-          <div className="flex items-center space-x-1">
-            {editingField === 'dueDate' ? (
-              <input
-                type="date"
-                value={editValues.dueDate}
-                onChange={(e) => {
-                  setEditValues((prev) => ({
-                    ...prev,
-                    dueDate: e.target.value,
-                  }));
-                }}
-                onBlur={() => handleSaveEdit('dueDate')}
-                onKeyDown={(e) => handleKeyPress(e, 'dueDate')}
-                className="text-xs px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 dark:text-white"
-                autoFocus
-              />
-            ) : (
-              <span
-                onClick={() => handleStartEdit('dueDate')}
-                className={`badge clickable cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale ${
-                  isOverdue ? 'badge-error font-medium' : 'badge-gray'
+              <h3
+                onClick={() => handleStartEdit('title')}
+                className={`editable-field cursor-pointer hover:bg-white/20 rounded transition-colors ${
+                  completionAnimation ? 'task-title-completing completing' : ''
                 }`}
+                style={{
+                  fontSize: '16px',
+                  fontWeight: 600,
+                  lineHeight: 1.4,
+                  letterSpacing: '-0.025em',
+                  marginBottom: '8px',
+                  textDecoration:
+                    task.status.toLowerCase() === 'completed'
+                      ? 'line-through'
+                      : 'none',
+                  opacity: task.status.toLowerCase() === 'completed' ? 0.7 : 1,
+                  color:
+                    task.status.toLowerCase() === 'completed'
+                      ? '#6b7280'
+                      : task.priority === 'high'
+                        ? '#7f1d1d'
+                        : task.priority === 'medium'
+                          ? '#92400e'
+                          : '#064e3b',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
               >
-                {task.dueDate ? formatDate(task.dueDate) : 'Set due date'}
-              </span>
+                {task.title}
+              </h3>
             )}
           </div>
+        </div>
 
-          {/* Due Time */}
-          <div className="flex items-center space-x-1">
-            {editingField === 'dueTime' ? (
-              <div className="flex items-center gap-1">
-                <input
-                  ref={timeInputRef}
-                  type="time"
-                  value={editValues.dueTime}
+        {/* Card Body - Description */}
+        <div className="task-card-body">
+          {(task.description || editingField === 'description') && (
+            <div>
+              {editingField === 'description' ? (
+                <textarea
+                  ref={descriptionInputRef}
+                  value={editValues.description}
                   onChange={(e) =>
                     setEditValues((prev) => ({
                       ...prev,
-                      dueTime: e.target.value,
+                      description: e.target.value,
                     }))
                   }
-                  onBlur={() => {
-                    if (!isProcessingTimeEnter) {
-                      handleSaveEdit('dueTime');
-                    }
-                  }}
-                  onKeyDown={(e) => handleKeyPress(e, 'dueTime')}
-                  className="text-xs px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 dark:text-white"
+                  onBlur={() => handleSaveEdit('description')}
+                  onKeyDown={(e) => handleKeyPress(e, 'description')}
+                  rows={2}
+                  className="w-full task-input-description bg-transparent border border-gray-300 dark:border-gray-600 rounded px-2 py-1"
+                  placeholder="Add description..."
                 />
-                <button
-                  onClick={handleRemoveTime}
-                  className="icon-button text-gray-400 hover:text-red-500 text-xs opacity-60 hover:opacity-100 transition-all duration-200"
-                  title="Remove time"
+              ) : (
+                <p
+                  onClick={() => handleStartEdit('description')}
+                  className={`editable-field cursor-pointer hover:bg-white/20 rounded transition-colors line-clamp-2 ${
+                    task.status.toLowerCase() === 'completed'
+                      ? 'task-description-completed'
+                      : 'task-description'
+                  }`}
                 >
-                  ×
-                </button>
+                  {task.description || 'Add description...'}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Card Meta - Date, Time, Priority, Category */}
+        <div className="task-card-meta">
+          <div className="task-metadata space-y-2">
+            {/* Due Date and Time */}
+            <div className="task-badge-group">
+              {/* Due Date */}
+              <div className="flex items-center space-x-1">
+                {editingField === 'dueDate' ? (
+                  <input
+                    type="date"
+                    value={editValues.dueDate}
+                    onChange={(e) => {
+                      setEditValues((prev) => ({
+                        ...prev,
+                        dueDate: e.target.value,
+                      }));
+                    }}
+                    onBlur={() => handleSaveEdit('dueDate')}
+                    onKeyDown={(e) => handleKeyPress(e, 'dueDate')}
+                    className="task-input-meta px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 dark:text-white"
+                    autoFocus
+                  />
+                ) : (
+                  <span
+                    onClick={() => handleStartEdit('dueDate')}
+                    className={`badge clickable cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale ${
+                      isOverdue ? 'badge-error font-medium' : 'badge-gray'
+                    } ${
+                      task.status.toLowerCase() === 'completed'
+                        ? 'task-badge-completed'
+                        : ''
+                    }`}
+                  >
+                    {task.dueDate ? formatDate(task.dueDate) : 'Set due date'}
+                  </span>
+                )}
               </div>
-            ) : (
-              <div className="relative inline-block">
-                {task.dueTime ? (
-                  <div className="badge clickable badge-gray cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale flex items-center gap-1">
-                    <span onClick={() => handleStartEdit('dueTime')}>
-                      {formatTime(task.dueTime)}
-                    </span>
+
+              {/* Due Time */}
+              <div className="flex items-center space-x-1">
+                {editingField === 'dueTime' ? (
+                  <div className="flex items-center gap-1">
+                    <input
+                      ref={timeInputRef}
+                      type="time"
+                      value={editValues.dueTime}
+                      onChange={(e) =>
+                        setEditValues((prev) => ({
+                          ...prev,
+                          dueTime: e.target.value,
+                        }))
+                      }
+                      onBlur={() => {
+                        if (!isProcessingTimeEnter) {
+                          handleSaveEdit('dueTime');
+                        }
+                      }}
+                      onKeyDown={(e) => handleKeyPress(e, 'dueTime')}
+                      className="task-input-meta px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 dark:text-white"
+                    />
                     <button
                       onClick={handleRemoveTime}
-                      className="icon-button text-gray-400 hover:text-red-500 text-xs opacity-60 hover:opacity-100 transition-all duration-200 ml-1"
+                      className="icon-button text-gray-400 hover:text-red-500 text-xs opacity-60 hover:opacity-100 transition-all duration-200"
                       title="Remove time"
                     >
                       ×
                     </button>
                   </div>
                 ) : (
-                  <span
-                    onClick={() => handleStartEdit('dueTime')}
-                    className="badge clickable badge-gray cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale"
+                  <div className="relative inline-block">
+                    {task.dueTime ? (
+                      <div
+                        className={`badge clickable badge-gray cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale flex items-center gap-1 ${
+                          task.status.toLowerCase() === 'completed'
+                            ? 'task-badge-completed'
+                            : ''
+                        }`}
+                      >
+                        <span onClick={() => handleStartEdit('dueTime')}>
+                          {formatTime(task.dueTime)}
+                        </span>
+                        <button
+                          onClick={handleRemoveTime}
+                          className="icon-button text-gray-400 hover:text-red-500 text-xs opacity-60 hover:opacity-100 transition-all duration-200 ml-1"
+                          title="Remove time"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ) : (
+                      <span
+                        onClick={() => handleStartEdit('dueTime')}
+                        className={`badge clickable badge-gray cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale ${
+                          task.status.toLowerCase() === 'completed'
+                            ? 'task-badge-completed'
+                            : ''
+                        }`}
+                      >
+                        Set time
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Priority and Category */}
+            <div className="task-badge-group">
+              {/* Priority */}
+              <div className="flex items-center space-x-1">
+                {editingField === 'priority' ? (
+                  <select
+                    value={editValues.priority.toLowerCase()}
+                    onChange={(e) =>
+                      setEditValues((prev) => ({
+                        ...prev,
+                        priority: e.target.value as Priority,
+                      }))
+                    }
+                    onBlur={() => handleSaveEdit('priority')}
+                    onKeyDown={(e) => handleKeyPress(e, 'priority')}
+                    className="text-xs px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 dark:text-white"
+                    autoFocus
                   >
-                    Set time
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                  </select>
+                ) : (
+                  <span
+                    onClick={() => handleStartEdit('priority')}
+                    className={`badge clickable cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale priority-indicator-${task.priority} ${
+                      task.status.toLowerCase() === 'completed'
+                        ? 'task-badge-completed'
+                        : ''
+                    }`}
+                  >
+                    {task.priority.charAt(0).toUpperCase() +
+                      task.priority.slice(1)}
                   </span>
                 )}
               </div>
-            )}
+
+              {/* Category */}
+              <div className="flex items-center space-x-1">
+                {editingField === 'categoryId' ? (
+                  <select
+                    value={editValues.categoryId}
+                    onChange={(e) =>
+                      setEditValues((prev) => ({
+                        ...prev,
+                        categoryId: e.target.value,
+                      }))
+                    }
+                    onBlur={() => handleSaveEdit('categoryId')}
+                    onKeyDown={(e) => handleKeyPress(e, 'categoryId')}
+                    className="text-xs px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 dark:text-white"
+                    autoFocus
+                  >
+                    <option value="">No category</option>
+                    {categories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : task.category ? (
+                  <span
+                    onClick={() => handleStartEdit('categoryId')}
+                    className={`badge clickable badge-primary cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale ${
+                      task.status.toLowerCase() === 'completed'
+                        ? 'task-badge-completed'
+                        : ''
+                    }`}
+                  >
+                    {task.category.name}
+                  </span>
+                ) : (
+                  <span
+                    onClick={() => handleStartEdit('categoryId')}
+                    className={`badge clickable badge-gray cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale ${
+                      task.status.toLowerCase() === 'completed'
+                        ? 'task-badge-completed'
+                        : ''
+                    }`}
+                  >
+                    Set category
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Card Footer - Delete Button */}
+          <div className="task-card-footer">
+            <button
+              onClick={handleDelete}
+              className="task-action-button hover:text-red-600"
+              title="Delete task"
+            >
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+            </button>
           </div>
         </div>
-
-        {/* Priority and Category */}
-        <div className="flex flex-wrap items-center gap-1">
-          {/* Priority */}
-          <div className="flex items-center space-x-1">
-            {editingField === 'priority' ? (
-              <select
-                value={editValues.priority.toLowerCase()}
-                onChange={(e) =>
-                  setEditValues((prev) => ({
-                    ...prev,
-                    priority: e.target.value as Priority,
-                  }))
-                }
-                onBlur={() => handleSaveEdit('priority')}
-                onKeyDown={(e) => handleKeyPress(e, 'priority')}
-                className="text-xs px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 dark:text-white"
-                autoFocus
-              >
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-              </select>
-            ) : (
-              <span
-                onClick={() => handleStartEdit('priority')}
-                className={`badge clickable cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale ${
-                  task.priority === 'high'
-                    ? 'badge-error'
-                    : task.priority === 'medium'
-                      ? 'badge-warning'
-                      : 'badge-success'
-                }`}
-              >
-                {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
-              </span>
-            )}
-          </div>
-
-          {/* Category */}
-          <div className="flex items-center space-x-1">
-            {editingField === 'categoryId' ? (
-              <select
-                value={editValues.categoryId}
-                onChange={(e) =>
-                  setEditValues((prev) => ({
-                    ...prev,
-                    categoryId: e.target.value,
-                  }))
-                }
-                onBlur={() => handleSaveEdit('categoryId')}
-                onKeyDown={(e) => handleKeyPress(e, 'categoryId')}
-                className="text-xs px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 dark:text-white"
-                autoFocus
-              >
-                <option value="">No category</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-            ) : task.category ? (
-              <span
-                onClick={() => handleStartEdit('categoryId')}
-                className="badge clickable badge-primary cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale"
-              >
-                {task.category.name}
-              </span>
-            ) : (
-              <span
-                onClick={() => handleStartEdit('categoryId')}
-                className="badge clickable badge-gray cursor-pointer hover:opacity-80 transition-all duration-250 hover-scale"
-              >
-                Set category
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Card Footer - Delete Button */}
-      <div className="flex justify-end">
-        <button
-          onClick={handleDelete}
-          className="action-button text-gray-500 hover:text-red-600 hover:bg-white/50 rounded-full transition-all duration-200 hover:scale-110"
-          title="Delete task"
-        >
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-            />
-          </svg>
-        </button>
       </div>
     </div>
   );

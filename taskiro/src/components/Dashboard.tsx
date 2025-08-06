@@ -219,11 +219,19 @@ const Dashboard: React.FC = () => {
       {/* Fixed Toast Notification */}
       {notification && (
         <div
-          className={`fixed top-5 right-5 z-50 rounded-lg p-4 min-w-80 shadow-lg transition-colors duration-300 ${
+          className={`fixed bottom-5 right-5 z-50 rounded-lg p-4 min-w-80 shadow-lg transition-all duration-300 transform ${
             notification.type === 'success'
               ? 'bg-sky-50 dark:bg-sky-900/20 border-3 border-green-500 dark:border-green-400'
               : 'bg-red-50 dark:bg-red-900/20 border-3 border-red-500 dark:border-red-400'
           }`}
+          style={{
+            position: 'fixed',
+            bottom: '20px',
+            right: '20px',
+            zIndex: 9999,
+            pointerEvents: 'auto',
+            maxWidth: '400px',
+          }}
         >
           <div className="flex justify-between items-center">
             <div className="flex items-center">
