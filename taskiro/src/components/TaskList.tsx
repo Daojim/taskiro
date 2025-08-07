@@ -324,7 +324,7 @@ const TaskList: React.FC<TaskListProps> = ({
             </p>
           </div>
         ) : (
-          <div className="animate-fade-in flex flex-wrap gap-4 justify-start">
+          <div className="animate-fade-in task-grid">
             {filteredAndSortedTasks.map((task) => (
               <TaskItemCompact
                 key={task.id}

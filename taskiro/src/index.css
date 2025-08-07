@@ -291,3 +291,83 @@ body {
 .task-toggling * {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
+/* Responsive Task Layout - Using Flexbox for better compatibility */
+.task-grid {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 1rem !important;
+  width: 100% !important;
+  background-color: red !important;
+  border: 5px solid blue !important;
+  padding: 10px !important;
+}
+
+/* Force task cards to specific widths for columns */
+.task-grid > * {
+  flex: 0 0 calc(50% - 0.5rem) !important; /* 2 columns */
+  max-width: calc(50% - 0.5rem) !important;
+  min-width: 0 !important;
+  background-color: yellow !important;
+  border: 3px solid green !important;
+}
+
+/* Small mobile - 3 columns */
+@media (min-width: 480px) {
+  .task-grid > * {
+    flex: 0 0 calc(33.333% - 0.67rem) !important; /* 3 columns */
+    max-width: calc(33.333% - 0.67rem) !important;
+  }
+}
+
+/* Tablet - 4 columns */
+@media (min-width: 768px) {
+  .task-grid {
+    gap: 1.25rem !important;
+  }
+  .task-grid > * {
+    flex: 0 0 calc(25% - 0.9375rem) !important; /* 4 columns */
+    max-width: calc(25% - 0.9375rem) !important;
+  }
+}
+
+/* Desktop - 5 columns */
+@media (min-width: 1024px) {
+  .task-grid {
+    gap: 1.5rem !important;
+  }
+  .task-grid > * {
+    flex: 0 0 calc(20% - 1.2rem) !important; /* 5 columns */
+    max-width: calc(20% - 1.2rem) !important;
+  }
+}
+
+/* Large desktop - 6 columns */
+@media (min-width: 1280px) {
+  .task-grid > * {
+    flex: 0 0 calc(16.666% - 1.25rem) !important; /* 6 columns */
+    max-width: calc(16.666% - 1.25rem) !important;
+  }
+}
+
+/* Alternative selectors in case class name isn't matching */
+div.task-grid,
+[class*='task-grid'],
+.animate-fade-in.task-grid {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 1rem !important;
+  width: 100% !important;
+  background-color: purple !important;
+  border: 5px solid orange !important;
+  padding: 10px !important;
+}
+
+div.task-grid > *,
+[class*='task-grid'] > *,
+.animate-fade-in.task-grid > * {
+  flex: 0 0 calc(50% - 0.5rem) !important;
+  max-width: calc(50% - 0.5rem) !important;
+  min-width: 0 !important;
+  background-color: pink !important;
+  border: 3px solid black !important;
+}

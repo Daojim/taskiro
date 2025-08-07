@@ -369,7 +369,7 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
   // Generate CSS classes for priority-based visual system
   const getTaskCardClasses = () => {
     const baseClasses =
-      'relative p-4 rounded-lg w-full max-w-[250px] min-h-[180px] flex flex-col justify-between';
+      'relative p-4 rounded-lg w-full min-h-[180px] flex flex-col justify-between';
     const priorityClass = `task-card-priority-${task.priority}`;
     const completedClass =
       task.status.toLowerCase() === 'completed' ? 'task-card-completed' : '';
