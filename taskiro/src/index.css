@@ -27,6 +27,9 @@ body {
 /* Import Priority Debug Styles */
 @import './styles/priority-debug.css';
 
+/* Import Enhanced Time Input Styles */
+@import './styles/enhanced-time-input.css';
+
 /* CRITICAL PRIORITY STYLES - Inline to ensure they load */
 .task-card-priority-high {
   background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%) !important;

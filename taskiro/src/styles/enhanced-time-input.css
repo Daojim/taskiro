@@ -1,0 +1,279 @@
+/* Enhanced Time Input Styles */
+/* Addresses requirements 3.1, 3.3, 3.4, 3.6 for improved inline editing experience */
+
+.enhanced-time-input-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+/* Specific styles for inline editing in task cards */
+.enhanced-time-input-inline {
+  font-size: 12px !important;
+  padding: 6px 10px !important;
+  min-width: 120px !important;
+}
+
+.enhanced-time-input {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  background-color: #ffffff;
+  color: #111827;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+.enhanced-time-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Edit mode visual indicators */
+.enhanced-time-input--editing {
+  border: 2px solid #3b82f6 !important;
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  transform: scale(1.02);
+}
+
+/* Error state */
+.enhanced-time-input--error {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+/* Saving state */
+.enhanced-time-input--saving {
+  opacity: 0.7;
+  cursor: wait;
+  pointer-events: none;
+}
+
+/* Loading spinner */
+.enhanced-time-input-spinner {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+/* Error message */
+.enhanced-time-input-error {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.enhanced-time-input-error::before {
+  content: '⚠';
+  font-size: 14px;
+}
+
+/* Help text */
+.enhanced-time-input-help {
+  color: #6b7280;
+  font-size: 11px;
+  margin-top: 2px;
+  padding: 0 8px;
+  opacity: 0.8;
+}
+
+/* Suggestions dropdown */
+.enhanced-time-input-suggestions {
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  background: #ffffff !important;
+  border: 3px solid #2563eb !important;
+  border-radius: 8px !important;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(37, 99, 235, 0.1) !important;
+  z-index: 9999 !important; /* Even higher z-index */
+  margin-top: 6px !important;
+  max-height: 200px !important;
+  overflow-y: auto !important;
+  animation: slideDown 0.15s ease-out !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.enhanced-time-input-suggestion {
+  padding: 12px 16px !important;
+  cursor: pointer !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  color: #111827 !important;
+  background: #ffffff !important;
+  transition: all 0.1s ease-in-out !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  font-weight: 600 !important;
+  display: block !important;
+  width: 100% !important;
+}
+
+.enhanced-time-input-suggestion:last-child {
+  border-bottom: none;
+}
+
+.enhanced-time-input-suggestion:hover {
+  background-color: #dbeafe !important;
+  color: #1e40af !important;
+}
+
+.enhanced-time-input-suggestion.selected,
+.enhanced-time-input-suggestion:focus {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+/* Dark mode support */
+.dark .enhanced-time-input {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+.dark .enhanced-time-input:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+}
+
+.dark .enhanced-time-input--editing {
+  border-color: #60a5fa !important;
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1) !important;
+}
+
+.dark .enhanced-time-input--error {
+  border-color: #f87171 !important;
+  background-color: #1f1917 !important;
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.1) !important;
+}
+
+.dark .enhanced-time-input-error {
+  color: #f87171;
+}
+
+.dark .enhanced-time-input-help {
+  color: #9ca3af;
+}
+
+.dark .enhanced-time-input-suggestions {
+  background-color: #1f2937 !important;
+  border-color: #60a5fa !important;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.4),
+    0 10px 10px -5px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark .enhanced-time-input-suggestion {
+  color: #f9fafb !important;
+  background: #1f2937 !important;
+  border-bottom-color: #374151;
+}
+
+.dark .enhanced-time-input-suggestion:hover {
+  background-color: #1e3a8a !important;
+  color: #dbeafe !important;
+}
+
+.dark .enhanced-time-input-suggestion.selected,
+.dark .enhanced-time-input-suggestion:focus {
+  background-color: #60a5fa !important;
+  color: #1f2937 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .enhanced-time-input {
+    font-size: 16px; /* Prevent zoom on iOS */
+    padding: 12px 16px;
+  }
+
+  .enhanced-time-input-suggestions {
+    font-size: 14px;
+  }
+
+  .enhanced-time-input-suggestion {
+    padding: 12px 16px;
+    min-height: 44px; /* Touch target size */
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* Animation for smooth transitions */
+.enhanced-time-input,
+.enhanced-time-input-suggestions,
+.enhanced-time-input-suggestion {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus ring for accessibility */
+.enhanced-time-input:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.enhanced-time-input-suggestion:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: -2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .enhanced-time-input {
+    border-width: 2px;
+  }
+
+  .enhanced-time-input--editing {
+    border-width: 3px;
+  }
+
+  .enhanced-time-input-suggestion.selected {
+    background-color: #000000;
+    color: #ffffff;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .enhanced-time-input,
+  .enhanced-time-input-suggestions,
+  .enhanced-time-input-suggestion {
+    transition: none;
+  }
+
+  .enhanced-time-input-suggestions {
+    animation: none;
+  }
+
+  .enhanced-time-input--editing {
+    transform: none;
+  }
+}

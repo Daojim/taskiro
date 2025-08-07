@@ -5,6 +5,8 @@ import type {
   UpdateTaskRequest,
   Priority,
 } from '../types/task';
+import EnhancedTimeInput from './EnhancedTimeInput';
+// parseTime is now handled by EnhancedTimeInput component
 
 interface TaskItemCompactProps {
   task: Task;
@@ -25,13 +27,13 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
 }) => {
   const [isToggling, setIsToggling] = useState(false);
   const [editingField, setEditingField] = useState<string | null>(null);
-  const [isProcessingTimeEnter, setIsProcessingTimeEnter] = useState(false);
+
   const [completionAnimation, setCompletionAnimation] = useState<
     'completing' | 'uncompleting' | null
   >(null);
   const [showCompletionFeedback, setShowCompletionFeedback] = useState(false);
 
-  // Helper function to format time for input field
+  // Helper function to format time for input field using enhanced parser
   const formatTimeForInput = (timeString: string) => {
     if (!timeString) return '';
     if (timeString.includes('T')) {
@@ -67,7 +69,6 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
 
   const titleInputRef = useRef<HTMLInputElement>(null);
   const descriptionInputRef = useRef<HTMLTextAreaElement>(null);
-  const timeInputRef = useRef<HTMLInputElement>(null);
 
   const handleToggleCompletion = useCallback(async () => {
     if (isToggling) return;
@@ -138,8 +139,7 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
       } else if (field === 'description' && descriptionInputRef.current) {
         descriptionInputRef.current.focus();
         descriptionInputRef.current.select();
-      } else if (field === 'dueTime' && timeInputRef.current) {
-        timeInputRef.current.focus();
+        // Time input is now handled by EnhancedTimeInput component
       }
     }, 0);
   }, []);
@@ -168,6 +168,50 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
     });
   }, [task]);
 
+  const handleSaveEditWithTime = useCallback(
+    async (field: string, parsedTime: string) => {
+      console.log(
+        'handleSaveEditWithTime called with field:',
+        field,
+        'parsedTime:',
+        parsedTime
+      );
+      try {
+        const updates: UpdateTaskRequest = {
+          title: editValues.title.trim(),
+          description: editValues.description.trim() || undefined,
+          priority: editValues.priority,
+        };
+
+        if (editValues.categoryId) {
+          updates.categoryId = editValues.categoryId;
+        }
+
+        // Use the parsed time directly
+        if (field === 'dueTime') {
+          updates.dueTime = parsedTime;
+        } else if (task.dueTime) {
+          updates.dueTime = formatTimeForInput(task.dueTime);
+        }
+
+        // Handle dueDate
+        if (editValues.dueDate) {
+          const dateStr = editValues.dueDate + 'T00:00:00.000Z';
+          const date = new Date(dateStr);
+          updates.dueDate = date.toISOString();
+        }
+
+        await onUpdate(task.id, updates);
+        setEditingField(null);
+      } catch {
+        if (onError) {
+          onError('Failed to update task');
+        }
+      }
+    },
+    [task.id, task.dueTime, editValues, onUpdate, onError]
+  );
+
   const handleSaveEdit = useCallback(
     async (field: string) => {
       console.log(
@@ -187,18 +231,16 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
           updates.categoryId = editValues.categoryId;
         }
 
-        // Handle dueTime
+        // Handle dueTime - EnhancedTimeInput already provides parsed time
         if (field === 'dueTime') {
-          // Get the actual value from the DOM input if available
-          const actualTimeValue =
-            timeInputRef.current?.value || editValues.dueTime;
-          console.log('Time save debug:', {
-            actualTimeValue,
-            editValues: editValues.dueTime,
-          });
-
-          if (actualTimeValue && actualTimeValue.trim() !== '') {
-            updates.dueTime = actualTimeValue;
+          const timeValue = editValues.dueTime;
+          console.log('Processing dueTime field, timeValue:', timeValue);
+          if (timeValue && timeValue.trim() !== '') {
+            // EnhancedTimeInput already provides the time in HH:MM format
+            updates.dueTime = timeValue;
+          } else {
+            // Clear the time if empty
+            updates.dueTime = undefined;
           }
         } else if (task.dueTime) {
           updates.dueTime = formatTimeForInput(task.dueTime);
@@ -232,55 +274,12 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
     (e: React.KeyboardEvent, field: string) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-
-        // For time fields, force browser to complete formatting by triggering blur
-        if (field === 'dueTime') {
-          const timeInput = e.target as HTMLInputElement;
-          setIsProcessingTimeEnter(true);
-
-          console.log(
-            'Enter pressed on time field, forcing blur to complete formatting'
-          );
-
-          // Force the browser to complete formatting by blurring and refocusing
-          timeInput.blur();
-
-          // Small delay to let the blur event complete, then check the value
-          setTimeout(() => {
-            console.log('After blur, checking time input:', {
-              domValue: timeInput.value,
-              validity: timeInput.validity.valid,
-              validationMessage: timeInput.validationMessage,
-            });
-
-            if (timeInput.validity.valid && timeInput.value) {
-              // Input is now valid, update state and save
-              console.log(
-                'Valid time found after blur, saving:',
-                timeInput.value
-              );
-              setEditValues((prev) => ({ ...prev, dueTime: timeInput.value }));
-              setTimeout(() => {
-                handleSaveEdit(field);
-                setIsProcessingTimeEnter(false);
-              }, 0);
-            } else {
-              // Still invalid, show error
-              console.log('Time input still invalid after blur');
-              if (onError) {
-                onError('Please enter a valid time (e.g., 09:00)');
-              }
-              setIsProcessingTimeEnter(false);
-            }
-          }, 10); // Very short delay just to let blur complete
-        } else {
-          handleSaveEdit(field);
-        }
+        handleSaveEdit(field);
       } else if (e.key === 'Escape') {
         handleCancelEdit();
       }
     },
-    [handleSaveEdit, handleCancelEdit, onError]
+    [handleSaveEdit, handleCancelEdit]
   );
 
   const handleRemoveTime = useCallback(async () => {
@@ -627,28 +626,45 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
               {/* Due Time */}
               <div className="flex items-center space-x-1">
                 {editingField === 'dueTime' ? (
-                  <div className="flex items-center gap-1">
-                    <input
-                      ref={timeInputRef}
-                      type="time"
+                  <div className="flex items-center gap-1 min-w-[120px]">
+                    <EnhancedTimeInput
                       value={editValues.dueTime}
-                      onChange={(e) =>
+                      onChange={(value) => {
+                        console.log(
+                          'EnhancedTimeInput onChange called with:',
+                          value
+                        );
                         setEditValues((prev) => ({
                           ...prev,
-                          dueTime: e.target.value,
-                        }))
-                      }
-                      onBlur={() => {
-                        if (!isProcessingTimeEnter) {
-                          handleSaveEdit('dueTime');
+                          dueTime: value,
+                        }));
+                      }}
+                      onSave={async (parsedTime) => {
+                        console.log(
+                          'EnhancedTimeInput onSave called with parsedTime:',
+                          parsedTime
+                        );
+                        if (parsedTime) {
+                          // Update the state with the parsed time and then save
+                          setEditValues((prev) => ({
+                            ...prev,
+                            dueTime: parsedTime,
+                          }));
+                          // Use the parsed time directly for saving
+                          await handleSaveEditWithTime('dueTime', parsedTime);
+                        } else {
+                          await handleSaveEdit('dueTime');
                         }
                       }}
-                      onKeyDown={(e) => handleKeyPress(e, 'dueTime')}
-                      className="task-input-meta px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 dark:text-white"
+                      onCancel={handleCancelEdit}
+                      onError={onError}
+                      autoFocus={true}
+                      className="enhanced-time-input-inline"
+                      placeholder="e.g., 9:00 AM"
                     />
                     <button
                       onClick={handleRemoveTime}
-                      className="icon-button text-gray-400 hover:text-red-500 text-xs opacity-60 hover:opacity-100 transition-all duration-200"
+                      className="icon-button text-gray-400 hover:text-red-500 text-xs opacity-60 hover:opacity-100 transition-all duration-200 ml-1"
                       title="Remove time"
                     >
                       ×

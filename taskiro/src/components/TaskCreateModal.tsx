@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import type { Task, Category, Priority } from '../types/task';
+import EnhancedTimeInput from './EnhancedTimeInput';
+import { parseTime } from '../utils/timeParser';
 
 interface TaskCreateModalProps {
   date: Date;
@@ -57,10 +59,24 @@ const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
       setIsSubmitting(true);
 
       try {
+        // Validate time if provided
+        let validatedTime = formData.dueTime;
+        if (formData.dueTime) {
+          const parseResult = parseTime(formData.dueTime);
+          if (parseResult.success && parseResult.time) {
+            validatedTime = parseResult.time;
+          } else {
+            if (onError) {
+              onError(parseResult.error || 'Invalid time format');
+            }
+            return;
+          }
+        }
+
         const taskData: Partial<Task> = {
           title: formData.title.trim(),
           description: formData.description.trim() || undefined,
-          dueTime: formData.dueTime || undefined,
+          dueTime: validatedTime || undefined,
           priority: formData.priority,
           categoryId: formData.categoryId || undefined,
         };
@@ -158,11 +174,11 @@ const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
             >
               Time
             </label>
-            <input
-              type="time"
-              id="dueTime"
+            <EnhancedTimeInput
               value={formData.dueTime}
-              onChange={(e) => handleInputChange('dueTime', e.target.value)}
+              onChange={(value) => handleInputChange('dueTime', value)}
+              onError={onError}
+              placeholder="Enter time (e.g., 9:00 AM, 14:30, noon)"
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
             />
           </div>
