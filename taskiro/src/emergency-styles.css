@@ -2780,45 +2780,42 @@ input.native-date-input-isolated {
 
 /* Force task cards to specific widths for columns */
 .task-grid > * {
-  flex: 0 0 calc(50% - 0.5rem) !important; /* 2 columns */
-  max-width: calc(50% - 0.5rem) !important;
+  flex: 0 0 100% !important; /* 1 column */
+  max-width: 100% !important;
   min-width: 0 !important;
 }
 
-/* Small mobile - 3 columns */
+/* Small mobile - 2 columns */
 @media (min-width: 480px) {
   .task-grid > * {
-    flex: 0 0 calc(33.333% - 0.67rem) !important; /* 3 columns */
-    max-width: calc(33.333% - 0.67rem) !important;
+    flex: 0 0 calc(50% - 0.5rem) !important; /* 2 columns */
+    max-width: calc(50% - 0.5rem) !important;
   }
 }
 
-/* Tablet - 4 columns */
-@media (min-width: 768px) {
-  .task-grid {
-    gap: 1.25rem !important;
-  }
-  .task-grid > * {
-    flex: 0 0 calc(25% - 0.9375rem) !important; /* 4 columns */
-    max-width: calc(25% - 0.9375rem) !important;
-  }
-}
-
-/* Desktop - 5 columns */
+/* Desktop - 3 columns */
 @media (min-width: 1024px) {
   .task-grid {
     gap: 1.5rem !important;
   }
   .task-grid > * {
-    flex: 0 0 calc(20% - 1.2rem) !important; /* 5 columns */
-    max-width: calc(20% - 1.2rem) !important;
+    flex: 0 0 calc(33.333% - 1rem) !important; /* 3 columns */
+    max-width: calc(33.333% - 1rem) !important;
   }
 }
 
-/* Large desktop - 6 columns */
+/* Large desktop - 4 columns */
 @media (min-width: 1280px) {
   .task-grid > * {
-    flex: 0 0 calc(16.666% - 1.25rem) !important; /* 6 columns */
-    max-width: calc(16.666% - 1.25rem) !important;
+    flex: 0 0 calc(25% - 1.125rem) !important; /* 4 columns */
+    max-width: calc(25% - 1.125rem) !important;
+  }
+}
+
+/* Extra large screens - 5 columns */
+@media (min-width: 1600px) {
+  .task-grid > * {
+    flex: 0 0 calc(20% - 1.2rem) !important; /* 5 columns */
+    max-width: calc(20% - 1.2rem) !important;
   }
 }
