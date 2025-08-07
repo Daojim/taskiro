@@ -146,6 +146,21 @@ const TaskList: React.FC<TaskListProps> = ({
 
     // Sort tasks
     filtered.sort((a, b) => {
+      // When showing all tasks (no status filter), prioritize active tasks over completed ones
+      if (!filters.status) {
+        const aStatus = a.status.toLowerCase();
+        const bStatus = b.status.toLowerCase();
+
+        // Active tasks come before completed tasks
+        if (aStatus === 'active' && bStatus === 'completed') {
+          return -1;
+        }
+        if (aStatus === 'completed' && bStatus === 'active') {
+          return 1;
+        }
+        // If both have the same status, continue with regular sorting
+      }
+
       let comparison = 0;
 
       switch (filters.sortBy) {
