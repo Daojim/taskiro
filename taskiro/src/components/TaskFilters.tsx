@@ -146,7 +146,6 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
             <option value="dueDate">Due Date</option>
             <option value="priority">Priority</option>
             <option value="title">Title</option>
-            <option value="createdAt">Created Date</option>
           </select>
         </div>
 
@@ -258,7 +257,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
           onClick={() =>
             onChange({
               status: 'completed',
-              sortBy: 'createdAt',
+              sortBy: 'dueDate',
               sortOrder: 'desc',
             })
           }

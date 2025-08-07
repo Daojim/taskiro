@@ -29,7 +29,7 @@ export interface FilterState {
   category: string;
   priority: Priority | '';
   status: TaskStatus | '';
-  sortBy: 'dueDate' | 'priority' | 'title' | 'createdAt';
+  sortBy: 'dueDate' | 'priority' | 'title';
   sortOrder: 'asc' | 'desc';
 }
 
@@ -175,17 +175,20 @@ const TaskList: React.FC<TaskListProps> = ({
           break;
         }
         case 'priority': {
-          const priorityOrder = { high: 3, medium: 2, low: 1 };
-          comparison = priorityOrder[b.priority] - priorityOrder[a.priority];
+          const priorityOrder: Record<string, number> = {
+            low: 1,
+            medium: 2,
+            high: 3,
+          };
+          const aPriority = priorityOrder[a.priority?.toLowerCase()] || 0;
+          const bPriority = priorityOrder[b.priority?.toLowerCase()] || 0;
+          comparison = aPriority - bPriority;
           break;
         }
         case 'title':
           comparison = a.title.localeCompare(b.title);
           break;
-        case 'createdAt':
-          comparison =
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-          break;
+
         default:
           comparison = 0;
       }
