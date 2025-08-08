@@ -375,7 +375,7 @@ class SyncManagerService {
     }
   }
 
-  private async processSyncAction(action: unknown): Promise<void> {
+  private async processSyncAction(action: any): Promise<void> {
     switch (action.type) {
       case 'CREATE_TASK':
         await apiService.createTask(action.data);

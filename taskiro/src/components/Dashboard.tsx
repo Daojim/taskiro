@@ -116,7 +116,7 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 font-sans transition-colors duration-300">
+    <div className="min-h-screen bg-gray-100 dark:bg-slate-900 font-sans transition-colors duration-300">
       <nav
         style={{
           position: 'fixed',
@@ -124,8 +124,8 @@ const Dashboard: React.FC = () => {
           left: 0,
           right: 0,
           width: '100%',
-          backgroundColor: theme === 'dark' ? '#1f2937' : 'white',
-          borderBottom: `1px solid ${theme === 'dark' ? '#374151' : '#e5e7eb'}`,
+          backgroundColor: theme === 'dark' ? '#1e293b' : 'white',
+          borderBottom: `1px solid ${theme === 'dark' ? '#334155' : '#e5e7eb'}`,
           zIndex: 40,
           display: 'block',
         }}
@@ -141,13 +141,13 @@ const Dashboard: React.FC = () => {
         >
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center">
-              <h1 className="text-2xl font-semibold text-blue-600 dark:text-blue-400 m-0">
+              <h1 className="text-2xl font-semibold text-blue-600 dark:text-amber-400 m-0">
                 Taskiro
               </h1>
             </div>
             <div className="flex items-center gap-3">
               <SyncStatusIndicator showDetails={true} />
-              <span className="text-sm text-gray-600 dark:text-gray-300">
+              <span className="text-sm text-gray-600 dark:text-slate-300">
                 Welcome, {user?.email}
               </span>
               <ThemeToggle />

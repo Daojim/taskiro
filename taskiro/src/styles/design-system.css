@@ -2,7 +2,7 @@
 
 /* Card System with Elevation */
 .card {
-  @apply bg-white dark:bg-gray-800 rounded-xl shadow-card border border-gray-100 dark:border-gray-700;
+  @apply bg-white dark:bg-slate-800 rounded-xl shadow-card border border-gray-100 dark:border-slate-700;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -24,15 +24,15 @@
 }
 
 .btn-primary {
-  @apply btn bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white shadow-sm hover:shadow-md focus:ring-primary-500 active:scale-95;
+  @apply btn bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-sm hover:shadow-md focus:ring-amber-500 active:scale-95;
 }
 
 .btn-secondary {
-  @apply btn bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 shadow-sm hover:shadow-md focus:ring-primary-500 active:scale-95;
+  @apply btn bg-white dark:bg-slate-700 text-gray-700 dark:text-slate-200 border border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-600 shadow-sm hover:shadow-md focus:ring-amber-500 active:scale-95;
 }
 
 .btn-ghost {
-  @apply btn text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white focus:ring-primary-500 active:scale-95;
+  @apply btn text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-slate-100 focus:ring-amber-500 active:scale-95;
 }
 
 .btn-danger {
@@ -53,9 +53,9 @@
 
 /* Enhanced Form Inputs */
 .input {
-  @apply block w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-250;
-  @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500;
-  @apply hover:border-gray-400 dark:hover:border-gray-500;
+  @apply block w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 placeholder-gray-500 dark:placeholder-slate-400 transition-all duration-250;
+  @apply focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500;
+  @apply hover:border-gray-400 dark:hover:border-slate-500;
 }
 
 .input-error {
@@ -137,12 +137,12 @@
 }
 
 .badge-gray {
-  @apply badge bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200;
+  @apply badge bg-gray-100 text-gray-800 dark:bg-slate-700 dark:text-slate-200;
 }
 
 /* Loading States and Skeletons */
 .skeleton {
-  @apply animate-pulse bg-gray-200 dark:bg-gray-700 rounded;
+  @apply animate-pulse bg-gray-200 dark:bg-slate-700 rounded;
 }
 
 .skeleton-text {
@@ -189,7 +189,7 @@
 }
 
 .modal-content {
-  @apply bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-hidden;
+  @apply bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-hidden;
   animation: scaleIn 0.2s ease-out;
 }
 
@@ -207,7 +207,7 @@
 
 /* Enhanced Dropdown System */
 .dropdown {
-  @apply absolute z-10 mt-1 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-1 min-w-48;
+  @apply absolute z-10 mt-1 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-200 dark:border-slate-700 py-1 min-w-48;
   animation: slideDown 0.2s ease-out;
 }
 
@@ -225,7 +225,7 @@
 
 /* Enhanced Toast/Notification System */
 .toast {
-  @apply fixed bottom-4 right-4 z-50 max-w-sm w-full bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4;
+  @apply fixed bottom-4 right-4 z-50 max-w-sm w-full bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-200 dark:border-slate-700 p-4;
   animation: slideUp 0.3s ease-out;
 }
 
