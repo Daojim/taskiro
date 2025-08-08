@@ -21,6 +21,15 @@ interface TaskContextType {
   refreshTasks: () => Promise<void>;
   refreshCategories: () => Promise<void>;
   clearError: () => void;
+  // Offline sync status
+  syncStatus: {
+    isOnline: boolean;
+    isSyncing: boolean;
+    lastSync: number | null;
+    pendingActions: number;
+    error: string | null;
+  };
+  forceSync: () => Promise<void>;
 }
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);

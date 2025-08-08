@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { apiService } from '../services/api';
+import { networkStatus } from '../services/networkStatus';
 import type {
   ParsedInput,
   AmbiguousElement,
@@ -28,6 +29,8 @@ const TaskInput: React.FC<TaskInputProps> = ({
   const [ambiguousElements, setAmbiguousElements] = useState<
     AmbiguousElement[]
   >([]);
+  const [isOnline, setIsOnline] = useState(networkStatus.isOnline);
+  const [wasOfflineMode, setWasOfflineMode] = useState(false);
 
   // Manual form fields
   const [manualTask, setManualTask] = useState<CreateTaskRequest>({
@@ -43,9 +46,32 @@ const TaskInput: React.FC<TaskInputProps> = ({
   const parseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const shouldMaintainFocus = useRef(false);
 
+  // Listen for network status changes
+  useEffect(() => {
+    const unsubscribe = networkStatus.addListener((online) => {
+      setIsOnline(online);
+
+      if (!online) {
+        // Going offline - switch to manual mode and remember this
+        setIsManualMode(true);
+        setWasOfflineMode(true);
+        // Clear any parsing data since it won't work offline
+        setParsedData(null);
+        setShowDisambiguation(false);
+        setAmbiguousElements([]);
+      } else if (wasOfflineMode) {
+        // Coming back online after being offline - switch back to natural language mode
+        setIsManualMode(false);
+        setWasOfflineMode(false);
+      }
+    });
+
+    return unsubscribe;
+  }, [wasOfflineMode]);
+
   // Real-time parsing with debounce
   useEffect(() => {
-    if (!input.trim() || isManualMode) {
+    if (!input.trim() || isManualMode || !isOnline) {
       setParsedData(null);
       return;
     }
@@ -105,7 +131,7 @@ const TaskInput: React.FC<TaskInputProps> = ({
         clearTimeout(parseTimeoutRef.current);
       }
     };
-  }, [input, isManualMode]);
+  }, [input, isManualMode, isOnline]);
 
   // Maintain focus during parsing
   useEffect(() => {
@@ -270,18 +296,50 @@ const TaskInput: React.FC<TaskInputProps> = ({
         {/* Mode Toggle */}
         <div className="flex items-center justify-between">
           <h2 className="text-heading-3">Add New Task</h2>
-          <button
-            type="button"
-            onClick={() => setIsManualMode(!isManualMode)}
-            className="btn-ghost btn-sm"
-          >
-            {isManualMode
-              ? 'Switch to Natural Language'
-              : 'Switch to Manual Entry'}
-          </button>
+          {isOnline ? (
+            <button
+              type="button"
+              onClick={() => setIsManualMode(!isManualMode)}
+              className="btn-ghost btn-sm"
+            >
+              {isManualMode
+                ? 'Switch to Natural Language'
+                : 'Switch to Manual Entry'}
+            </button>
+          ) : (
+            <div className="text-sm text-gray-500 dark:text-gray-400">
+              Manual Entry Only (Offline)
+            </div>
+          )}
         </div>
 
-        {!isManualMode ? (
+        {/* Offline Banner */}
+        {!isOnline && (
+          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
+            <div className="flex items-center">
+              <svg
+                className="h-5 w-5 text-yellow-600 dark:text-yellow-400 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 18.5c-.77.833.192 2.5 1.732 2.5z"
+                />
+              </svg>
+              <div className="text-sm text-yellow-800 dark:text-yellow-200">
+                <strong>You're offline.</strong> Natural language parsing is
+                unavailable. Use manual entry to create tasks - they'll sync
+                when you're back online.
+              </div>
+            </div>
+          </div>
+        )}
+
+        {!isManualMode && isOnline ? (
           <>
             {/* Natural Language Input */}
             <div className="relative">

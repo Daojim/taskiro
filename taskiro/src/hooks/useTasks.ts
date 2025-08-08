@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { apiService } from '../services/api';
+import { useOfflineSync } from './useOfflineSync';
 import type {
   Task,
   Category,
@@ -20,6 +21,15 @@ interface UseTasksReturn {
   refreshTasks: () => Promise<void>;
   refreshCategories: () => Promise<void>;
   clearError: () => void;
+  // Offline sync status
+  syncStatus: {
+    isOnline: boolean;
+    isSyncing: boolean;
+    lastSync: number | null;
+    pendingActions: number;
+    error: string | null;
+  };
+  forceSync: () => Promise<void>;
 }
 
 /**
@@ -29,10 +39,22 @@ interface UseTasksReturn {
  * @returns {UseTasksReturn} Object containing tasks, categories, loading state, and CRUD functions
  */
 export const useTasks = (): UseTasksReturn => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Use offline sync hook for data management
+  const {
+    tasks,
+    categories,
+    status: syncStatus,
+    loadTasks,
+    loadCategories,
+    createTask: createTaskOffline,
+    updateTask: updateTaskOffline,
+    deleteTask: deleteTaskOffline,
+    toggleTaskCompletion: toggleTaskCompletionOffline,
+    forceSync,
+  } = useOfflineSync();
 
   // Prevent duplicate calls
   const pendingCallsRef = useRef<Set<string>>(new Set());
@@ -93,32 +115,8 @@ export const useTasks = (): UseTasksReturn => {
         setIsLoading(true);
         setError(null);
 
-        // Fetch both active and completed tasks since backend defaults to active only
-        const [activeResponse, completedResponse] = await Promise.all([
-          apiService.getTasks({ status: 'active' }),
-          apiService.getTasks({ status: 'completed' }),
-        ]);
-
-        // Combine both arrays and sort by creation date for consistent ordering
-        const allTasks = [
-          ...activeResponse.tasks,
-          ...completedResponse.tasks,
-        ].sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-
-        // Only log in development mode
-        if (process.env.NODE_ENV === 'development') {
-          console.log('Fetched tasks:', {
-            active: activeResponse.tasks.length,
-            completed: completedResponse.tasks.length,
-            total: allTasks.length,
-            statuses: allTasks.map((t) => t.status),
-          });
-        }
-
-        setTasks(allTasks);
+        // Use offline sync to load tasks (handles online/offline automatically)
+        await loadTasks();
       } catch (err: unknown) {
         // Retry logic for network errors
         if (retryCount < 2 && err && typeof err === 'object') {
@@ -142,18 +140,18 @@ export const useTasks = (): UseTasksReturn => {
         isRefreshingRef.current = false;
       }
     },
-    [handleError]
+    [handleError, loadTasks]
   );
 
   const refreshCategories = useCallback(async () => {
     try {
       setError(null);
-      const response = await apiService.getCategories();
-      setCategories(response.categories);
+      // Use offline sync to load categories (handles online/offline automatically)
+      await loadCategories();
     } catch (err: unknown) {
       handleError(err, 'Failed to fetch categories');
     }
-  }, [handleError]);
+  }, [handleError, loadCategories]);
 
   const createTask = useCallback(
     async (taskData: CreateTaskRequest): Promise<Task | null> => {
@@ -169,12 +167,9 @@ export const useTasks = (): UseTasksReturn => {
           return null;
         }
 
-        console.log('About to call apiService.createTask with:', taskData);
-        const response = await apiService.createTask(taskData);
-        const newTask = response.task;
-
-        // Add the new task to the local state
-        setTasks((prevTasks) => [newTask, ...prevTasks]);
+        console.log('About to call createTaskOffline with:', taskData);
+        // Use offline sync to create task (handles online/offline automatically)
+        const newTask = await createTaskOffline(taskData);
 
         return newTask;
       } catch (err: unknown) {
@@ -183,21 +178,16 @@ export const useTasks = (): UseTasksReturn => {
         return null;
       }
     },
-    [handleError]
+    [handleError, createTaskOffline]
   );
 
   const updateTask = useCallback(
     async (id: string, taskData: UpdateTaskRequest): Promise<Task | null> => {
       try {
         setError(null);
-        const response = await apiService.updateTask(id, taskData);
-        const updatedTask = response.task;
+        // Use offline sync to update task (handles online/offline automatically)
+        const updatedTask = await updateTaskOffline(id, taskData);
         console.log('useTasks updateTask success:', { id, updatedTask });
-
-        // Update the task in local state
-        setTasks((prevTasks) =>
-          prevTasks.map((task) => (task.id === id ? updatedTask : task))
-        );
 
         return updatedTask;
       } catch (err: unknown) {
@@ -205,17 +195,15 @@ export const useTasks = (): UseTasksReturn => {
         return null;
       }
     },
-    [handleError]
+    [handleError, updateTaskOffline]
   );
 
   const deleteTask = useCallback(
     async (id: string): Promise<boolean> => {
       try {
         setError(null);
-        await apiService.deleteTask(id);
-
-        // Remove the task from local state (it's archived, not deleted)
-        setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+        // Use offline sync to delete task (handles online/offline automatically)
+        await deleteTaskOffline(id);
 
         return true;
       } catch (err: unknown) {
@@ -223,7 +211,7 @@ export const useTasks = (): UseTasksReturn => {
         return false;
       }
     },
-    [handleError]
+    [handleError, deleteTaskOffline]
   );
 
   const toggleTaskCompletion = useCallback(
@@ -236,56 +224,14 @@ export const useTasks = (): UseTasksReturn => {
 
       pendingCallsRef.current.add(id);
 
-      // Optimistic update - create new task object to minimize re-renders
-      let originalTask: Task | undefined;
-      setTasks((prevTasks) => {
-        const taskIndex = prevTasks.findIndex((task) => task.id === id);
-        if (taskIndex === -1) return prevTasks;
-
-        originalTask = prevTasks[taskIndex];
-        const newTask = {
-          ...originalTask,
-          status:
-            originalTask.status.toLowerCase() === 'completed'
-              ? 'active'
-              : 'completed',
-        } as Task;
-
-        // Create new array with only the changed task replaced
-        const newTasks = [...prevTasks];
-        newTasks[taskIndex] = newTask;
-        return newTasks;
-      });
-
       try {
         setError(null);
-        const response = await apiService.toggleTaskCompletion(id);
-        const updatedTask = response.task;
 
-        // Update with actual server response - targeted update
-        setTasks((prevTasks) => {
-          const taskIndex = prevTasks.findIndex((task) => task.id === id);
-          if (taskIndex === -1) return prevTasks;
-
-          const newTasks = [...prevTasks];
-          newTasks[taskIndex] = updatedTask;
-          return newTasks;
-        });
+        // Use offline sync to toggle task completion
+        const updatedTask = await toggleTaskCompletionOffline(id);
 
         return updatedTask;
       } catch (err: unknown) {
-        // Revert optimistic update on error - targeted update
-        if (originalTask) {
-          setTasks((prevTasks) => {
-            const taskIndex = prevTasks.findIndex((task) => task.id === id);
-            if (taskIndex === -1) return prevTasks;
-
-            const newTasks = [...prevTasks];
-            newTasks[taskIndex] = originalTask!;
-            return newTasks;
-          });
-        }
-
         handleError(err, 'Failed to toggle task completion');
         return null;
       } finally {
@@ -293,7 +239,7 @@ export const useTasks = (): UseTasksReturn => {
         pendingCallsRef.current.delete(id);
       }
     },
-    [handleError]
+    [handleError, toggleTaskCompletionOffline]
   );
 
   const restoreTask = useCallback(
@@ -303,8 +249,8 @@ export const useTasks = (): UseTasksReturn => {
         const response = await apiService.restoreTask(id);
         const restoredTask = response.task;
 
-        // Add the restored task back to local state
-        setTasks((prevTasks) => [restoredTask, ...prevTasks]);
+        // Refresh tasks to get updated data
+        await loadTasks();
 
         return restoredTask;
       } catch (err: unknown) {
@@ -312,7 +258,7 @@ export const useTasks = (): UseTasksReturn => {
         return null;
       }
     },
-    [handleError]
+    [handleError, loadTasks]
   );
 
   // Use ref to ensure initial load only happens once
@@ -343,5 +289,7 @@ export const useTasks = (): UseTasksReturn => {
     refreshTasks,
     refreshCategories,
     clearError,
+    syncStatus,
+    forceSync,
   };
 };

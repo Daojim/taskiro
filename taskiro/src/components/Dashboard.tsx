@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useTaskContext } from '../contexts/TaskContext';
 import { useTheme } from '../hooks/useTheme';
@@ -12,6 +12,8 @@ import TaskList from './TaskList';
 import CalendarView from './CalendarView';
 import CategoryManager from './CategoryManager';
 import ThemeToggle from './ThemeToggle';
+import { SyncStatusIndicator } from './SyncStatusIndicator';
+import { networkStatus } from '../services/networkStatus';
 import type { Task, CreateTaskRequest } from '../types/task';
 
 type ViewMode = 'list' | 'calendar';
@@ -34,6 +36,41 @@ const Dashboard: React.FC = () => {
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [showCategoryManager, setShowCategoryManager] = useState(false);
 
+  // Helper to show notifications without overriding offline status
+  const showNotification = (
+    type: 'success' | 'error',
+    message: string,
+    autoHide = true
+  ) => {
+    setNotification({ type, message });
+    if (autoHide) {
+      setTimeout(() => setNotification(null), 3000);
+    }
+  };
+
+  // Network status monitoring for notifications
+  useEffect(() => {
+    const unsubscribe = networkStatus.addListener((isOnline) => {
+      if (!isOnline) {
+        setNotification({
+          type: 'error',
+          message:
+            "You're offline. Changes will sync when connection is restored.",
+        });
+        // Keep offline notification persistent (don't auto-dismiss)
+      } else {
+        setNotification({
+          type: 'success',
+          message: 'Connection restored. Your changes will sync automatically.',
+        });
+        // Auto-dismiss online notification after 3 seconds
+        setTimeout(() => setNotification(null), 3000);
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
   const handleLogout = async () => {
     try {
       logout();
@@ -46,11 +83,7 @@ const Dashboard: React.FC = () => {
     try {
       await createTask(taskData);
       // No refresh needed - shared context updates all components automatically
-      setNotification({
-        type: 'success',
-        message: 'Task created successfully!',
-      });
-      setTimeout(() => setNotification(null), 3000);
+      showNotification('success', 'Task created successfully!');
     } catch {
       handleError('Failed to create task');
     }
@@ -58,11 +91,7 @@ const Dashboard: React.FC = () => {
 
   const handleTaskUpdated = async (_task: Task) => {
     try {
-      setNotification({
-        type: 'success',
-        message: 'Task updated successfully!',
-      });
-      setTimeout(() => setNotification(null), 3000);
+      showNotification('success', 'Task updated successfully!');
     } catch {
       handleError('Failed to update task');
     }
@@ -71,28 +100,19 @@ const Dashboard: React.FC = () => {
   const handleTaskDeleted = async (_taskId: string) => {
     try {
       // No refresh needed - shared context updates all components automatically
-      setNotification({
-        type: 'success',
-        message: 'Task archived successfully!',
-      });
-      setTimeout(() => setNotification(null), 3000);
+      showNotification('success', 'Task archived successfully!');
     } catch {
       handleError('Failed to delete task');
     }
   };
 
   const handleError = (errorMessage: string) => {
-    setNotification({ type: 'error', message: errorMessage });
-    setTimeout(() => setNotification(null), 5000);
+    showNotification('error', errorMessage);
   };
 
   const handleCategoryChange = () => {
     refreshCategories();
-    setNotification({
-      type: 'success',
-      message: 'Categories updated successfully!',
-    });
-    setTimeout(() => setNotification(null), 3000);
+    showNotification('success', 'Categories updated successfully!');
   };
 
   return (
@@ -126,6 +146,7 @@ const Dashboard: React.FC = () => {
               </h1>
             </div>
             <div className="flex items-center gap-3">
+              <SyncStatusIndicator showDetails={true} />
               <span className="text-sm text-gray-600 dark:text-gray-300">
                 Welcome, {user?.email}
               </span>
@@ -221,8 +242,8 @@ const Dashboard: React.FC = () => {
         <div
           className={`fixed bottom-5 right-5 z-50 rounded-lg p-4 min-w-80 shadow-lg transition-all duration-300 transform ${
             notification.type === 'success'
-              ? 'bg-sky-50 dark:bg-sky-900/20 border-3 border-green-500 dark:border-green-400'
-              : 'bg-red-50 dark:bg-red-900/20 border-3 border-red-500 dark:border-red-400'
+              ? 'bg-green-50 dark:bg-green-900/30 border-2 border-green-500 dark:border-green-400'
+              : 'bg-red-50 dark:bg-red-900/30 border-2 border-red-500 dark:border-red-400'
           }`}
           style={{
             position: 'fixed',
