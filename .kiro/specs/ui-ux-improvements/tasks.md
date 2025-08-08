@@ -55,9 +55,9 @@
 
 ## Phase 3: Desktop Calendar and Search Enhancement (High Priority)
 
-- [ ] 4. Desktop Calendar View Usability Improvements
+- [-] 4. Desktop Calendar View Usability Improvements
 
-  - [ ] 4.1 Implement smart task overflow handling
+  - [x] 4.1 Implement smart task overflow handling
 
     - Create "show more" functionality for days with many tasks
     - Add visual warnings for days with 10+ tasks
@@ -65,6 +65,7 @@
     - _Requirements: 4.1, 4.2_
 
   - [ ] 4.2 Enhance desktop calendar task interactions
+
     - Add hover states with action buttons for desktop
     - Implement contextual task creation on day clicks
     - Improve task ordering within days (chronological, priority-based)

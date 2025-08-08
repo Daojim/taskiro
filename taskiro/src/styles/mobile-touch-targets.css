@@ -251,10 +251,13 @@ a.touch-target,
 
 .calendar-task:hover {
   background-color: rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .dark .calendar-task:hover {
   background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .calendar-task .task-actions {
@@ -278,12 +281,12 @@ a.touch-target,
 }
 
 .calendar-task .task-action-button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
   transform: scale(1.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .calendar-task .task-action-button:active {
-  transform: scale(0.9);
+  transform: scale(0.95);
 }
 
 /* Modal and dropdown touch targets */

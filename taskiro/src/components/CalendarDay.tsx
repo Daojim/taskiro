@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { PlusIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import CalendarTask from './CalendarTask';
 import TaskCreateModal from './TaskCreateModal';
 import type { Task, Category } from '../types/task';
@@ -33,6 +33,7 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
   const [showAllTasks, setShowAllTasks] = useState(false);
 
   const dayNumber = date.getDate();
+
   const hasOverflow = tasks.length > 3;
   const visibleTasks = showAllTasks ? tasks : tasks.slice(0, 3);
   const hiddenTaskCount = tasks.length - 3;
@@ -70,6 +71,8 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
 
   // Show warning for days with 10+ tasks
   const hasTaskLimitWarning = tasks.length >= 10;
+  const taskOverloadLevel =
+    tasks.length >= 15 ? 'critical' : tasks.length >= 10 ? 'warning' : 'normal';
 
   return (
     <>
@@ -120,10 +123,19 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
           {/* Task limit warning */}
           {hasTaskLimitWarning && (
             <div
-              className="text-xs text-red-500 font-medium"
-              title="High task load"
+              className={`flex items-center text-xs font-medium ${
+                taskOverloadLevel === 'critical'
+                  ? 'text-red-600 dark:text-red-400'
+                  : 'text-amber-600 dark:text-amber-400'
+              }`}
+              title={`${tasks.length} tasks - ${taskOverloadLevel === 'critical' ? 'Critical task overload' : 'High task load'}`}
             >
-              !
+              <ExclamationTriangleIcon
+                className={`h-3 w-3 mr-1 ${
+                  taskOverloadLevel === 'critical' ? 'animate-pulse' : ''
+                }`}
+              />
+              {tasks.length}
             </div>
           )}
 
@@ -144,7 +156,8 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
 
         {/* Tasks */}
         <div className="space-y-1">
-          {visibleTasks.map((task) => (
+          {/* Always visible tasks */}
+          {visibleTasks.slice(0, 3).map((task) => (
             <CalendarTask
               key={task.id}
               task={task}
@@ -156,23 +169,74 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
             />
           ))}
 
-          {/* Show more button */}
-          {hasOverflow && !showAllTasks && (
-            <button
-              onClick={handleShowMore}
-              className="w-full text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 py-1 text-left font-medium"
+          {/* Expandable tasks with smooth animation */}
+          {hasOverflow && (
+            <div
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                showAllTasks ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+              }`}
             >
-              +{hiddenTaskCount} more
-            </button>
+              <div className="space-y-1 pt-1">
+                {visibleTasks.slice(3).map((task) => (
+                  <CalendarTask
+                    key={task.id}
+                    task={task}
+                    categories={categories}
+                    onUpdate={onTaskUpdate}
+                    onDelete={onTaskDelete}
+                    onToggleCompletion={onToggleCompletion}
+                    onError={onError}
+                  />
+                ))}
+              </div>
+            </div>
           )}
 
-          {/* Show less button */}
-          {showAllTasks && hasOverflow && (
+          {/* Show more/less button */}
+          {hasOverflow && (
             <button
               onClick={handleShowMore}
-              className="w-full text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 py-1 text-left font-medium"
+              className={`w-full text-xs py-1 text-left font-medium transition-colors duration-200 ${
+                showAllTasks
+                  ? 'text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+                  : 'text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300'
+              }`}
             >
-              Show less
+              {showAllTasks ? (
+                <span className="flex items-center">
+                  <span>Show less</span>
+                  <svg
+                    className="ml-1 h-3 w-3 transform rotate-180 transition-transform duration-200"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </span>
+              ) : (
+                <span className="flex items-center">
+                  <span>+{hiddenTaskCount} more</span>
+                  <svg
+                    className="ml-1 h-3 w-3 transition-transform duration-200"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </span>
+              )}
             </button>
           )}
         </div>
