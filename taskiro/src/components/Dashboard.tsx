@@ -242,8 +242,8 @@ const Dashboard: React.FC = () => {
         <div
           className={`fixed bottom-5 right-5 z-50 rounded-lg p-4 min-w-80 shadow-lg transition-all duration-300 transform ${
             notification.type === 'success'
-              ? 'bg-green-50 dark:bg-green-900/30 border-2 border-green-500 dark:border-green-400'
-              : 'bg-red-50 dark:bg-red-900/30 border-2 border-red-500 dark:border-red-400'
+              ? 'bg-green-100 border-2 border-green-500 text-green-800'
+              : 'bg-red-100 border-2 border-red-500 text-red-800'
           }`}
           style={{
             position: 'fixed',
@@ -252,6 +252,11 @@ const Dashboard: React.FC = () => {
             zIndex: 9999,
             pointerEvents: 'auto',
             maxWidth: '400px',
+            backgroundColor:
+              notification.type === 'success' ? '#dcfce7' : '#fecaca', // green-100 : red-100
+            borderColor:
+              notification.type === 'success' ? '#22c55e' : '#ef4444', // green-500 : red-500
+            color: notification.type === 'success' ? '#166534' : '#991b1b', // green-800 : red-800
           }}
         >
           <div className="flex justify-between items-center">
