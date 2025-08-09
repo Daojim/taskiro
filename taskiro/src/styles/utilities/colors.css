@@ -1,0 +1,206 @@
+/* Color Utilities */
+
+/* Text Colors */
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-tertiary {
+  color: var(--text-tertiary);
+}
+
+.text-inverse {
+  color: var(--text-inverse);
+}
+
+/* Semantic text colors */
+.text-success {
+  color: var(--color-success-600);
+}
+
+.text-error {
+  color: var(--color-error-600);
+}
+
+.text-warning {
+  color: var(--color-warning-600);
+}
+
+/* Primary text colors */
+.text-primary-500 {
+  color: var(--color-primary-500);
+}
+
+.text-primary-600 {
+  color: var(--color-primary-600);
+}
+
+.text-primary-700 {
+  color: var(--color-primary-700);
+}
+
+/* Gray text colors */
+.text-gray-400 {
+  color: var(--color-gray-400);
+}
+
+.text-gray-500 {
+  color: var(--color-gray-500);
+}
+
+.text-gray-600 {
+  color: var(--color-gray-600);
+}
+
+.text-gray-700 {
+  color: var(--color-gray-700);
+}
+
+.text-gray-800 {
+  color: var(--color-gray-800);
+}
+
+.text-gray-900 {
+  color: var(--color-gray-900);
+}
+
+.text-white {
+  color: #ffffff;
+}
+
+/* Background Colors */
+.bg-primary {
+  background-color: var(--bg-primary);
+}
+
+.bg-secondary {
+  background-color: var(--bg-secondary);
+}
+
+.bg-tertiary {
+  background-color: var(--bg-tertiary);
+}
+
+.bg-inverse {
+  background-color: var(--bg-inverse);
+}
+
+/* Semantic background colors */
+.bg-success {
+  background-color: var(--color-success-500);
+}
+
+.bg-success-50 {
+  background-color: var(--color-success-50);
+}
+
+.bg-error {
+  background-color: var(--color-error-500);
+}
+
+.bg-error-50 {
+  background-color: var(--color-error-50);
+}
+
+.bg-warning {
+  background-color: var(--color-warning-500);
+}
+
+.bg-warning-50 {
+  background-color: var(--color-warning-50);
+}
+
+/* Primary background colors */
+.bg-primary-50 {
+  background-color: var(--color-primary-50);
+}
+
+.bg-primary-100 {
+  background-color: var(--color-primary-100);
+}
+
+.bg-primary-500 {
+  background-color: var(--color-primary-500);
+}
+
+.bg-primary-600 {
+  background-color: var(--color-primary-600);
+}
+
+.bg-primary-700 {
+  background-color: var(--color-primary-700);
+}
+
+/* Gray background colors */
+.bg-gray-50 {
+  background-color: var(--color-gray-50);
+}
+
+.bg-gray-100 {
+  background-color: var(--color-gray-100);
+}
+
+.bg-gray-200 {
+  background-color: var(--color-gray-200);
+}
+
+.bg-gray-300 {
+  background-color: var(--color-gray-300);
+}
+
+.bg-gray-800 {
+  background-color: var(--color-gray-800);
+}
+
+.bg-gray-900 {
+  background-color: var(--color-gray-900);
+}
+
+.bg-white {
+  background-color: #ffffff;
+}
+
+.bg-transparent {
+  background-color: transparent;
+}
+
+/* Border Colors */
+.border-primary {
+  border-color: var(--border-primary);
+}
+
+.border-secondary {
+  border-color: var(--border-secondary);
+}
+
+.border-focus {
+  border-color: var(--border-focus);
+}
+
+.border-success {
+  border-color: var(--color-success-500);
+}
+
+.border-error {
+  border-color: var(--color-error-500);
+}
+
+.border-warning {
+  border-color: var(--color-warning-500);
+}
+
+.border-gray-200 {
+  border-color: var(--color-gray-200);
+}
+
+.border-gray-300 {
+  border-color: var(--color-gray-300);
+}
+
+.border-transparent {
+  border-color: transparent;
+}
