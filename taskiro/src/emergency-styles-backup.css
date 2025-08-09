@@ -2822,219 +2822,756 @@ input.native-date-input-isolated {
   }
 }
 
-/* ========================================
-   ESSENTIAL DARK MODE FIXES ONLY
-   ======================================== */
-
-/* Fix main background color - change from blue to warm gray */
-.dark body {
-  background-color: #1c1917 !important;
-}
-
+/* FORCE WARM DARK THEME COLORS */
 .dark .min-h-screen {
-  background-color: #1c1917 !important;
+  background-color: #0f172a !important;
 }
 
-.dark .bg-gray-100 {
-  background-color: #1c1917 !important;
-}
-
-.dark .bg-slate-900 {
-  background-color: #1c1917 !important;
-}
-
-/* Fix navigation */
 .dark nav {
-  background-color: #292524 !important;
-  border-bottom-color: #44403c !important;
+  background-color: #1e293b !important;
 }
 
-/* Fix card container backgrounds */
-.dark .bg-white {
-  background-color: #292524 !important;
-}
-
-.dark .bg-gray-800 {
-  background-color: #292524 !important;
-}
-
-/* Fix text readability - category text */
-.dark .text-gray-700 {
-  color: #e7e5e4 !important;
-}
-
-.dark .text-gray-600 {
-  color: #d6d3d1 !important;
-}
-
-.dark .text-gray-500 {
-  color: #a8a29e !important;
-}
-
-.dark .text-gray-400 {
-  color: #78716c !important;
-}
-
-/* Fix button colors - keep blue in light mode, amber in dark mode */
-.dark .btn-primary {
-  background-color: #f59e0b !important;
-  color: #1c1917 !important;
-}
-
-.dark .btn-primary:hover {
-  background-color: #d97706 !important;
-}
-
-/* Fix input backgrounds */
-.dark .input {
-  background-color: #292524 !important;
-  color: #e7e5e4 !important;
-  border-color: #44403c !important;
-}
-
-.dark .input:focus {
-  border-color: #f59e0b !important;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2) !important;
-}
-
-/* Fix headings */
-.dark .text-heading-3 {
-  color: #fbbf24 !important;
-}
-
-.dark .text-display-2 {
-  color: #fbbf24 !important;
-}
-
-/* End of essential dark mode fixes */
-
-/* ========================================
-   ADDITIONAL DARK MODE FIXES
-   ======================================== */
-
-/* Fix task list container background */
-.dark .task-list-container {
-  background-color: #292524 !important;
-  border-color: #44403c !important;
-}
-
-/* Fix view toggle section background */
-.dark .card {
-  background-color: #292524 !important;
-  border-color: #44403c !important;
-}
-
-/* Fix theme toggle visibility */
-.dark .theme-toggle {
-  background-color: #44403c !important;
-}
-
-.dark .theme-toggle:hover {
-  background-color: #57534e !important;
-}
-
-/* Make moon icon more visible */
-.dark .theme-toggle svg {
-  color: #fbbf24 !important;
-}
-
-/* Fix sync status indicators */
-.dark .sync-status {
-  background-color: #292524 !important;
-  border-color: #44403c !important;
-  color: #e7e5e4 !important;
-}
-
-.dark .sync-status svg {
-  color: #a8a29e !important;
-}
-
-/* Fix category text readability */
-.dark .task-category {
-  color: #e7e5e4 !important;
-  background-color: #57534e !important;
-}
-
-/* Fix filter labels and dropdowns */
-.dark .filter-label {
-  color: #e7e5e4 !important;
-}
-
-.dark .filter-select {
-  background-color: #44403c !important;
-  color: #e7e5e4 !important;
-  border-color: #57534e !important;
-}
-
-.dark .quick-filter {
-  background-color: #44403c !important;
-  color: #e7e5e4 !important;
-  border-color: #57534e !important;
-}
-
-.dark .quick-filter:hover {
-  background-color: #57534e !important;
-}
-
-.dark .quick-filter.active {
-  background-color: #f59e0b !important;
-  color: #1c1917 !important;
-}
-
-/* Fix any remaining text visibility issues */
-.dark .text-gray-800 {
-  color: #e7e5e4 !important;
-}
-
-.dark .text-gray-900 {
-  color: #f5f5f4 !important;
-}
-
-/* Fix search input */
-.dark .search-input {
-  background-color: #44403c !important;
-  color: #e7e5e4 !important;
-  border-color: #57534e !important;
-}
-
-/* Fix any dark backgrounds that should be warm */
-.dark [class*='bg-slate-'] {
-  background-color: #292524 !important;
-}
-
-.dark [class*='bg-gray-8'] {
-  background-color: #292524 !important;
-}
-
-.dark [class*='bg-gray-9'] {
-  background-color: #1c1917 !important;
-}
-
-/* End of additional fixes */
-/* Fix logo color in dark mode */
+/* Force logo color */
 .dark h1 {
   color: #fbbf24 !important;
 }
 
-/* More specific logo targeting */
-.dark .text-2xl {
-  color: #fbbf24 !important;
+/* Force card backgrounds */
+.dark .card,
+.dark .task-card {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
 }
 
-.dark .text-blue-600 {
-  color: #fbbf24 !important;
+/* Force text colors */
+.dark .text-gray-300 {
+  color: #cbd5e1 !important;
 }
 
-/* Target the specific logo classes */
-.dark .font-semibold {
-  color: #fbbf24 !important;
+.dark .text-gray-400 {
+  color: #94a3b8 !important;
 }
 
-/* Catch any remaining blue text in navigation */
-.dark nav h1 {
-  color: #fbbf24 !important;
+/* Force root background */
+.dark #root {
+  background-color: #0f172a !important;
 }
 
-.dark nav .text-blue-600 {
-  color: #fbbf24 !important;
+/* Force main container background */
+.dark .min-h-screen {
+  background-color: #0f172a !important;
+}
+
+/* FORCE MORE WARM DARK THEME ELEMENTS */
+
+/* Force main background to be warmer */
+.dark body,
+.dark html,
+.dark #root,
+.dark .min-h-screen,
+.dark div[class*='min-h-screen'] {
+  background-color: #0f172a !important;
+}
+
+/* Force navigation bar to be warmer */
+.dark nav,
+.dark nav[style] {
+  background-color: #1e293b !important;
+}
+
+/* REMOVED: Keep task cards with their original styling - they look good as-is */
+
+/* Force any gray-800 backgrounds to be slate-800 */
+.dark .bg-gray-800,
+.dark div[class*='bg-gray-800'] {
+  background-color: #1e293b !important;
+}
+
+/* Force any gray-900 backgrounds to be slate-900 */
+.dark .bg-gray-900,
+.dark div[class*='bg-gray-900'] {
+  background-color: #0f172a !important;
+}
+
+/* Force border colors to be warmer */
+.dark .border-gray-700,
+.dark div[class*='border-gray-700'] {
+  border-color: #334155 !important;
+}
+
+.dark .border-gray-600,
+.dark div[class*='border-gray-600'] {
+  border-color: #475569 !important;
+}
+
+/* Force text colors to be warmer */
+.dark .text-gray-300,
+.dark span[class*='text-gray-300'] {
+  color: #cbd5e1 !important;
+}
+
+.dark .text-gray-400,
+.dark span[class*='text-gray-400'] {
+  color: #94a3b8 !important;
+}
+
+/* Force secondary buttons to be warmer */
+.dark .btn-secondary,
+.dark button[class*='btn-secondary'] {
+  background-color: #334155 !important;
+  border-color: #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+.dark .btn-secondary:hover,
+.dark button[class*='btn-secondary']:hover {
+  background-color: #475569 !important;
+}
+
+/* Force input backgrounds to be warmer */
+.dark .input,
+.dark input[class*='input'],
+.dark select,
+.dark textarea {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+}
+/* TARGETED WARM BACKGROUND CHANGES - AVOID CARDS */
+
+/* Force only the main page background to be warmer */
+.dark body {
+  background-color: #0f172a !important;
+}
+
+.dark #root {
+  background-color: #0f172a !important;
+}
+
+/* Force only the main container background */
+.dark .min-h-screen {
+  background-color: #0f172a !important;
+}
+
+/* Force navigation to be warmer */
+.dark nav {
+  background-color: #1e293b !important;
+}
+
+/* Force the main task list container background (not individual cards) */
+.dark .bg-gray-800:not(.task-card):not(.card) {
+  background-color: #1e293b !important;
+}
+
+/* Force only specific background elements, not cards */
+.dark div[class*='bg-gray-900']:not(.task-card):not(.card) {
+  background-color: #0f172a !important;
+}
+
+/* Make sure the main dashboard container is warmer */
+.dark
+  div[class='min-h-screen bg-gray-100 dark:bg-slate-900 font-sans transition-colors duration-300'] {
+  background-color: #0f172a !important;
+}
+
+/* ========================================
+   WARM DARK THEME WITH AMBER ACCENTS
+   ======================================== */
+
+/* Warm Dark Theme Color Palette */
+:root {
+  /* Warm amber accent colors */
+  --amber-50: #fffbeb;
+  --amber-100: #fef3c7;
+  --amber-200: #fde68a;
+  --amber-300: #fcd34d;
+  --amber-400: #fbbf24;
+  --amber-500: #f59e0b;
+  --amber-600: #d97706;
+  --amber-700: #b45309;
+  --amber-800: #92400e;
+  --amber-900: #78350f;
+
+  /* Warm dark background colors */
+  --warm-gray-50: #fafaf9;
+  --warm-gray-100: #f5f5f4;
+  --warm-gray-200: #e7e5e4;
+  --warm-gray-300: #d6d3d1;
+  --warm-gray-400: #a8a29e;
+  --warm-gray-500: #78716c;
+  --warm-gray-600: #57534e;
+  --warm-gray-700: #44403c;
+  --warm-gray-750: #2d2a27;
+  --warm-gray-800: #292524;
+  --warm-gray-900: #1c1917;
+
+  /* Warm dark slate colors */
+  --warm-slate-50: #f8fafc;
+  --warm-slate-100: #f1f5f9;
+  --warm-slate-200: #e2e8f0;
+  --warm-slate-300: #cbd5e1;
+  --warm-slate-400: #94a3b8;
+  --warm-slate-500: #64748b;
+  --warm-slate-600: #475569;
+  --warm-slate-700: #334155;
+  --warm-slate-800: #1e293b;
+  --warm-slate-900: #0f172a;
+}
+
+/* Override body background for warm dark theme */
+.dark body {
+  background-color: var(--warm-gray-900) !important;
+  color: var(--warm-gray-100) !important;
+}
+
+/* Main container backgrounds */
+.dark .min-h-screen {
+  background-color: var(--warm-gray-900) !important;
+}
+
+.dark .bg-gray-100 {
+  background-color: var(--warm-gray-900) !important;
+}
+
+.dark .bg-slate-900 {
+  background-color: var(--warm-gray-900) !important;
+}
+
+/* Navigation with warm dark theme */
+.dark nav {
+  background-color: var(--warm-gray-800) !important;
+  border-bottom: 1px solid var(--warm-gray-700) !important;
+}
+
+/* Warm dark theme headings with amber accents */
+.dark .text-heading-3 {
+  color: var(--amber-400) !important;
+}
+
+.dark .text-display-2 {
+  background: linear-gradient(
+    135deg,
+    var(--amber-400),
+    var(--amber-300)
+  ) !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  color: transparent !important;
+}
+
+/* Cards with warm dark theme - keep original styling */
+.dark .card {
+  background-color: var(--warm-gray-800) !important;
+  border-color: var(--warm-gray-700) !important;
+}
+
+/* Buttons with amber accents */
+.dark .btn-primary {
+  background: linear-gradient(
+    135deg,
+    var(--amber-600),
+    var(--amber-500)
+  ) !important;
+  color: var(--warm-gray-900) !important;
+  font-weight: 600 !important;
+}
+
+.dark .btn-primary:hover {
+  background: linear-gradient(
+    135deg,
+    var(--amber-700),
+    var(--amber-600)
+  ) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3) !important;
+}
+
+.dark .btn-secondary {
+  background-color: var(--warm-gray-700) !important;
+  color: var(--warm-gray-200) !important;
+  border: 1px solid var(--warm-gray-600) !important;
+}
+
+.dark .btn-secondary:hover {
+  background-color: var(--warm-gray-600) !important;
+  border-color: var(--amber-500) !important;
+  color: var(--amber-100) !important;
+}
+
+/* Form inputs with warm dark theme */
+.dark .input {
+  background-color: var(--warm-gray-800) !important;
+  color: var(--warm-gray-100) !important;
+  border: 1px solid var(--warm-gray-600) !important;
+}
+
+.dark .input:focus {
+  border-color: var(--amber-500) !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2) !important;
+}
+
+.dark .input::placeholder {
+  color: var(--warm-gray-400) !important;
+}
+
+/* Task cards with warm dark theme - minimal changes */
+.dark .task-card {
+  background-color: var(--warm-gray-800) !important;
+  border: 1px solid var(--warm-gray-700) !important;
+}
+
+.dark .task-card:hover {
+  background-color: var(--warm-gray-750) !important;
+}
+
+/* Task list container */
+.dark .task-list-container {
+  background-color: var(--warm-gray-800) !important;
+  border-color: var(--warm-gray-700) !important;
+}
+
+.dark .task-item {
+  background-color: var(--warm-gray-800) !important;
+  border-bottom-color: var(--warm-gray-700) !important;
+}
+
+.dark .task-item:hover {
+  background-color: var(--warm-gray-750) !important;
+}
+
+.dark .task-item.completed {
+  background-color: var(--warm-gray-750) !important;
+  opacity: 0.8 !important;
+}
+
+/* Task content styling */
+.dark .task-title {
+  color: var(--warm-gray-100) !important;
+}
+
+.dark .task-description {
+  color: var(--warm-gray-300) !important;
+}
+
+/* Priority badges with warm colors */
+.dark .task-priority.high {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+  color: #fca5a5 !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+}
+
+.dark .task-priority.medium {
+  background-color: rgba(245, 158, 11, 0.2) !important;
+  color: var(--amber-300) !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+}
+
+.dark .task-priority.low {
+  background-color: rgba(34, 197, 94, 0.2) !important;
+  color: #86efac !important;
+  border: 1px solid rgba(34, 197, 94, 0.3) !important;
+}
+
+/* Due date styling */
+.dark .task-due-date {
+  background-color: var(--warm-gray-700) !important;
+  color: var(--warm-gray-200) !important;
+}
+
+.dark .task-due-date.overdue {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+  color: #fca5a5 !important;
+}
+
+/* Category badges */
+.dark .task-category {
+  background-color: var(--amber-600) !important;
+  color: var(--warm-gray-900) !important;
+  font-weight: 600 !important;
+}
+
+/* Badges with warm theme */
+.dark .badge-primary {
+  background-color: rgba(245, 158, 11, 0.2) !important;
+  color: var(--amber-300) !important;
+}
+
+.dark .badge-success {
+  background-color: rgba(34, 197, 94, 0.2) !important;
+  color: #86efac !important;
+}
+
+.dark .badge-warning {
+  background-color: rgba(251, 191, 36, 0.2) !important;
+  color: var(--amber-200) !important;
+}
+
+.dark .badge-error {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+  color: #fca5a5 !important;
+}
+
+.dark .badge-gray {
+  background-color: var(--warm-gray-700) !important;
+  color: var(--warm-gray-200) !important;
+}
+
+/* Loading spinner with amber accent */
+.dark .spinner {
+  border: 2px solid var(--warm-gray-600) !important;
+  border-top: 2px solid var(--amber-500) !important;
+}
+
+/* Toast notifications with warm theme */
+.dark .toast-success {
+  background-color: var(--warm-gray-800) !important;
+  border: 1px solid var(--warm-gray-700) !important;
+  border-left: 4px solid #22c55e !important;
+  color: var(--warm-gray-100) !important;
+}
+
+.dark .toast-error {
+  background-color: var(--warm-gray-800) !important;
+  border: 1px solid var(--warm-gray-700) !important;
+  border-left: 4px solid #ef4444 !important;
+  color: var(--warm-gray-100) !important;
+}
+
+/* Modal with warm dark theme */
+.dark .modal-overlay {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.dark .modal-content {
+  background-color: var(--warm-gray-800) !important;
+  border: 1px solid var(--warm-gray-700) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+}
+
+.dark .modal-header {
+  border-bottom: 1px solid var(--warm-gray-700) !important;
+}
+
+.dark .modal-footer {
+  border-top: 1px solid var(--warm-gray-700) !important;
+}
+
+/* Task filters with warm theme */
+.dark .task-filters {
+  background-color: var(--warm-gray-750) !important;
+  border-bottom-color: var(--warm-gray-700) !important;
+}
+
+.dark .filter-select {
+  background-color: var(--warm-gray-700) !important;
+  border-color: var(--warm-gray-600) !important;
+  color: var(--warm-gray-100) !important;
+}
+
+.dark .filter-select:focus {
+  border-color: var(--amber-500) !important;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2) !important;
+}
+
+.dark .quick-filter {
+  background-color: var(--warm-gray-700) !important;
+  border-color: var(--warm-gray-600) !important;
+  color: var(--warm-gray-200) !important;
+}
+
+.dark .quick-filter:hover {
+  background-color: var(--warm-gray-600) !important;
+  border-color: var(--amber-500) !important;
+}
+
+.dark .quick-filter.active {
+  background-color: var(--amber-600) !important;
+  color: var(--warm-gray-900) !important;
+  border-color: var(--amber-500) !important;
+}
+
+/* Checkbox styling with amber accent */
+.dark input[type='checkbox'] {
+  background-color: var(--warm-gray-700) !important;
+  border: 2px solid var(--warm-gray-600) !important;
+}
+
+.dark input[type='checkbox']:checked {
+  background-color: var(--amber-600) !important;
+  border-color: var(--amber-500) !important;
+}
+
+.dark input[type='checkbox']:focus {
+  outline: 2px solid var(--amber-500) !important;
+  outline-offset: 2px !important;
+}
+
+/* Links with amber accent */
+.dark a {
+  color: var(--amber-400) !important;
+}
+
+.dark a:hover {
+  color: var(--amber-300) !important;
+}
+
+/* Text colors for warm theme */
+.dark .text-body {
+  color: var(--warm-gray-300) !important;
+}
+
+.dark .text-gray-700 {
+  color: var(--warm-gray-200) !important;
+}
+
+.dark .text-gray-300 {
+  color: var(--warm-gray-400) !important;
+}
+
+.dark .text-gray-400 {
+  color: var(--warm-gray-400) !important;
+}
+
+.dark .text-gray-500 {
+  color: var(--warm-gray-500) !important;
+}
+
+/* Primary colors with amber theme */
+.dark .text-primary-500 {
+  color: var(--amber-400) !important;
+}
+
+.dark .text-primary-400 {
+  color: var(--amber-300) !important;
+}
+
+.dark .text-primary-600 {
+  color: var(--amber-500) !important;
+}
+
+.dark .text-primary-700 {
+  color: var(--amber-600) !important;
+}
+
+/* Border colors */
+.dark .border-gray-200 {
+  border-color: var(--warm-gray-700) !important;
+}
+
+.dark .border-gray-300 {
+  border-color: var(--warm-gray-600) !important;
+}
+
+.dark .border-gray-700 {
+  border-color: var(--warm-gray-600) !important;
+}
+
+/* Gradients with warm theme */
+.dark .bg-gradient-to-br {
+  background: linear-gradient(
+    to bottom right,
+    var(--warm-gray-900),
+    var(--warm-gray-800)
+  ) !important;
+}
+
+.dark .from-primary-600 {
+  --tw-gradient-from: var(--amber-600) !important;
+}
+
+.dark .to-primary-700 {
+  --tw-gradient-to: var(--amber-700) !important;
+}
+
+/* Search components with warm theme */
+.dark .search-icon {
+  color: var(--warm-gray-400) !important;
+}
+
+.dark .search-clear-button {
+  color: var(--warm-gray-400) !important;
+}
+
+.dark .search-clear-button:hover {
+  color: var(--amber-400) !important;
+}
+
+/* Empty state styling */
+.dark .empty-state {
+  color: var(--warm-gray-400) !important;
+}
+
+.dark .empty-state h3 {
+  color: var(--warm-gray-200) !important;
+}
+
+.dark .empty-state svg {
+  color: var(--warm-gray-600) !important;
+}
+
+/* Hover effects with amber accents */
+.dark .hover\\:text-primary-700:hover {
+  color: var(--amber-600) !important;
+}
+
+.dark .hover\\:text-primary-300:hover {
+  color: var(--amber-300) !important;
+}
+
+.dark .hover\\:bg-gray-50:hover {
+  background-color: var(--warm-gray-750) !important;
+}
+
+/* Task delete button */
+.dark .task-delete-btn:hover {
+  color: #ef4444 !important;
+  background-color: rgba(239, 68, 68, 0.1) !important;
+}
+
+/* Additional warm gray shade for hover states */
+.dark .warm-gray-750 {
+  background-color: #2d2a27 !important;
+}
+
+/* Ensure proper contrast for accessibility */
+.dark .filter-label {
+  color: var(--warm-gray-300) !important;
+}
+
+/* Calendar specific styling (if calendar components exist) */
+.dark .calendar-day {
+  background-color: var(--warm-gray-800) !important;
+  border-color: var(--warm-gray-700) !important;
+  color: var(--warm-gray-200) !important;
+}
+
+.dark .calendar-day:hover {
+  background-color: var(--warm-gray-700) !important;
+  border-color: var(--amber-500) !important;
+}
+
+.dark .calendar-day.today {
+  background-color: var(--amber-600) !important;
+  color: var(--warm-gray-900) !important;
+}
+
+/* Sync status indicator with warm theme */
+.dark .sync-status {
+  background-color: var(--warm-gray-800) !important;
+  border-color: var(--warm-gray-700) !important;
+  color: var(--warm-gray-200) !important;
+}
+
+.dark .sync-status.online {
+  border-left-color: #22c55e !important;
+}
+
+.dark .sync-status.offline {
+  border-left-color: var(--amber-500) !important;
+}
+
+.dark .sync-status.syncing {
+  border-left-color: var(--amber-400) !important;
+}
+
+.dark .sync-status.error {
+  border-left-color: #ef4444 !important;
+}
+
+/* Animation improvements for dark theme */
+.dark .animate-fade-in {
+  animation: darkFadeIn 0.3s ease-in-out !important;
+}
+
+@keyframes darkFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scrollbar styling for dark theme */
+.dark ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--warm-gray-800);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--warm-gray-600);
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--amber-600);
+}
+
+/* Selection styling */
+.dark ::selection {
+  background-color: rgba(245, 158, 11, 0.3) !important;
+  color: var(--warm-gray-100) !important;
+}
+
+/* Focus ring improvements */
+.dark .focus-ring:focus {
+  outline: 2px solid var(--amber-500) !important;
+  outline-offset: 2px !important;
+}
+
+/* Ensure all text is readable in dark mode */
+.dark * {
+  color: inherit;
+}
+
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6 {
+  color: var(--warm-gray-100) !important;
+}
+
+.dark p {
+  color: var(--warm-gray-300) !important;
+}
+
+.dark small {
+  color: var(--warm-gray-400) !important;
+}
+
+/* End of Warm Dark Theme */
+/* Fix specific component backgrounds for dark theme */
+.dark .bg-white {
+  background-color: var(--warm-gray-800) !important;
+}
+
+.dark .bg-gray-800 {
+  background-color: var(--warm-gray-800) !important;
+}
+
+/* Task input container */
+.dark [class*='bg-white'] {
+  background-color: var(--warm-gray-800) !important;
+}
+
+/* Ensure main dashboard background */
+.dark [class*='bg-gray-100'] {
+  background-color: var(--warm-gray-900) !important;
+}
+
+.dark [class*='bg-slate-900'] {
+  background-color: var(--warm-gray-900) !important;
+}
+
+/* Fix any remaining white backgrounds in dark mode */
+.dark div[style*='background-color: white'],
+.dark div[style*='backgroundColor: white'] {
+  background-color: var(--warm-gray-800) !important;
 }
