@@ -106,6 +106,10 @@
   margin-bottom: var(--spacing-sm);
 }
 
+.mb-3 {
+  margin-bottom: 0.75rem;
+}
+
 .mb-4 {
   margin-bottom: var(--spacing-md);
 }
@@ -127,6 +131,10 @@
   margin-left: var(--spacing-sm);
 }
 
+.ml-3 {
+  margin-left: 0.75rem;
+}
+
 .ml-4 {
   margin-left: var(--spacing-md);
 }
@@ -142,6 +150,10 @@
 
 .mr-2 {
   margin-right: var(--spacing-sm);
+}
+
+.mr-3 {
+  margin-right: 0.75rem;
 }
 
 .mr-4 {
@@ -229,6 +241,33 @@
   padding-bottom: var(--spacing-xl);
 }
 
+.py-12 {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+/* Space Between */
+.space-x-3 > * + * {
+  margin-left: 0.75rem;
+}
+
+.space-y-5 > * + * {
+  margin-top: 1.25rem;
+}
+
+.space-y-6 > * + * {
+  margin-top: 1.5rem;
+}
+
+/* Gap utilities (additional) */
+.gap-3 {
+  gap: 0.75rem;
+}
+
+.gap-5 {
+  gap: 1.25rem;
+}
+
 /* Padding Top */
 .pt-1 {
   padding-top: var(--spacing-xs);
@@ -280,6 +319,10 @@
   padding-left: var(--spacing-sm);
 }
 
+.pl-3 {
+  padding-left: 0.75rem;
+}
+
 .pl-4 {
   padding-left: var(--spacing-md);
 }
@@ -292,6 +335,10 @@
   padding-left: var(--spacing-xl);
 }
 
+.pl-10 {
+  padding-left: 2.5rem;
+}
+
 /* Padding Right */
 .pr-1 {
   padding-right: var(--spacing-xs);
@@ -299,6 +346,10 @@
 
 .pr-2 {
   padding-right: var(--spacing-sm);
+}
+
+.pr-3 {
+  padding-right: 0.75rem;
 }
 
 .pr-4 {
@@ -311,4 +362,8 @@
 
 .pr-8 {
   padding-right: var(--spacing-xl);
+}
+
+.pr-10 {
+  padding-right: 2.5rem;
 }

@@ -205,3 +205,101 @@
     transition-duration: 0.01ms !important;
   }
 }
+/* Mobile-specific utilities */
+@media (max-width: 640px) {
+  .container-app {
+    padding: 0 0.5rem;
+  }
+
+  .hidden {
+    display: none;
+  }
+}
+
+/* Dark mode utilities */
+.dark .bg-gray-800 {
+  background-color: #1e293b;
+}
+
+.dark .bg-gray-900 {
+  background-color: #0f172a;
+}
+
+.dark .bg-gray-700-50 {
+  background-color: rgba(55, 65, 81, 0.5);
+}
+
+.dark .text-gray-300 {
+  color: #cbd5e1;
+}
+
+.dark .text-gray-400 {
+  color: #94a3b8;
+}
+
+.dark .text-gray-500 {
+  color: #64748b;
+}
+
+.dark .text-gray-700 {
+  color: #e5e7eb;
+}
+
+.dark .text-display-2 {
+  color: #60a5fa;
+}
+
+.dark .text-heading-4 {
+  color: #ffffff;
+}
+
+.dark .text-body {
+  color: #9ca3af;
+}
+
+.dark .text-primary-500 {
+  color: #60a5fa;
+}
+
+.dark .text-primary-400 {
+  color: #93c5fd;
+}
+
+.dark .border-gray-700 {
+  border-color: #374151;
+}
+
+.dark .hover\:text-gray-200:hover {
+  color: #e5e7eb;
+}
+
+.dark .hover\:bg-gray-700-50:hover {
+  background-color: rgba(55, 65, 81, 0.5);
+}
+
+.dark .hover\:bg-error-900-30:hover {
+  background-color: rgba(127, 29, 29, 0.3);
+}
+
+.dark .bg-gradient-to-br {
+  background: linear-gradient(to bottom right, #111827, #1f2937);
+}
+
+.dark a {
+  color: #60a5fa;
+}
+
+.dark a:hover {
+  color: #93c5fd;
+}
+
+.dark .card {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+.dark .input {
+  background-color: #1f2937;
+  color: #ffffff;
+  border-color: #4b5563;
+}

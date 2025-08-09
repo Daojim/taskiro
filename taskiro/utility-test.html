@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Utility Classes Test</title>
+    <link rel="stylesheet" href="src/styles/main.css" />
+  </head>
+  <body>
+    <div class="container-app py-8">
+      <h1 class="text-display-2 text-center mb-8">Utility Classes Test</h1>
+
+      <!-- Layout utilities test -->
+      <div class="mb-6">
+        <h2 class="text-xl font-bold mb-4">Layout Utilities</h2>
+        <div
+          class="flex items-center justify-between p-4 bg-gray-100 rounded-lg"
+        >
+          <div class="w-4 h-4 bg-primary-500"></div>
+          <div class="w-5 h-5 bg-error-500"></div>
+          <div class="flex-1 text-center">Flex Layout</div>
+        </div>
+      </div>
+
+      <!-- Spacing utilities test -->
+      <div class="mb-6">
+        <h2 class="text-xl font-bold mb-4">Spacing Utilities</h2>
+        <div class="space-y-6">
+          <div class="p-4 bg-primary-50 rounded-lg">Padding 4</div>
+          <div class="px-6 py-2 bg-success-50 rounded-lg">Padding X-6, Y-2</div>
+          <div class="ml-4 mr-3 bg-warning-50 rounded-lg p-2">
+            Margin Left 4, Right 3
+          </div>
+        </div>
+      </div>
+
+      <!-- Color utilities test -->
+      <div class="mb-6">
+        <h2 class="text-xl font-bold mb-4">Color Utilities</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-primary-600 bg-primary-50 p-4 rounded-lg">
+            Primary Colors
+          </div>
+          <div class="text-error-600 bg-error-50 p-4 rounded-lg">
+            Error Colors
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
