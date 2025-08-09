@@ -1,5 +1,8 @@
 /* Main CSS Entry Point - Modular CSS Architecture */
 
+/* Emergency styles (temporary during migration) */
+@import '../emergency-styles.css';
+
 /* Core Foundation Styles */
 @import './core/reset.css';
 @import './core/variables.css';
