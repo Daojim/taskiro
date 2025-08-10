@@ -172,6 +172,26 @@
   color: var(--badge-gray-text);
 }
 
+/* Clickable badge styles */
+.badge.clickable {
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.badge.clickable:hover {
+  transform: scale(1.05);
+  opacity: 0.8;
+}
+
+/* Hover scale utility */
+.hover-scale {
+  transition: transform var(--transition-fast);
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
 /* Empty states */
 .empty-state {
   text-align: center;

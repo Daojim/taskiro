@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useTaskContext } from '../contexts/TaskContext';
-import { useTheme } from '../hooks/useTheme';
 import {
   ListBulletIcon,
   CalendarDaysIcon,
@@ -20,7 +19,6 @@ type ViewMode = 'list' | 'calendar';
 
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
-  const { theme } = useTheme();
   const {
     tasks,
     categories,
@@ -116,7 +114,10 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-slate-900 font-sans transition-colors duration-300">
+    <div
+      className="min-h-screen font-sans transition-colors duration-300"
+      style={{ backgroundColor: 'var(--bg-tertiary)' }}
+    >
       <nav
         style={{
           position: 'fixed',
@@ -124,8 +125,8 @@ const Dashboard: React.FC = () => {
           left: 0,
           right: 0,
           width: '100%',
-          backgroundColor: theme === 'dark' ? '#1e293b' : 'white',
-          borderBottom: `1px solid ${theme === 'dark' ? '#334155' : '#e5e7eb'}`,
+          backgroundColor: 'var(--bg-primary)',
+          borderBottom: '1px solid var(--border-primary)',
           zIndex: 40,
           display: 'block',
         }}
@@ -145,9 +146,12 @@ const Dashboard: React.FC = () => {
                 Taskiro
               </h1>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <SyncStatusIndicator showDetails={true} />
-              <span className="text-sm text-gray-600 dark:text-slate-300">
+              <span
+                className="text-sm"
+                style={{ color: 'var(--text-secondary)' }}
+              >
                 Welcome, {user?.email}
               </span>
               <ThemeToggle />
@@ -177,7 +181,7 @@ const Dashboard: React.FC = () => {
       >
         <div className="flex flex-col gap-6">
           {/* Task Input Component */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 transition-colors duration-300">
+          <div className="card p-6">
             <TaskInput
               onTaskCreated={handleTaskCreated}
               categories={categories}
