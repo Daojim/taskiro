@@ -178,7 +178,11 @@
 }
 
 .bg-primary-900-20 {
-  background-color: rgba(30, 58, 138, 0.2);
+  background-color: color-mix(
+    in srgb,
+    var(--color-primary-900) 20%,
+    transparent
+  );
 }
 
 /* Gray background colors */
@@ -199,7 +203,7 @@
 }
 
 .bg-gray-700-50 {
-  background-color: rgba(55, 65, 81, 0.5);
+  background-color: color-mix(in srgb, var(--color-gray-700) 50%, transparent);
 }
 
 .bg-gray-800 {
@@ -228,11 +232,11 @@
 }
 
 .bg-error-900-20 {
-  background-color: rgba(127, 29, 29, 0.2);
+  background-color: color-mix(in srgb, var(--color-error-800) 20%, transparent);
 }
 
 .bg-error-900-30 {
-  background-color: rgba(127, 29, 29, 0.3);
+  background-color: color-mix(in srgb, var(--color-error-800) 30%, transparent);
 }
 
 /* Gradient utilities */
@@ -245,33 +249,45 @@
 }
 
 .from-primary-600 {
-  --tw-gradient-from: #2563eb;
+  --tw-gradient-from: var(--color-primary-600);
   --tw-gradient-stops:
-    var(--tw-gradient-from), var(--tw-gradient-to, rgba(37, 99, 235, 0));
+    var(--tw-gradient-from),
+    var(
+      --tw-gradient-to,
+      color-mix(in srgb, var(--color-primary-600) 0%, transparent)
+    );
 }
 
 .to-primary-700 {
-  --tw-gradient-to: #1d4ed8;
+  --tw-gradient-to: var(--color-primary-700);
 }
 
 .from-gray-50 {
-  --tw-gradient-from: #f9fafb;
+  --tw-gradient-from: var(--color-gray-50);
   --tw-gradient-stops:
-    var(--tw-gradient-from), var(--tw-gradient-to, rgba(249, 250, 251, 0));
+    var(--tw-gradient-from),
+    var(
+      --tw-gradient-to,
+      color-mix(in srgb, var(--color-gray-50) 0%, transparent)
+    );
 }
 
 .to-gray-100 {
-  --tw-gradient-to: #f3f4f6;
+  --tw-gradient-to: var(--color-gray-100);
 }
 
 .from-gray-900 {
-  --tw-gradient-from: #111827;
+  --tw-gradient-from: var(--color-gray-900);
   --tw-gradient-stops:
-    var(--tw-gradient-from), var(--tw-gradient-to, rgba(17, 24, 39, 0));
+    var(--tw-gradient-from),
+    var(
+      --tw-gradient-to,
+      color-mix(in srgb, var(--color-gray-900) 0%, transparent)
+    );
 }
 
 .to-gray-800 {
-  --tw-gradient-to: #1f2937;
+  --tw-gradient-to: var(--color-gray-800);
 }
 
 .bg-clip-text {
@@ -358,7 +374,7 @@
 }
 
 .hover\:bg-gray-700-50:hover {
-  background-color: rgba(55, 65, 81, 0.5);
+  background-color: color-mix(in srgb, var(--color-gray-700) 50%, transparent);
 }
 
 .hover\:bg-error-100:hover {
@@ -366,5 +382,5 @@
 }
 
 .hover\:bg-error-900-30:hover {
-  background-color: rgba(127, 29, 29, 0.3);
+  background-color: color-mix(in srgb, var(--color-error-800) 30%, transparent);
 }

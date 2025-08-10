@@ -1,17 +1,18 @@
 /* CSS Custom Properties - Design Tokens */
+/* Extracted from emergency-styles.css repeated values */
 
 :root {
-  /* Colors - Primary */
-  --color-primary-50: #fffbeb;
-  --color-primary-100: #fef3c7;
-  --color-primary-200: #fde68a;
-  --color-primary-300: #fcd34d;
-  --color-primary-400: #fbbf24;
-  --color-primary-500: #f59e0b;
-  --color-primary-600: #d97706;
-  --color-primary-700: #b45309;
-  --color-primary-800: #92400e;
-  --color-primary-900: #78350f;
+  /* Colors - Primary (Blue scale used in emergency-styles.css) */
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
 
   /* Colors - Gray */
   --color-gray-50: #f9fafb;
@@ -26,19 +27,24 @@
   --color-gray-900: #111827;
 
   /* Colors - Semantic */
-  --color-success-50: #ecfdf5;
+  --color-success-50: #dcfce7;
   --color-success-500: #10b981;
-  --color-success-600: #059669;
-  --color-success-700: #047857;
+  --color-success-600: #16a34a;
+  --color-success-700: #166534;
 
   --color-error-50: #fef2f2;
+  --color-error-100: #fee2e2;
+  --color-error-200: #fecaca;
+  --color-error-400: #f87171;
   --color-error-500: #ef4444;
   --color-error-600: #dc2626;
   --color-error-700: #b91c1c;
+  --color-error-800: #991b1b;
 
-  --color-warning-50: #fffbeb;
+  --color-warning-50: #fef3c7;
   --color-warning-500: #f59e0b;
   --color-warning-600: #d97706;
+  --color-warning-700: #92400e;
 
   /* Colors - Surface */
   --color-surface: #ffffff;
@@ -106,4 +112,125 @@
   --z-modal: 50;
   --z-popover: 60;
   --z-tooltip: 70;
+
+  /* Semantic color aliases for easier usage */
+  --text-primary: var(--color-gray-900);
+  --text-secondary: var(--color-gray-600);
+  --text-tertiary: var(--color-gray-500);
+  --text-muted: var(--color-gray-400);
+
+  --bg-primary: var(--color-surface);
+  --bg-secondary: var(--color-surface-secondary);
+  --bg-tertiary: var(--color-surface-tertiary);
+
+  --border-primary: var(--color-gray-300);
+  --border-secondary: var(--color-gray-200);
+  --border-focus: var(--color-primary-500);
+
+  /* Badge colors */
+  --badge-primary-bg: var(--color-primary-100);
+  --badge-primary-text: var(--color-primary-800);
+  --badge-success-bg: var(--color-success-50);
+  --badge-success-text: var(--color-success-700);
+  --badge-warning-bg: var(--color-warning-50);
+  --badge-warning-text: var(--color-warning-700);
+  --badge-error-bg: var(--color-error-100);
+  --badge-error-text: var(--color-error-800);
+  --badge-gray-bg: var(--color-gray-100);
+  --badge-gray-text: var(--color-gray-700);
+
+  /* Button colors */
+  --btn-primary-bg: var(--color-primary-600);
+  --btn-primary-bg-hover: var(--color-primary-700);
+  --btn-primary-text: #ffffff;
+  --btn-secondary-bg: #ffffff;
+  --btn-secondary-bg-hover: var(--color-gray-50);
+  --btn-secondary-text: var(--color-gray-700);
+  --btn-secondary-border: var(--color-gray-300);
+  --btn-danger-bg: var(--color-error-600);
+  --btn-danger-bg-hover: var(--color-error-700);
+  --btn-danger-text: #ffffff;
+
+  /* Input colors */
+  --input-bg: #ffffff;
+  --input-border: var(--color-gray-300);
+  --input-border-focus: var(--color-primary-500);
+  --input-text: var(--color-gray-900);
+  --input-placeholder: var(--color-gray-400);
+
+  /* Task priority colors */
+  --priority-high-bg: var(--color-error-100);
+  --priority-high-text: var(--color-error-600);
+  --priority-high-border: var(--color-error-500);
+  --priority-medium-bg: var(--color-warning-50);
+  --priority-medium-text: var(--color-warning-600);
+  --priority-medium-border: var(--color-warning-500);
+  --priority-low-bg: var(--color-success-50);
+  --priority-low-text: var(--color-success-600);
+  --priority-low-border: var(--color-success-500);
+
+  /* Container widths */
+  --container-max-width: 80rem;
+  --container-padding: 1rem;
+
+  /* Common heights */
+  --nav-height: 4rem;
+  --input-height: 2.5rem;
+  --btn-height: 2.5rem;
+  --btn-sm-height: 2rem;
+
+  /* Animation durations */
+  --duration-150: 150ms;
+  --duration-200: 200ms;
+  --duration-250: 250ms;
+  --duration-300: 300ms;
+  --duration-350: 350ms;
+
+  /* Easing functions */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Dark theme overrides */
+[data-theme='dark'],
+.dark {
+  /* Dark mode surface colors */
+  --color-surface: #1f2937;
+  --color-surface-secondary: #374151;
+  --color-surface-tertiary: #4b5563;
+
+  /* Dark mode text colors */
+  --text-primary: #f9fafb;
+  --text-secondary: #e5e7eb;
+  --text-tertiary: #d1d5db;
+  --text-muted: #9ca3af;
+
+  /* Dark mode borders */
+  --border-primary: #4b5563;
+  --border-secondary: #374151;
+
+  /* Dark mode backgrounds */
+  --bg-primary: var(--color-surface);
+  --bg-secondary: var(--color-surface-secondary);
+  --bg-tertiary: var(--color-surface-tertiary);
+
+  /* Dark mode inputs */
+  --input-bg: #374151;
+  --input-border: #4b5563;
+  --input-text: #f9fafb;
+  --input-placeholder: #9ca3af;
+
+  /* Dark mode buttons */
+  --btn-secondary-bg: #374151;
+  --btn-secondary-bg-hover: #4b5563;
+  --btn-secondary-text: #f9fafb;
+  --btn-secondary-border: #4b5563;
+
+  /* Adjust primary colors for dark mode */
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+
+  /* Dark mode badge adjustments */
+  --badge-gray-bg: #374151;
+  --badge-gray-text: #e5e7eb;
 }
