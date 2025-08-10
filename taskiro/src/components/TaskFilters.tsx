@@ -62,21 +62,18 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
     filters.category || filters.priority || filters.status;
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-700-50 rounded-lg p-4">
+    <div className="task-filters">
       <div className="flex flex-wrap items-center gap-4">
         {/* Category Filter */}
         <div className="flex items-center space-x-2">
-          <label
-            htmlFor="category-filter"
-            className="text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
+          <label htmlFor="category-filter" className="task-filter-label">
             Category:
           </label>
           <select
             id="category-filter"
             value={filters.category}
             onChange={handleCategoryChange}
-            className="text-sm border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="filter-select"
           >
             <option value="">All categories</option>
             <option value="uncategorized">Uncategorized</option>
@@ -90,17 +87,14 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
 
         {/* Priority Filter */}
         <div className="flex items-center space-x-2">
-          <label
-            htmlFor="priority-filter"
-            className="text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
+          <label htmlFor="priority-filter" className="task-filter-label">
             Priority:
           </label>
           <select
             id="priority-filter"
             value={filters.priority}
             onChange={handlePriorityChange}
-            className="text-sm border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="filter-select"
           >
             <option value="">All priorities</option>
             <option value="high">High</option>
@@ -111,17 +105,14 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
 
         {/* Status Filter */}
         <div className="flex items-center space-x-2">
-          <label
-            htmlFor="status-filter"
-            className="text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
+          <label htmlFor="status-filter" className="task-filter-label">
             Status:
           </label>
           <select
             id="status-filter"
             value={filters.status}
             onChange={handleStatusChange}
-            className="text-sm border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="filter-select"
           >
             <option value="">All tasks</option>
             <option value="active">Active</option>
@@ -131,17 +122,14 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
 
         {/* Sort By */}
         <div className="flex items-center space-x-2">
-          <label
-            htmlFor="sort-by"
-            className="text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
+          <label htmlFor="sort-by" className="task-filter-label">
             Sort by:
           </label>
           <select
             id="sort-by"
             value={filters.sortBy}
             onChange={handleSortByChange}
-            className="text-sm border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="filter-select"
           >
             <option value="dueDate">Due Date</option>
             <option value="priority">Priority</option>
@@ -151,17 +139,14 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
 
         {/* Sort Order */}
         <div className="flex items-center space-x-2">
-          <label
-            htmlFor="sort-order"
-            className="text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
+          <label htmlFor="sort-order" className="task-filter-label">
             Order:
           </label>
           <select
             id="sort-order"
             value={filters.sortOrder}
             onChange={handleSortOrderChange}
-            className="text-sm border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="filter-select"
           >
             <option value="asc">Ascending</option>
             <option value="desc">Descending</option>
@@ -170,10 +155,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
 
         {/* Clear Filters Button */}
         {hasActiveFilters && (
-          <button
-            onClick={handleClearFilters}
-            className="btn btn-ghost text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium focus:outline-none focus:underline"
-          >
+          <button onClick={handleClearFilters} className="btn-ghost btn-sm">
             Clear filters
           </button>
         )}
@@ -182,7 +164,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
       {/* Active Filters Display */}
       {hasActiveFilters && (
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <span className="text-sm text-gray-600 dark:text-gray-400">
+          <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
             Active filters:
           </span>
 
@@ -233,13 +215,13 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
 
       {/* Quick Filter Buttons */}
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        <span className="text-sm text-gray-600 dark:text-gray-400">
+        <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
           Quick filters:
         </span>
 
         <button
           onClick={() => onChange({ status: 'active', priority: 'high' })}
-          className="quick-filter-button px-3 py-1 text-xs font-medium rounded-full border border-red-200 text-red-700 hover:bg-red-50 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-900/20 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+          className="quick-filter quick-filter-high"
         >
           High Priority Active
         </button>
@@ -248,7 +230,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
           onClick={() =>
             onChange({ status: 'active', sortBy: 'dueDate', sortOrder: 'asc' })
           }
-          className="quick-filter-button px-3 py-1 text-xs font-medium rounded-full border border-blue-200 text-blue-700 hover:bg-blue-50 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900/20 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+          className="quick-filter quick-filter-due"
         >
           Due Soon
         </button>
@@ -261,7 +243,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
               sortOrder: 'desc',
             })
           }
-          className="quick-filter-button px-3 py-1 text-xs font-medium rounded-full border border-green-200 text-green-700 hover:bg-green-50 dark:border-green-800 dark:text-green-300 dark:hover:bg-green-900/20 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+          className="quick-filter quick-filter-completed"
         >
           Recently Completed
         </button>

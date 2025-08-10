@@ -191,23 +191,23 @@
   --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-/* Dark theme overrides */
+/* Dark Warm Theme - Consistent warm color palette */
 [data-theme='dark'],
 .dark {
-  /* Dark mode surface colors */
-  --color-surface: #0f172a;
-  --color-surface-secondary: #1e293b;
-  --color-surface-tertiary: #334155;
+  /* Warm dark surface colors - using warm grays and browns */
+  --color-surface: #1c1917; /* warm-gray-900 */
+  --color-surface-secondary: #292524; /* warm-gray-800 */
+  --color-surface-tertiary: #44403c; /* warm-gray-700 */
 
-  /* Dark mode text colors */
-  --text-primary: #f1f5f9;
-  --text-secondary: #cbd5e1;
-  --text-tertiary: #94a3b8;
-  --text-muted: #64748b;
+  /* Warm dark text colors */
+  --text-primary: #fafaf9; /* warm-gray-50 */
+  --text-secondary: #e7e5e4; /* warm-gray-200 */
+  --text-tertiary: #d6d3d1; /* warm-gray-300 */
+  --text-muted: #a8a29e; /* warm-gray-400 */
 
-  /* Dark mode borders */
-  --border-primary: #334155;
-  --border-secondary: #1e293b;
+  /* Warm dark borders */
+  --border-primary: #57534e; /* warm-gray-600 */
+  --border-secondary: #44403c; /* warm-gray-700 */
 
   /* Dark mode backgrounds */
   --bg-primary: var(--color-surface-secondary);
@@ -215,24 +215,40 @@
   --bg-tertiary: var(--color-surface);
 
   /* Dark mode inputs */
-  --input-bg: #334155;
-  --input-border: #475569;
-  --input-text: #f1f5f9;
-  --input-placeholder: #64748b;
+  --input-bg: #44403c;
+  --input-border: #57534e;
+  --input-text: #fafaf9;
+  --input-placeholder: #a8a29e;
 
   /* Dark mode buttons */
-  --btn-secondary-bg: #334155;
-  --btn-secondary-bg-hover: #475569;
-  --btn-secondary-text: #f1f5f9;
-  --btn-secondary-border: #475569;
+  --btn-secondary-bg: #44403c;
+  --btn-secondary-bg-hover: #57534e;
+  --btn-secondary-text: #fafaf9;
+  --btn-secondary-border: #57534e;
 
-  /* Adjust primary colors for dark mode - use amber instead of blue */
+  /* Warm amber primary colors for dark mode */
+  --color-primary-50: #fffbeb;
+  --color-primary-100: #fef3c7;
+  --color-primary-200: #fde68a;
+  --color-primary-300: #fcd34d;
   --color-primary-400: #fbbf24;
   --color-primary-500: #f59e0b;
   --color-primary-600: #d97706;
   --color-primary-700: #b45309;
+  --color-primary-800: #92400e;
+  --color-primary-900: #78350f;
 
   /* Dark mode badge adjustments */
-  --badge-gray-bg: #334155;
-  --badge-gray-text: #cbd5e1;
+  --badge-gray-bg: #44403c;
+  --badge-gray-text: #e7e5e4;
+  --badge-primary-bg: rgba(251, 191, 36, 0.1);
+  --badge-primary-text: #fbbf24;
+
+  /* Dark mode semantic colors adjustments */
+  --color-success-50: rgba(16, 185, 129, 0.1);
+  --color-success-100: rgba(16, 185, 129, 0.2);
+  --color-error-50: rgba(239, 68, 68, 0.1);
+  --color-error-100: rgba(239, 68, 68, 0.2);
+  --color-warning-50: rgba(245, 158, 11, 0.1);
+  --color-warning-100: rgba(245, 158, 11, 0.2);
 }

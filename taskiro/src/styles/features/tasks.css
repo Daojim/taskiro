@@ -34,13 +34,10 @@
 
 /* Task filters */
 .task-filters {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-  padding: var(--spacing-md);
-  background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--border-primary);
-  flex-wrap: wrap;
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  border: 1px solid var(--border-primary);
 }
 
 .task-filter-group {
@@ -53,6 +50,54 @@
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   color: var(--text-secondary);
+}
+
+/* Quick filter buttons */
+.quick-filter {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border-radius: 9999px;
+  border: 1px solid var(--border-primary);
+  background-color: var(--bg-primary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.quick-filter:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.quick-filter-high {
+  border-color: var(--color-error-200);
+  color: var(--color-error-700);
+}
+
+.quick-filter-high:hover {
+  background-color: var(--color-error-50);
+  color: var(--color-error-800);
+}
+
+.quick-filter-due {
+  border-color: var(--color-primary-200);
+  color: var(--color-primary-700);
+}
+
+.quick-filter-due:hover {
+  background-color: var(--color-primary-50);
+  color: var(--color-primary-800);
+}
+
+.quick-filter-completed {
+  border-color: var(--color-success-200);
+  color: var(--color-success-700);
+}
+
+.quick-filter-completed:hover {
+  background-color: var(--color-success-50);
+  color: var(--color-success-800);
 }
 
 .task-search {
@@ -737,32 +782,66 @@
   text-decoration: line-through;
 }
 
-/* Dark mode adjustments for task cards */
+/* Dark mode adjustments for task cards - warm theme */
 .dark .task-card-priority-high {
   background: linear-gradient(
     135deg,
-    rgba(239, 68, 68, 0.1) 0%,
-    rgba(239, 68, 68, 0.05) 100%
+    rgba(239, 68, 68, 0.15) 0%,
+    rgba(239, 68, 68, 0.08) 100%
   );
-  border-color: rgba(239, 68, 68, 0.3);
+  border-color: rgba(239, 68, 68, 0.4);
+  border-left-color: #ef4444;
 }
 
 .dark .task-card-priority-medium {
   background: linear-gradient(
     135deg,
-    rgba(245, 158, 11, 0.1) 0%,
-    rgba(245, 158, 11, 0.05) 100%
+    rgba(251, 191, 36, 0.15) 0%,
+    rgba(251, 191, 36, 0.08) 100%
   );
-  border-color: rgba(245, 158, 11, 0.3);
+  border-color: rgba(251, 191, 36, 0.4);
+  border-left-color: #fbbf24;
 }
 
 .dark .task-card-priority-low {
   background: linear-gradient(
     135deg,
-    rgba(16, 185, 129, 0.1) 0%,
-    rgba(16, 185, 129, 0.05) 100%
+    rgba(16, 185, 129, 0.15) 0%,
+    rgba(16, 185, 129, 0.08) 100%
   );
+  border-color: rgba(16, 185, 129, 0.4);
+  border-left-color: #10b981;
+}
+
+/* Dark mode quick filter adjustments */
+.dark .quick-filter-high {
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+
+.dark .quick-filter-high:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #fca5a5;
+}
+
+.dark .quick-filter-due {
+  border-color: rgba(251, 191, 36, 0.3);
+  color: #fbbf24;
+}
+
+.dark .quick-filter-due:hover {
+  background-color: rgba(251, 191, 36, 0.1);
+  color: #fcd34d;
+}
+
+.dark .quick-filter-completed {
   border-color: rgba(16, 185, 129, 0.3);
+  color: #34d399;
+}
+
+.dark .quick-filter-completed:hover {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #6ee7b7;
 }
 
 /* Dark mode support for tasks */
