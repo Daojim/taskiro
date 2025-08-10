@@ -1,31 +1,31 @@
 /* Main CSS Entry Point - Modular CSS Architecture */
 
-/* Emergency styles (temporary during migration) */
-@import '../emergency-styles.css';
-
-/* Core Foundation Styles */
+/* Core Foundation Styles - Load first to establish base */
 @import './core/reset.css';
 @import './core/variables.css';
 @import './core/typography.css';
 @import './core/themes.css';
 
-/* Utility Classes */
+/* Utility Classes - Load before components for proper cascade */
 @import './utilities/layout.css';
 @import './utilities/spacing.css';
 @import './utilities/colors.css';
 @import './utilities/responsive.css';
 
-/* Component Styles */
+/* Component Styles - Reusable UI components */
 @import './components/buttons.css';
 @import './components/forms.css';
 @import './components/cards.css';
+@import './components/modals.css';
+@import './components/navigation.css';
+@import './components/feedback.css';
 
-/* Feature-Specific Styles */
+/* Feature-Specific Styles - Application features */
 @import './features/tasks.css';
 @import './features/calendar.css';
 @import './features/auth.css';
 
-/* Global application styles */
+/* Global Application Styles - App-specific layout and structure */
 .app {
   min-height: 100vh;
   background-color: var(--bg-tertiary);

@@ -5,7 +5,7 @@ body {
   font-family: var(--font-family-sans);
   font-size: var(--font-size-base);
   line-height: var(--line-height-normal);
-  font-weight: var(--font-weight-normal);
+  color: var(--text-primary);
 }
 
 /* Headings */
@@ -17,11 +17,13 @@ h5,
 h6 {
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
-  margin-bottom: var(--spacing-md);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
 }
 
 h1 {
   font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
 }
 
 h2 {
@@ -44,66 +46,145 @@ h6 {
   font-size: var(--font-size-sm);
 }
 
-/* Text utilities */
-.text-xs {
-  font-size: var(--font-size-xs);
-}
-
-.text-sm {
-  font-size: var(--font-size-sm);
-}
-
-.text-base {
-  font-size: var(--font-size-base);
-}
-
-.text-lg {
-  font-size: var(--font-size-lg);
-}
-
-.text-xl {
-  font-size: var(--font-size-xl);
-}
-
-.text-2xl {
-  font-size: var(--font-size-2xl);
-}
-
-.text-3xl {
-  font-size: var(--font-size-3xl);
-}
-
-/* Font weights */
-.font-normal {
-  font-weight: var(--font-weight-normal);
-}
-
-.font-medium {
-  font-weight: var(--font-weight-medium);
-}
-
-.font-semibold {
-  font-weight: var(--font-weight-semibold);
-}
-
-.font-bold {
-  font-weight: var(--font-weight-bold);
-}
-
-/* Line heights */
-.leading-tight {
-  line-height: var(--line-height-tight);
-}
-
-.leading-normal {
-  line-height: var(--line-height-normal);
-}
-
-.leading-relaxed {
+/* Paragraphs */
+p {
+  margin-bottom: var(--spacing-md);
   line-height: var(--line-height-relaxed);
 }
 
-/* Monospace text */
-.font-mono {
+/* Links */
+a {
+  color: var(--color-primary-600);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-primary-700);
+  text-decoration: underline;
+}
+
+/* Lists */
+ul,
+ol {
+  margin-bottom: var(--spacing-md);
+  padding-left: var(--spacing-lg);
+}
+
+li {
+  margin-bottom: var(--spacing-xs);
+}
+
+/* Code */
+code {
   font-family: var(--font-family-mono);
+  font-size: 0.875em;
+  background-color: var(--bg-secondary);
+  padding: 0.125rem 0.25rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+}
+
+pre {
+  font-family: var(--font-family-mono);
+  background-color: var(--bg-secondary);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+  margin-bottom: var(--spacing-md);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+}
+
+/* Blockquotes */
+blockquote {
+  border-left: 4px solid var(--color-primary-200);
+  padding-left: var(--spacing-md);
+  margin: var(--spacing-md) 0;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+/* Small text */
+small {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+}
+
+/* Strong and emphasis */
+strong,
+b {
+  font-weight: var(--font-weight-semibold);
+}
+
+em,
+i {
+  font-style: italic;
+}
+
+/* Mark */
+mark {
+  background-color: var(--color-warning-100);
+  color: var(--color-warning-800);
+  padding: 0.125rem 0.25rem;
+  border-radius: var(--radius-sm);
+}
+
+/* Horizontal rule */
+hr {
+  border: none;
+  height: 1px;
+  background-color: var(--border-primary);
+  margin: var(--spacing-xl) 0;
+}
+
+/* Text selection */
+::selection {
+  background-color: var(--color-primary-100);
+  color: var(--color-primary-900);
+}
+
+/* Dark mode typography adjustments */
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6 {
+  color: #f9fafb;
+}
+
+.dark p {
+  color: #e5e7eb;
+}
+
+.dark code {
+  background-color: #374151;
+  color: #f9fafb;
+}
+
+.dark pre {
+  background-color: #374151;
+}
+
+.dark blockquote {
+  border-left-color: #4b5563;
+  color: #d1d5db;
+}
+
+.dark mark {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+
+.dark hr {
+  background-color: #374151;
+}
+
+.dark ::selection {
+  background-color: rgba(59, 130, 246, 0.3);
+  color: #dbeafe;
 }
