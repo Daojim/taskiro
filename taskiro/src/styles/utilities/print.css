@@ -1,0 +1,16 @@
+/* Print Styles */
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .app {
+    background: white !important;
+  }
+
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+  }
+}

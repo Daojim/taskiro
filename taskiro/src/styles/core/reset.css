@@ -31,7 +31,9 @@ body {
 
 /* Root element */
 #root {
-  height: 100%;
+  min-height: 100vh;
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
 }
 
 /* Link styles */
@@ -64,6 +66,13 @@ select {
   line-height: inherit;
 }
 
+/* Enhanced form element focus styles */
+input[type='checkbox']:focus,
+input[type='radio']:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
 /* List reset */
 ul,
 ol {
@@ -76,10 +85,20 @@ img {
   height: auto;
 }
 
-/* Table reset */
+/* Enhanced table styles */
 table {
+  width: 100%;
   border-collapse: collapse;
-  border-spacing: 0;
+}
+
+th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+td {
+  color: var(--text-secondary);
 }
 
 /* Focus styles */
@@ -93,10 +112,26 @@ table {
   outline: none;
 }
 
-/* Ensure focus-visible works */
+/* Enhanced focus styles for accessibility */
 :focus-visible {
   outline: 2px solid var(--color-primary-500);
   outline-offset: 2px;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Enhanced selection styles */
+::selection {
+  background-color: var(--color-primary-100);
+  color: var(--color-primary-800);
+}
+
+/* Enhanced placeholder styles */
+::placeholder {
+  color: var(--input-placeholder);
 }
 
 /* Accessibility improvements */

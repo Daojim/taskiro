@@ -11,7 +11,6 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import LoginForm from './components/auth/LoginForm';
 import RegisterForm from './components/auth/RegisterForm';
 import Dashboard from './components/Dashboard';
-import './App.css';
 
 function App() {
   return (
