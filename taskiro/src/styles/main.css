@@ -356,7 +356,9 @@
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-elevated);
-  min-width: 300px;
+  width: 350px;
+  max-height: 80px;
+  overflow: hidden;
   animation: slideIn 0.3s ease-out;
 }
 

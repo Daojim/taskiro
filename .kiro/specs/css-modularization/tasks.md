@@ -134,17 +134,69 @@
     - Only proceed to cleanup if everything is perfect
     - _Requirements: 2.1, 2.2, 2.3_
 
-- [ ] 9. Cleanup and optimization (only after perfect validation)
+- [x] 9. Cleanup and optimization (only after perfect validation)
 
-  - [ ] 9.1 Remove emergency-styles.css
+  - [x] 9.1 Remove emergency-styles.css
 
     - Delete emergency-styles.css and emergency-styles-clean.css files
     - Remove any remaining references to emergency styles
     - Clean up unused CSS files in styles directory
     - _Requirements: 2.1, 2.2, 2.4_
 
-  - [ ] 9.2 Final optimization
+  - [x] 9.2 Final optimization
+
     - Optimize CSS bundle size and remove any duplicate declarations
     - Measure performance improvements and bundle size reduction
     - Document the new CSS architecture for future maintenance
     - _Requirements: 7.1, 7.3, 1.1, 1.2_
+
+- [ ] 10. Advanced CSS architecture cleanup
+
+  - [ ] 10.1 Remove duplicate/conflicting CSS files
+
+    - Identify and remove duplicate files like design-system.css and design-system-simple.css
+    - Consolidate overlapping styles into appropriate modular files
+    - Ensure no functionality is lost during file removal
+    - _Requirements: 2.1, 2.2, 1.1_
+
+  - [ ] 10.2 Fix persistent dark theme background color inconsistencies
+
+    - Identify and fix old blue-ish background colors in header/nav bar, Add New Task component, list/calendar view toggle, and task list container
+    - Search for hardcoded background colors and CSS specificity conflicts overriding the warm dark theme
+    - Replace with proper CSS variables (--color-surface, --color-background) to match the current warm dark theme
+    - Test that all major UI areas use consistent warm dark theme colors in dark mode
+    - _Requirements: 6.1, 6.2, 2.2, 2.4_
+
+  - [ ] 10.3 Clean up generic element selectors
+
+    - Remove or scope generic h1, h2, h3 selectors that conflict with component classes
+    - Replace with component-specific classes or properly scoped selectors
+    - Prevent future conflicts between generic and component styles
+    - _Requirements: 2.1, 2.2, 3.1_
+
+  - [ ] 10.4 Consolidate overlapping utility classes
+
+    - Identify duplicate utility classes across different files
+    - Merge overlapping utilities into single, consistent implementations
+    - Standardize utility class naming convention across all files
+    - _Requirements: 5.1, 5.4, 2.1_
+
+  - [ ] 10.5 Remove unused CSS files and dead code
+
+    - Audit all CSS files for unused rules and selectors
+    - Remove CSS files that are no longer referenced
+    - Clean up commented-out code and obsolete styles
+    - _Requirements: 2.1, 2.2, 7.3_
+
+  - [ ] 10.6 Standardize component class naming convention
+
+    - Establish consistent naming patterns (BEM, utility-first, or CSS modules)
+    - Rename inconsistent class names to follow the chosen convention
+    - Update component files to use standardized class names
+    - _Requirements: 3.1, 3.2, 1.1_
+
+  - [ ] 10.7 Fix remaining !important declarations
+    - Identify all remaining !important declarations in the codebase
+    - Replace with proper cascade management and specificity control
+    - Ensure styles work correctly without !important overrides
+    - _Requirements: 2.2, 2.4, 4.1_
