@@ -845,22 +845,27 @@
 }
 
 /* Dark mode support for tasks */
+.dark .task-input-container {
+  background-color: var(--color-surface-secondary);
+  border-bottom-color: var(--border-primary);
+}
+
 .dark .task-list-container {
-  background-color: #1f2937;
-  border-color: #374151;
+  background-color: var(--color-surface-secondary);
+  border-color: var(--border-primary);
 }
 
 .dark .task-item {
-  background-color: #1f2937;
-  border-bottom-color: #374151;
+  background-color: var(--color-surface-secondary);
+  border-bottom-color: var(--border-primary);
 }
 
 .dark .task-item:hover {
-  background-color: #374151;
+  background-color: var(--color-surface-tertiary);
 }
 
 .dark .task-item.completed {
-  background-color: #374151;
+  background-color: var(--color-surface-tertiary);
 }
 
 .dark .task-title {
@@ -872,27 +877,27 @@
 }
 
 .dark .task-due-date {
-  background-color: #374151;
-  color: #d1d5db;
+  background-color: var(--color-surface-tertiary);
+  color: var(--text-secondary);
 }
 
 .dark .task-filters {
-  background-color: #374151;
-  border-bottom-color: #4b5563;
+  background-color: var(--color-surface-tertiary);
+  border-bottom-color: var(--border-primary);
 }
 
 .dark .filter-select {
-  background-color: #374151;
-  border-color: #4b5563;
-  color: #f9fafb;
+  background-color: var(--color-surface-tertiary);
+  border-color: var(--border-primary);
+  color: var(--text-primary);
 }
 
 .dark .quick-filter {
-  background-color: #374151;
-  border-color: #4b5563;
-  color: #f9fafb;
+  background-color: var(--color-surface-tertiary);
+  border-color: var(--border-primary);
+  color: var(--text-primary);
 }
 
 .dark .quick-filter:hover {
-  background-color: #4b5563;
+  background-color: var(--border-primary);
 }

@@ -213,21 +213,21 @@ hr {
 }
 
 .dark p {
-  color: #e5e7eb;
+  color: var(--text-secondary);
 }
 
 .dark code {
-  background-color: #374151;
-  color: #f9fafb;
+  background-color: var(--color-surface-tertiary);
+  color: var(--text-primary);
 }
 
 .dark pre {
-  background-color: #374151;
+  background-color: var(--color-surface-tertiary);
 }
 
 .dark blockquote {
-  border-left-color: #4b5563;
-  color: #d1d5db;
+  border-left-color: var(--border-primary);
+  color: var(--text-secondary);
 }
 
 .dark mark {
@@ -236,7 +236,7 @@ hr {
 }
 
 .dark hr {
-  background-color: #374151;
+  background-color: var(--color-surface-tertiary);
 }
 
 .dark ::selection {

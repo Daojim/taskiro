@@ -170,8 +170,8 @@ html {
 
 /* Dark mode base adjustments */
 .dark body {
-  background-color: #0f172a;
-  color: #f9fafb;
+  background-color: var(--color-surface);
+  color: var(--text-primary);
 }
 
 .dark a {

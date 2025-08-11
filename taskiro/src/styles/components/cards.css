@@ -125,7 +125,7 @@
 /* Data attribute support for React state changes */
 .task-card[data-status='completed'] {
   opacity: 0.75;
-  background-color: #f9fafb;
+  background-color: var(--bg-secondary);
 }
 
 .task-card[data-status='completed'] h4 {
@@ -223,8 +223,8 @@
 }
 
 .task-due-date.overdue {
-  background-color: #fee2e2;
-  color: #dc2626;
+  background-color: var(--color-error-50);
+  color: var(--color-error-600);
 }
 
 .task-actions {
@@ -402,25 +402,25 @@ div[data-index] .task-card {
 
 /* Dark mode styles */
 .dark .card {
-  background-color: #1f2937;
-  border-color: #374151;
+  background-color: var(--color-surface-secondary);
+  border-color: var(--border-primary);
 }
 
 .dark .task-card {
-  background-color: #1f2937;
-  border-color: #374151;
+  background-color: var(--color-surface-secondary);
+  border-color: var(--border-primary);
 }
 
 .dark .task-card-completed {
-  background-color: #374151;
+  background-color: var(--color-surface-tertiary);
 }
 
 .dark .task-card-completed h4 {
-  color: #9ca3af;
+  color: var(--text-tertiary);
 }
 
 .dark .task-card-completed p {
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .dark .task-card-overdue {
@@ -428,15 +428,15 @@ div[data-index] .task-card {
 }
 
 .dark .task-card[data-status='completed'] {
-  background-color: #374151;
+  background-color: var(--color-surface-tertiary);
 }
 
 .dark .task-card[data-status='completed'] h4 {
-  color: #9ca3af;
+  color: var(--text-tertiary);
 }
 
 .dark .task-card[data-status='completed'] p {
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 /* Responsive spacing adjustments */

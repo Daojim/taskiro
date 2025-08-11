@@ -131,10 +131,10 @@
 
 /* Dark mode support */
 .dark .modal {
-  background-color: #1f2937;
-  border-color: #374151;
+  background-color: var(--color-surface-secondary);
+  border-color: var(--border-primary);
 }
 
 .dark .modal-content {
-  background-color: #1f2937;
+  background-color: var(--color-surface-secondary);
 }

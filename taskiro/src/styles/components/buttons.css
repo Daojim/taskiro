@@ -128,8 +128,8 @@
 }
 
 .dark .task-delete-button:hover {
-  background-color: #374151;
-  color: #d1d5db;
+  background-color: var(--color-surface-tertiary);
+  color: var(--text-secondary);
 }
 
 .dark .task-delete-button.confirm-delete {

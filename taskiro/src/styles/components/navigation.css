@@ -58,8 +58,8 @@ nav {
 
 /* Dark mode support */
 .dark nav {
-  background-color: #1f2937;
-  border-bottom-color: #374151;
+  background-color: var(--color-surface-secondary);
+  border-bottom-color: var(--border-primary);
 }
 
 .dark .nav-brand {
