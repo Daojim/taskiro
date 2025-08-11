@@ -33,6 +33,9 @@
 
 .app-container {
   min-height: 100vh;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
   font-family: var(--font-family-sans);
   background-color: var(--bg-tertiary);
   transition: all var(--transition-fast);
@@ -67,6 +70,8 @@
   padding-left: var(--spacing-md);
   padding-right: var(--spacing-md);
   padding-bottom: var(--spacing-xl);
+  flex: 1;
+  padding: var(--spacing-lg);
 }
 
 .welcome-text {
@@ -89,30 +94,12 @@
   z-index: var(--z-sticky);
 }
 
-.app-main {
-  flex: 1;
-  padding: var(--spacing-lg);
-}
-
-.app-container {
-  max-width: 80rem;
-  margin: 0 auto;
-  padding: 0 var(--spacing-md);
-}
-
 /* Navigation styles */
 .nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-md) var(--spacing-lg);
-}
-
-.app-logo {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-primary-600) !important;
-  margin: 0;
 }
 
 .nav-brand {
@@ -325,6 +312,81 @@
 .focus-visible:focus {
   outline: 2px solid var(--color-primary-500);
   outline-offset: 2px;
+}
+
+/* View toggle styles */
+.view-toggle-active {
+  background-color: var(--color-primary-600);
+  color: white;
+}
+
+.view-toggle-inactive {
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.view-toggle-inactive:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+/* Animation utilities */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Notification styles */
+.app-notification {
+  position: fixed;
+  top: var(--spacing-lg);
+  right: var(--spacing-lg);
+  z-index: var(--z-tooltip);
+  padding: var(--spacing-md);
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-elevated);
+  min-width: 300px;
+  animation: slideIn 0.3s ease-out;
+}
+
+.app-notification.success {
+  border-left: 4px solid var(--color-success-500);
+}
+
+.app-notification.error {
+  border-left: 4px solid var(--color-error-500);
+}
+
+.notification-message {
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+}
+
+.notification-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.notification-close:hover {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
 }
 
 /* Print styles */
