@@ -327,7 +327,7 @@ const EnhancedTimeInput: React.FC<EnhancedTimeInputProps> = ({
       {/* Loading indicator */}
       {(isValidating || isSaving) && (
         <div className="enhanced-time-input-spinner absolute right-3 top-1/2 transform -translate-y-1/2">
-          <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-500 border-t-transparent"></div>
+          <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary-500 border-t-transparent"></div>
         </div>
       )}
 

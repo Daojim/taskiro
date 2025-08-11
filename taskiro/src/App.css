@@ -1,18 +1,13 @@
 /* Global App Styles */
 #root {
   min-height: 100vh;
-  background-color: #f9fafb;
-  color: #111827;
-}
-
-.dark #root {
-  background-color: #0f172a;
-  color: #f1f5f9;
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
 }
 
 /* Enhanced focus styles for accessibility */
 :focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--color-primary-500);
   outline-offset: 2px;
 }
 
@@ -23,22 +18,13 @@ html {
 
 /* Enhanced selection styles */
 ::selection {
-  background-color: #dbeafe;
-  color: #1e3a8a;
-}
-
-.dark ::selection {
-  background-color: rgba(30, 58, 138, 0.3);
-  color: #dbeafe;
+  background-color: var(--color-primary-100);
+  color: var(--color-primary-800);
 }
 
 /* Enhanced placeholder styles */
 ::placeholder {
-  color: #9ca3af;
-}
-
-.dark ::placeholder {
-  color: #6b7280;
+  color: var(--input-placeholder);
 }
 
 /* Remove default button styles */
@@ -48,26 +34,18 @@ button {
 
 /* Enhanced link styles */
 a {
-  color: #2563eb;
+  color: var(--color-primary-600);
   transition: color 0.15s ease-in-out;
 }
 
 a:hover {
-  color: #1d4ed8;
-}
-
-.dark a {
-  color: #60a5fa;
-}
-
-.dark a:hover {
-  color: #93c5fd;
+  color: var(--color-primary-700);
 }
 
 /* Enhanced form element styles */
 input[type='checkbox']:focus,
 input[type='radio']:focus {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--color-primary-500);
   outline-offset: 2px;
 }
 
@@ -80,69 +58,40 @@ table {
 th {
   text-align: left;
   font-weight: 500;
-  color: #111827;
-}
-
-.dark th {
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 td {
-  color: #4b5563;
-}
-
-.dark td {
-  color: #9ca3af;
+  color: var(--text-secondary);
 }
 
 /* Enhanced code styles */
 code {
-  background-color: #f3f4f6;
-  color: #111827;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
   font-size: 0.875rem;
-  font-family:
-    ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo,
-    monospace;
-}
-
-.dark code {
-  background-color: #374151;
-  color: #f3f4f6;
+  font-family: var(--font-family-mono);
 }
 
 pre {
-  background-color: #f3f4f6;
-  color: #111827;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
   padding: 1rem;
   border-radius: 0.5rem;
   overflow-x: auto;
 }
 
-.dark pre {
-  background-color: #374151;
-  color: #f3f4f6;
-}
-
 /* Enhanced blockquote styles */
 blockquote {
-  border-left: 4px solid #d1d5db;
+  border-left: 4px solid var(--border-primary);
   padding-left: 1rem;
   font-style: italic;
-  color: #4b5563;
-}
-
-.dark blockquote {
-  border-left-color: #4b5563;
-  color: #9ca3af;
+  color: var(--text-secondary);
 }
 
 /* Enhanced hr styles */
 hr {
-  border-color: #e5e7eb;
-}
-
-.dark hr {
-  border-color: #374151;
+  border-color: var(--border-primary);
 }

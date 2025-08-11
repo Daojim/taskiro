@@ -169,7 +169,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
           </span>
 
           {filters.category && (
-            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-200">
+            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800 dark:bg-primary-900/20 dark:text-primary-200">
               Category:{' '}
               {filters.category === 'uncategorized'
                 ? 'Uncategorized'
@@ -177,7 +177,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
                   'Unknown'}
               <button
                 onClick={() => onChange({ category: '' })}
-                className="filter-tag-remove ml-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
+                className="filter-tag-remove ml-1 text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300"
               >
                 ×
               </button>

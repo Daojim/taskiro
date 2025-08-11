@@ -147,14 +147,70 @@ hr {
   color: var(--color-primary-900);
 }
 
+/* Typography utility classes */
+.text-heading-1 {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-600) !important;
+  line-height: var(--line-height-tight);
+}
+
+.text-heading-2 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-600) !important;
+  line-height: var(--line-height-tight);
+}
+
+.text-heading-3 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-600) !important;
+  line-height: var(--line-height-tight);
+}
+
+.text-heading-4 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary-600) !important;
+  line-height: var(--line-height-tight);
+}
+
+.text-body {
+  font-size: var(--font-size-sm);
+  color: var(--text-tertiary);
+  line-height: var(--line-height-normal);
+}
+
+.text-body-large {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  line-height: var(--line-height-normal);
+}
+
 /* Dark mode typography adjustments */
-.dark h1,
-.dark h2,
-.dark h3,
-.dark h4,
-.dark h5,
-.dark h6 {
-  color: #f9fafb;
+.dark h1:not(.app-logo),
+.dark
+  h2:not(.text-heading-1):not(.text-heading-2):not(.text-heading-3):not(
+    .text-heading-4
+  ),
+.dark
+  h3:not(.text-heading-1):not(.text-heading-2):not(.text-heading-3):not(
+    .text-heading-4
+  ),
+.dark
+  h4:not(.text-heading-1):not(.text-heading-2):not(.text-heading-3):not(
+    .text-heading-4
+  ),
+.dark
+  h5:not(.text-heading-1):not(.text-heading-2):not(.text-heading-3):not(
+    .text-heading-4
+  ),
+.dark
+  h6:not(.text-heading-1):not(.text-heading-2):not(.text-heading-3):not(
+    .text-heading-4
+  ) {
+  color: var(--text-primary);
 }
 
 .dark p {

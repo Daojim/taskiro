@@ -46,18 +46,18 @@
 }
 
 .btn:focus {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--color-primary-500);
   outline-offset: 2px;
 }
 
 .btn-primary {
-  background-color: #2563eb;
+  background-color: var(--color-primary-600);
   color: #ffffff;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 .btn-primary:hover {
-  background-color: #1d4ed8;
+  background-color: var(--color-primary-700);
   box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -169,8 +169,8 @@
 
 .input:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-500-rgb), 0.1);
 }
 
 .dark .input {
@@ -215,8 +215,8 @@
 
 .textarea:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-500-rgb), 0.1);
 }
 
 .dark .textarea {
@@ -240,8 +240,8 @@
 
 .select:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-500-rgb), 0.1);
 }
 
 .dark .select {
@@ -372,7 +372,7 @@
 /* Loading States */
 .spinner {
   border: 2px solid #d1d5db;
-  border-top: 2px solid #2563eb;
+  border-top: 2px solid var(--color-primary-600);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -664,7 +664,7 @@
 
 /* Focus States */
 .focus-ring:focus {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--color-primary-500);
   outline-offset: 2px;
 }
 

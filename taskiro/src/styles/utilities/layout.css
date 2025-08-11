@@ -471,6 +471,22 @@
   transition: color var(--duration-150) var(--ease-in-out);
 }
 
+/* View toggle styles */
+.view-toggle-active {
+  background-color: var(--color-primary-100);
+  color: var(--color-primary-700);
+  box-shadow: var(--shadow-sm);
+}
+
+.view-toggle-inactive {
+  color: var(--text-secondary);
+}
+
+.view-toggle-inactive:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+}
+
 /* Animation utilities */
 .animate-fade-in {
   animation: fadeIn 0.2s ease-in-out;

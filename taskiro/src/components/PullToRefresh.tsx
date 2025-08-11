@@ -35,7 +35,7 @@ const PullToRefresh: React.FC<PullToRefreshProps> = ({
         <div
           className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 ${
             isTriggered
-              ? 'bg-blue-500 text-white'
+              ? 'bg-primary-500 text-white'
               : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
           }`}
         >

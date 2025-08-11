@@ -114,46 +114,16 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div
-      className="min-h-screen font-sans transition-colors duration-300"
-      style={{ backgroundColor: 'var(--bg-tertiary)' }}
-    >
-      <nav
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          width: '100%',
-          backgroundColor: 'var(--bg-primary)',
-          borderBottom: '1px solid var(--border-primary)',
-          zIndex: 40,
-          display: 'block',
-        }}
-      >
-        <div
-          className="mx-auto px-4 sm:px-6 lg:px-8"
-          style={{
-            width: '75%',
-            minWidth: '320px',
-            maxWidth: '1400px',
-            margin: '0 auto',
-          }}
-        >
+    <div className="app-container">
+      <nav className="app-nav">
+        <div className="app-nav-container">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center">
-              <h1 className="text-2xl font-semibold text-blue-600 dark:text-amber-400 m-0">
-                Taskiro
-              </h1>
+              <h1 className="app-logo">Taskiro</h1>
             </div>
             <div className="flex items-center gap-4">
               <SyncStatusIndicator showDetails={true} />
-              <span
-                className="text-sm"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                Welcome, {user?.email}
-              </span>
+              <span className="welcome-text">Welcome, {user?.email}</span>
               <ThemeToggle />
               <button
                 onClick={() => setShowCategoryManager(true)}
@@ -170,15 +140,7 @@ const Dashboard: React.FC = () => {
         </div>
       </nav>
 
-      <main
-        className="mx-auto px-4 sm:px-6 lg:px-8 py-8"
-        style={{
-          paddingTop: '80px',
-          width: '75%',
-          minWidth: '320px',
-          maxWidth: '1400px',
-        }}
-      >
+      <main className="app-main">
         <div className="flex flex-col gap-6">
           {/* Task Input Component */}
           <div className="card p-6">
@@ -196,8 +158,8 @@ const Dashboard: React.FC = () => {
                 onClick={() => setViewMode('list')}
                 className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-250 ${
                   viewMode === 'list'
-                    ? 'bg-primary-50 dark:bg-primary-900-20 text-primary-700 dark:text-primary-300 shadow-sm'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700-50'
+                    ? 'view-toggle-active'
+                    : 'view-toggle-inactive'
                 }`}
               >
                 <ListBulletIcon className="h-4 w-4 mr-2" />
@@ -207,8 +169,8 @@ const Dashboard: React.FC = () => {
                 onClick={() => setViewMode('calendar')}
                 className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-250 ${
                   viewMode === 'calendar'
-                    ? 'bg-primary-50 dark:bg-primary-900-20 text-primary-700 dark:text-primary-300 shadow-sm'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700-50'
+                    ? 'view-toggle-active'
+                    : 'view-toggle-inactive'
                 }`}
               >
                 <CalendarDaysIcon className="h-4 w-4 mr-2" />
@@ -244,24 +206,9 @@ const Dashboard: React.FC = () => {
       {/* Fixed Toast Notification */}
       {notification && (
         <div
-          className={`fixed bottom-5 right-5 z-50 rounded-lg p-4 min-w-80 shadow-lg transition-all duration-300 transform ${
-            notification.type === 'success'
-              ? 'bg-green-100 border-2 border-green-500 text-green-800'
-              : 'bg-red-100 border-2 border-red-500 text-red-800'
+          className={`app-notification ${
+            notification.type === 'success' ? 'success' : 'error'
           }`}
-          style={{
-            position: 'fixed',
-            bottom: '20px',
-            right: '20px',
-            zIndex: 9999,
-            pointerEvents: 'auto',
-            maxWidth: '400px',
-            backgroundColor:
-              notification.type === 'success' ? '#dcfce7' : '#fecaca', // green-100 : red-100
-            borderColor:
-              notification.type === 'success' ? '#22c55e' : '#ef4444', // green-500 : red-500
-            color: notification.type === 'success' ? '#166534' : '#991b1b', // green-800 : red-800
-          }}
         >
           <div className="flex justify-between items-center">
             <div className="flex items-center">
@@ -290,13 +237,13 @@ const Dashboard: React.FC = () => {
                   />
                 </svg>
               )}
-              <span className="text-gray-800 dark:text-gray-200 font-medium">
+              <span className="notification-message">
                 {notification.message}
               </span>
             </div>
             <button
               onClick={() => setNotification(null)}
-              className="ml-4 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
+              className="notification-close"
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path

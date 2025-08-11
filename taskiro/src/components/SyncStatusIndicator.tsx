@@ -86,7 +86,7 @@ export function SyncStatusIndicator({
   };
 
   const getStatusColor = () => {
-    if (status.isSyncing) return 'text-blue-600';
+    if (status.isSyncing) return 'text-primary-600';
     if (status.error) return 'text-red-600';
     if (!status.isOnline) return 'text-gray-600';
     if (status.pendingActions > 0) return 'text-yellow-600';

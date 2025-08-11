@@ -9,10 +9,12 @@
   --color-primary-300: #93c5fd;
   --color-primary-400: #60a5fa;
   --color-primary-500: #3b82f6;
+  --color-primary-500-rgb: 59, 130, 246;
   --color-primary-600: #2563eb;
   --color-primary-700: #1d4ed8;
   --color-primary-800: #1e40af;
   --color-primary-900: #1e3a8a;
+  --color-primary-900-rgb: 30, 58, 138;
 
   /* Colors - Gray */
   --color-gray-50: #f9fafb;
@@ -74,6 +76,8 @@
   --font-size-xl: 1.25rem; /* 20px */
   --font-size-2xl: 1.5rem; /* 24px */
   --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-4xl: 2.25rem; /* 36px */
+  --font-size-5xl: 3rem; /* 48px */
 
   --font-weight-normal: 400;
   --font-weight-medium: 500;
@@ -233,10 +237,12 @@
   --color-primary-300: #fcd34d;
   --color-primary-400: #fbbf24;
   --color-primary-500: #f59e0b;
+  --color-primary-500-rgb: 245, 158, 11;
   --color-primary-600: #d97706;
   --color-primary-700: #b45309;
   --color-primary-800: #92400e;
   --color-primary-900: #78350f;
+  --color-primary-900-rgb: 120, 53, 15;
 
   /* Dark mode badge adjustments */
   --badge-gray-bg: #44403c;

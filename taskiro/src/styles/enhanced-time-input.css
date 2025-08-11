@@ -28,16 +28,16 @@
 }
 
 .enhanced-time-input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-500-rgb), 0.1);
 }
 
 /* Edit mode visual indicators */
 .enhanced-time-input--editing {
-  border: 2px solid #3b82f6 !important;
+  border: 2px solid var(--color-primary-500) !important;
   background-color: #ffffff !important;
   color: #111827 !important;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-500-rgb), 0.1) !important;
   transform: scale(1.02);
 }
 
@@ -96,7 +96,7 @@
   left: 0 !important;
   right: 0 !important;
   background: #ffffff !important;
-  border: 3px solid #2563eb !important;
+  border: 3px solid var(--color-primary-600) !important;
   border-radius: 8px !important;
   box-shadow:
     0 25px 50px -12px rgba(0, 0, 0, 0.25),
@@ -145,7 +145,7 @@
 
 .enhanced-time-input-suggestion.selected,
 .enhanced-time-input-suggestion:focus {
-  background-color: #3b82f6 !important;
+  background-color: var(--color-primary-500) !important;
   color: #ffffff !important;
   font-weight: 600;
 }
@@ -158,15 +158,15 @@
 }
 
 .dark .enhanced-time-input:focus {
-  border-color: #60a5fa;
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-500-rgb), 0.1);
 }
 
 .dark .enhanced-time-input--editing {
-  border-color: #60a5fa !important;
+  border-color: var(--color-primary-500) !important;
   background-color: #1f2937 !important;
   color: #f9fafb !important;
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1) !important;
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-500-rgb), 0.1) !important;
 }
 
 .dark .enhanced-time-input--error {
@@ -185,7 +185,7 @@
 
 .dark .enhanced-time-input-suggestions {
   background-color: #1f2937 !important;
-  border-color: #60a5fa !important;
+  border-color: var(--color-primary-500) !important;
   box-shadow:
     0 20px 25px -5px rgba(0, 0, 0, 0.4),
     0 10px 10px -5px rgba(0, 0, 0, 0.3) !important;
@@ -204,7 +204,7 @@
 
 .dark .enhanced-time-input-suggestion.selected,
 .dark .enhanced-time-input-suggestion:focus {
-  background-color: #60a5fa !important;
+  background-color: var(--color-primary-500) !important;
   color: #1f2937 !important;
 }
 
@@ -236,12 +236,12 @@
 
 /* Focus ring for accessibility */
 .enhanced-time-input:focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--color-primary-500);
   outline-offset: 2px;
 }
 
 .enhanced-time-input-suggestion:focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--color-primary-500);
   outline-offset: -2px;
 }
 
