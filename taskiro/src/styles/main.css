@@ -71,7 +71,6 @@
   padding-right: var(--spacing-md);
   padding-bottom: var(--spacing-xl);
   flex: 1;
-  padding: var(--spacing-lg);
 }
 
 .welcome-text {
