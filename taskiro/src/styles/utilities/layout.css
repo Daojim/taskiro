@@ -1,4 +1,8 @@
-/* Layout Utilities */
+/* Layout Utilities
+ * 
+ * Generic SVG selector has been scoped to .icon class to prevent conflicts.
+ * Apply .icon class to SVG elements that need utility styling.
+ */
 
 /* Display */
 .block {
@@ -600,8 +604,9 @@
   transform: scale(1.05);
 }
 
-/* SVG utilities */
-svg {
+/* SVG utilities - scoped to avoid conflicts with component SVGs */
+.icon svg,
+svg.icon {
   flex-shrink: 0;
   display: block;
 }

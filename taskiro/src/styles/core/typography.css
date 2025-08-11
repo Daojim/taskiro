@@ -1,4 +1,13 @@
-/* Typography Styles */
+/* Typography Styles
+ * 
+ * This file contains scoped typography styles to prevent conflicts with component classes.
+ * Generic element selectors (h1, h2, p, a, etc.) are scoped to .content and .prose classes.
+ * 
+ * Usage:
+ * - Apply .content class to containers that need rich typography
+ * - Apply .prose class to text-heavy content areas
+ * - Use utility classes (.text-heading-1, etc.) for component-specific styling
+ */
 
 /* Base typography */
 body {
@@ -8,75 +17,95 @@ body {
   color: var(--text-primary);
 }
 
-/* Headings */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+/* Scoped heading styles - only apply to content areas, not components */
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+.content h5,
+.content h6,
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
   color: var(--text-primary);
   margin-bottom: var(--spacing-sm);
 }
 
-h1 {
+.content h1,
+.prose h1 {
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
 }
 
-h2 {
+.content h2,
+.prose h2 {
   font-size: var(--font-size-2xl);
 }
 
-h3 {
+.content h3,
+.prose h3 {
   font-size: var(--font-size-xl);
 }
 
-h4 {
+.content h4,
+.prose h4 {
   font-size: var(--font-size-lg);
 }
 
-h5 {
+.content h5,
+.prose h5 {
   font-size: var(--font-size-base);
 }
 
-h6 {
+.content h6,
+.prose h6 {
   font-size: var(--font-size-sm);
 }
 
-/* Paragraphs */
-p {
+/* Scoped paragraph styles - only apply to content areas */
+.content p,
+.prose p {
   margin-bottom: var(--spacing-md);
   line-height: var(--line-height-relaxed);
 }
 
-/* Links */
-a {
+/* Scoped link styles - only apply to content areas */
+.content a,
+.prose a {
   color: var(--color-primary-600);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
-a:hover {
+.content a:hover,
+.prose a:hover {
   color: var(--color-primary-700);
   text-decoration: underline;
 }
 
-/* Lists */
-ul,
-ol {
+/* Scoped list styles - only apply to content areas */
+.content ul,
+.content ol,
+.prose ul,
+.prose ol {
   margin-bottom: var(--spacing-md);
   padding-left: var(--spacing-lg);
+  list-style: revert; /* Restore list styles in content areas */
 }
 
-li {
+.content li,
+.prose li {
   margin-bottom: var(--spacing-xs);
 }
 
-/* Enhanced code styles */
-code {
+/* Scoped code styles - only apply to content areas */
+.content code,
+.prose code {
   background-color: var(--bg-secondary);
   color: var(--text-primary);
   padding: 0.125rem 0.25rem;
@@ -85,7 +114,8 @@ code {
   font-family: var(--font-family-mono);
 }
 
-pre {
+.content pre,
+.prose pre {
   background-color: var(--bg-secondary);
   color: var(--text-primary);
   padding: 1rem;
@@ -95,13 +125,15 @@ pre {
   margin-bottom: var(--spacing-md);
 }
 
-pre code {
+.content pre code,
+.prose pre code {
   background: none;
   padding: 0;
 }
 
-/* Enhanced blockquote styles */
-blockquote {
+/* Scoped blockquote styles - only apply to content areas */
+.content blockquote,
+.prose blockquote {
   border-left: 4px solid var(--border-primary);
   padding-left: 1rem;
   font-style: italic;
@@ -109,33 +141,40 @@ blockquote {
   margin: var(--spacing-md) 0;
 }
 
-/* Small text */
-small {
+/* Scoped small text styles - only apply to content areas */
+.content small,
+.prose small {
   font-size: var(--font-size-xs);
   color: var(--text-tertiary);
 }
 
-/* Strong and emphasis */
-strong,
-b {
+/* Scoped strong and emphasis styles - only apply to content areas */
+.content strong,
+.content b,
+.prose strong,
+.prose b {
   font-weight: var(--font-weight-semibold);
 }
 
-em,
-i {
+.content em,
+.content i,
+.prose em,
+.prose i {
   font-style: italic;
 }
 
-/* Mark */
-mark {
+/* Scoped mark styles - only apply to content areas */
+.content mark,
+.prose mark {
   background-color: var(--color-warning-100);
   color: var(--color-warning-800);
   padding: 0.125rem 0.25rem;
   border-radius: var(--radius-sm);
 }
 
-/* Enhanced hr styles */
-hr {
+/* Scoped hr styles - only apply to content areas */
+.content hr,
+.prose hr {
   border-color: var(--border-primary);
   margin: var(--spacing-xl) 0;
 }
@@ -144,6 +183,15 @@ hr {
 ::selection {
   background-color: var(--color-primary-100);
   color: var(--color-primary-900);
+}
+
+/* Content area wrapper classes */
+.content {
+  /* Apply this class to containers that should have rich typography styles */
+}
+
+.prose {
+  /* Apply this class to text-heavy content areas like articles, documentation, etc. */
 }
 
 /* Typography utility classes */
@@ -187,55 +235,52 @@ hr {
   line-height: var(--line-height-normal);
 }
 
-/* Dark mode typography adjustments */
-.dark h1:not(.app-logo),
-.dark
-  h2:not(.text-heading-1):not(.text-heading-2):not(.text-heading-3):not(
-    .text-heading-4
-  ),
-.dark
-  h3:not(.text-heading-1):not(.text-heading-2):not(.text-heading-3):not(
-    .text-heading-4
-  ),
-.dark
-  h4:not(.text-heading-1):not(.text-heading-2):not(.text-heading-3):not(
-    .text-heading-4
-  ),
-.dark
-  h5:not(.text-heading-1):not(.text-heading-2):not(.text-heading-3):not(
-    .text-heading-4
-  ),
-.dark
-  h6:not(.text-heading-1):not(.text-heading-2):not(.text-heading-3):not(
-    .text-heading-4
-  ) {
+/* Dark mode typography adjustments - scoped to content areas */
+.dark .content h1,
+.dark .content h2,
+.dark .content h3,
+.dark .content h4,
+.dark .content h5,
+.dark .content h6,
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3,
+.dark .prose h4,
+.dark .prose h5,
+.dark .prose h6 {
   color: var(--text-primary);
 }
 
-.dark p {
+.dark .content p,
+.dark .prose p {
   color: var(--text-secondary);
 }
 
-.dark code {
+.dark .content code,
+.dark .prose code {
   background-color: var(--color-surface-tertiary);
   color: var(--text-primary);
 }
 
-.dark pre {
+.dark .content pre,
+.dark .prose pre {
   background-color: var(--color-surface-tertiary);
 }
 
-.dark blockquote {
+.dark .content blockquote,
+.dark .prose blockquote {
   border-left-color: var(--border-primary);
   color: var(--text-secondary);
 }
 
-.dark mark {
+.dark .content mark,
+.dark .prose mark {
   background-color: rgba(245, 158, 11, 0.2);
   color: #fbbf24;
 }
 
-.dark hr {
+.dark .content hr,
+.dark .prose hr {
   background-color: var(--color-surface-tertiary);
 }
 

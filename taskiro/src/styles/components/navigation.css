@@ -1,7 +1,12 @@
-/* Navigation Component Styles */
+/* Navigation Component Styles
+ * 
+ * Generic nav selector has been scoped to .main-nav to prevent conflicts.
+ * Apply .main-nav class to navigation elements that need these styles.
+ */
 
-/* Main navigation */
-nav {
+/* Main navigation - scoped to avoid conflicts */
+.main-nav,
+nav.main-nav {
   background-color: var(--bg-primary);
   border-bottom: 1px solid var(--border-primary);
   position: sticky;
@@ -57,7 +62,8 @@ nav {
 }
 
 /* Dark mode support */
-.dark nav {
+.dark .main-nav,
+.dark nav.main-nav {
   background-color: var(--color-surface-secondary);
   border-bottom-color: var(--border-primary);
 }
