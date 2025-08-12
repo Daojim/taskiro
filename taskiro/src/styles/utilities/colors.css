@@ -98,20 +98,16 @@
   background-color: rgba(var(--color-primary-900-rgb), 0.2);
 }
 
-.bg-primary-900-20 {
-  background-color: rgba(30, 58, 138, 0.2);
-}
-
 .bg-error-50 {
   background-color: var(--color-error-50);
 }
 
-.bg-error-900-20 {
-  background-color: rgba(127, 29, 29, 0.2);
+.bg-error-900\/20 {
+  background-color: rgba(var(--color-error-900-rgb), 0.2);
 }
 
-.bg-error-900-30 {
-  background-color: rgba(127, 29, 29, 0.3);
+.bg-error-900\/30 {
+  background-color: rgba(var(--color-error-900-rgb), 0.3);
 }
 
 .bg-gray-50 {
@@ -122,8 +118,8 @@
   background-color: var(--color-gray-100);
 }
 
-.bg-gray-700-50 {
-  background-color: rgba(55, 65, 81, 0.5);
+.bg-gray-700\/50 {
+  background-color: rgba(var(--color-gray-700-rgb), 0.5);
 }
 
 .bg-gray-800 {
@@ -240,20 +236,16 @@
   background-color: var(--color-error-100);
 }
 
-.hover\:bg-gray-700-50:hover {
+.hover\:bg-gray-700\/50:hover {
   background-color: var(--bg-secondary);
 }
 
-.hover\:bg-error-900-30:hover {
+.hover\:bg-error-900\/30:hover {
   background-color: var(--color-error-100);
 }
 
 .hover\:text-primary-800:hover {
   color: var(--color-primary-800);
-}
-
-.hover\:text-primary-300:hover {
-  color: var(--color-primary-300);
 }
 
 /* Dark mode color overrides - using CSS variables for consistency */
@@ -281,7 +273,7 @@
   border-color: var(--border-primary);
 }
 
-.dark .bg-gray-700-50 {
+.dark .bg-gray-700\/50 {
   background-color: var(--bg-secondary);
 }
 

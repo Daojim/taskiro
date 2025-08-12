@@ -1,0 +1,203 @@
+/* Interaction Utilities */
+
+/* Cursor */
+.cursor-auto {
+  cursor: auto;
+}
+
+.cursor-default {
+  cursor: default;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-wait {
+  cursor: wait;
+}
+
+.cursor-text {
+  cursor: text;
+}
+
+.cursor-move {
+  cursor: move;
+}
+
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
+
+/* User Selection */
+.select-none {
+  user-select: none;
+}
+
+.select-text {
+  user-select: text;
+}
+
+.select-all {
+  user-select: all;
+}
+
+.select-auto {
+  user-select: auto;
+}
+
+/* Gesture handling for mobile */
+.gesture-active {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Mobile touch utilities */
+.mobile-tap-target {
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.haptic-feedback:active {
+  transform: scale(0.95);
+}
+
+/* Opacity */
+.opacity-0 {
+  opacity: 0;
+}
+
+.opacity-25 {
+  opacity: 0.25;
+}
+
+.opacity-50 {
+  opacity: 0.5;
+}
+
+.opacity-60 {
+  opacity: 0.6;
+}
+
+.opacity-75 {
+  opacity: 0.75;
+}
+
+.opacity-80 {
+  opacity: 0.8;
+}
+
+.opacity-90 {
+  opacity: 0.9;
+}
+
+.opacity-100 {
+  opacity: 1;
+}
+
+/* Transitions */
+.transition-none {
+  transition: none;
+}
+
+.transition-all {
+  transition: all var(--duration-150) var(--ease-in-out);
+}
+
+.transition-colors {
+  transition:
+    color var(--duration-150) var(--ease-in-out),
+    background-color var(--duration-150) var(--ease-in-out),
+    border-color var(--duration-150) var(--ease-in-out);
+}
+
+.transition-opacity {
+  transition: opacity var(--duration-150) var(--ease-in-out);
+}
+
+.transition-shadow {
+  transition: box-shadow var(--duration-150) var(--ease-in-out);
+}
+
+.transition-transform {
+  transition: transform var(--duration-150) var(--ease-in-out);
+}
+
+/* Transition durations */
+.duration-75 {
+  transition-duration: 75ms;
+}
+
+.duration-100 {
+  transition-duration: 100ms;
+}
+
+.duration-150 {
+  transition-duration: var(--duration-150);
+}
+
+.duration-200 {
+  transition-duration: 200ms;
+}
+
+.duration-250 {
+  transition-duration: var(--duration-250);
+}
+
+.duration-300 {
+  transition-duration: 300ms;
+}
+
+.duration-350 {
+  transition-duration: var(--duration-350);
+}
+
+.duration-500 {
+  transition-duration: 500ms;
+}
+
+/* Transition timing functions */
+.ease-linear {
+  transition-timing-function: linear;
+}
+
+.ease-in {
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+
+.ease-out {
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+.ease-in-out {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ease-bounce-in {
+  transition-timing-function: var(--ease-bounce);
+}
+
+/* Hover effects */
+.hover-scale {
+  transition: transform var(--duration-150) var(--ease-in-out);
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+/* Pointer events */
+.pointer-events-none {
+  pointer-events: none;
+}
+
+.pointer-events-auto {
+  pointer-events: auto;
+}

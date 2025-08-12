@@ -152,14 +152,14 @@
 
 - [ ] 10. Advanced CSS architecture cleanup
 
-  - [ ] 10.1 Remove duplicate/conflicting CSS files
+  - [x] 10.1 Remove duplicate/conflicting CSS files
 
     - Identify and remove duplicate files like design-system.css and design-system-simple.css
     - Consolidate overlapping styles into appropriate modular files
     - Ensure no functionality is lost during file removal
     - _Requirements: 2.1, 2.2, 1.1_
 
-  - [ ] 10.2 Fix persistent dark theme background color inconsistencies
+  - [x] 10.2 Fix persistent dark theme background color inconsistencies
 
     - Identify and fix old blue-ish background colors in header/nav bar, Add New Task component, list/calendar view toggle, and task list container
     - Search for hardcoded background colors and CSS specificity conflicts overriding the warm dark theme
@@ -167,14 +167,14 @@
     - Test that all major UI areas use consistent warm dark theme colors in dark mode
     - _Requirements: 6.1, 6.2, 2.2, 2.4_
 
-  - [ ] 10.3 Clean up generic element selectors
+  - [x] 10.3 Clean up generic element selectors
 
     - Remove or scope generic h1, h2, h3 selectors that conflict with component classes
     - Replace with component-specific classes or properly scoped selectors
     - Prevent future conflicts between generic and component styles
     - _Requirements: 2.1, 2.2, 3.1_
 
-  - [ ] 10.4 Consolidate overlapping utility classes
+  - [x] 10.4 Consolidate overlapping utility classes
 
     - Identify duplicate utility classes across different files
     - Merge overlapping utilities into single, consistent implementations

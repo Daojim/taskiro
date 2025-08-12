@@ -95,17 +95,4 @@
   }
 }
 
-/* Print styles */
-@media print {
-  .no-print {
-    display: none !important;
-  }
-
-  .print\:block {
-    display: block !important;
-  }
-
-  .print\:hidden {
-    display: none !important;
-  }
-}
+/* Print styles moved to print.css */

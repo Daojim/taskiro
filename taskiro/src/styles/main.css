@@ -10,6 +10,8 @@
 @import './utilities/layout.css';
 @import './utilities/spacing.css';
 @import './utilities/colors.css';
+@import './utilities/typography.css';
+@import './utilities/interactions.css';
 @import './utilities/responsive.css';
 @import './utilities/print.css';
 

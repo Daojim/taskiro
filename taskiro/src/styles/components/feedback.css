@@ -229,14 +229,7 @@
   opacity: 0.8;
 }
 
-/* Hover scale utility */
-.hover-scale {
-  transition: transform var(--transition-fast);
-}
-
-.hover-scale:hover {
-  transform: scale(1.05);
-}
+/* Hover scale utility moved to interactions.css */
 
 /* Empty states */
 .empty-state {
