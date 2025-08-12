@@ -8,6 +8,31 @@
   padding: var(--spacing-md);
 }
 
+.task-list--empty {
+  text-align: center;
+  padding: var(--spacing-3xl);
+  color: var(--text-tertiary);
+}
+
+.task-list__empty-icon {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-md);
+  opacity: 0.5;
+}
+
+.task-list__empty-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.task-list__empty-description {
+  font-size: var(--font-size-sm);
+  color: var(--text-tertiary);
+}
+
+/* Legacy support */
 .task-list-empty {
   text-align: center;
   padding: var(--spacing-3xl);
@@ -40,6 +65,19 @@
   border: 1px solid var(--border-primary);
 }
 
+.task-filters__group {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.task-filters__label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+}
+
+/* Legacy support */
 .task-filter-group {
   display: flex;
   align-items: center;

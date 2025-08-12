@@ -154,7 +154,7 @@ const RegisterForm: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting || isLoading}
-                  className="btn-primary w-full btn-lg"
+                  className="button button--primary w-full button--large"
                 >
                   {isSubmitting || isLoading ? (
                     <div className="flex items-center justify-center">

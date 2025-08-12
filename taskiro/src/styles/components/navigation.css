@@ -1,10 +1,51 @@
-/* Navigation Component Styles
- * 
- * Generic nav selector has been scoped to .main-nav to prevent conflicts.
- * Apply .main-nav class to navigation elements that need these styles.
- */
+/* Navigation Component Styles - Standardized BEM Naming */
 
-/* Main navigation - scoped to avoid conflicts */
+/* Main navigation component */
+.navigation {
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-primary);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+}
+
+.navigation__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md) var(--spacing-lg);
+  height: var(--nav-height);
+}
+
+.navigation__brand {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.navigation__menu {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.navigation__link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  transition: color var(--transition-fast);
+}
+
+.navigation__link:hover {
+  color: var(--text-primary);
+}
+
+.navigation__link--active {
+  color: var(--color-primary-600);
+}
+
+/* Legacy support */
 .main-nav,
 nav.main-nav {
   background-color: var(--bg-primary);

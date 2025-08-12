@@ -1,6 +1,6 @@
-/* Form Component Styles */
+/* Form Component Styles - Standardized BEM Naming */
 
-/* EXTRACTED FROM EMERGENCY-STYLES.CSS - Form inputs */
+/* Base input component */
 .input {
   display: block;
   width: 100%;
@@ -19,7 +19,23 @@
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Input error states */
+/* Input states */
+.input--error {
+  border-color: var(--color-error-400);
+}
+
+.input--error:focus {
+  border-color: var(--color-error-500);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* Input variants */
+.input--search {
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}
+
+/* Legacy support */
 .input-error {
   border-color: var(--color-error-400);
 }
@@ -29,21 +45,34 @@
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
-/* Search input specific styles */
 .search-input {
   padding-left: 2.5rem;
   padding-right: 2.5rem;
 }
 
-.input.pl-10 {
-  padding-left: 2.5rem;
+/* Filter components */
+.filter__select {
+  font-size: var(--font-size-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--input-bg);
+  color: var(--input-text);
 }
 
-.input.pr-10 {
-  padding-right: 2.5rem;
+.filter__select:focus {
+  outline: none;
+  border-color: var(--input-border-focus);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
 }
 
-/* Filter select styles */
+.filter__label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+}
+
+/* Legacy support */
 .filter-select {
   font-size: var(--font-size-xs);
   padding: var(--spacing-xs) var(--spacing-sm);
@@ -59,7 +88,6 @@
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
 }
 
-/* Filter label styles */
 .filter-label {
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);

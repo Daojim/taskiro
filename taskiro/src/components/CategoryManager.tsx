@@ -163,7 +163,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
           <h2 className="text-heading-2">Manage Categories</h2>
           <button
             onClick={onClose}
-            className="close-button btn-ghost p-2 hover-scale"
+            className="close-button button button--ghost p-2 hover-scale"
           >
             <svg
               className="w-6 h-6"
@@ -274,7 +274,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
                   <button
                     type="submit"
                     disabled={loading || !formData.name.trim()}
-                    className="btn-primary"
+                    className="button button--primary"
                   >
                     {loading ? (
                       <div className="flex items-center">
@@ -290,7 +290,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
                     <button
                       type="button"
                       onClick={handleCancelEdit}
-                      className="btn-secondary"
+                      className="button button--secondary"
                     >
                       Cancel
                     </button>
@@ -300,7 +300,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowTemplates(!showTemplates)}
-                  className="btn-ghost btn-sm"
+                  className="button button--ghost button--small"
                 >
                   {showTemplates ? 'Hide' : 'Show'} Templates
                 </button>
