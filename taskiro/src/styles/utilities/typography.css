@@ -21,14 +21,6 @@
   font-size: var(--font-size-xl);
 }
 
-.text-2xl {
-  font-size: var(--font-size-2xl);
-}
-
-.text-3xl {
-  font-size: var(--font-size-3xl);
-}
-
 /* Semantic typography classes */
 .text-display-2 {
   font-size: var(--font-size-3xl);
@@ -72,57 +64,11 @@
   text-align: justify;
 }
 
-/* Font weights */
-.font-normal {
-  font-weight: var(--font-weight-normal);
-}
+/* Font weights - keeping only used ones */
 
-.font-medium {
-  font-weight: var(--font-weight-medium);
-}
+/* Line height - removed unused utilities */
 
-.font-semibold {
-  font-weight: var(--font-weight-semibold);
-}
-
-.font-bold {
-  font-weight: var(--font-weight-bold);
-}
-
-/* Line height */
-.leading-tight {
-  line-height: var(--line-height-tight);
-}
-
-.leading-normal {
-  line-height: var(--line-height-normal);
-}
-
-.leading-relaxed {
-  line-height: var(--line-height-relaxed);
-}
-
-/* Text decoration */
-.underline {
-  text-decoration: underline;
-}
-
-.no-underline {
-  text-decoration: none;
-}
-
-/* Text transform */
-.uppercase {
-  text-transform: uppercase;
-}
-
-.lowercase {
-  text-transform: lowercase;
-}
-
-.capitalize {
-  text-transform: capitalize;
-}
+/* Text decoration and transform - removed unused utilities */
 
 /* Text overflow */
 .truncate {
@@ -139,23 +85,4 @@
   line-clamp: 2;
 }
 
-.line-clamp-3 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-}
-
-/* White space */
-.whitespace-nowrap {
-  white-space: nowrap;
-}
-
-.whitespace-pre {
-  white-space: pre;
-}
-
-.whitespace-pre-wrap {
-  white-space: pre-wrap;
-}
+/* White space - removed unused utilities */
