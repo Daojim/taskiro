@@ -13,6 +13,8 @@ interface SyncStatus {
   lastSync: number | null;
   pendingActions: number;
   error: string | null;
+  conflicts: number;
+  autoSyncEnabled: boolean;
 }
 
 interface UseOfflineSyncReturn {
@@ -35,9 +37,25 @@ interface UseOfflineSyncReturn {
   sync: () => Promise<void>;
   forceSync: () => Promise<void>;
 
+  // Conflict resolution
+  getConflicts: () => any[];
+  resolveConflict: (
+    conflictId: string,
+    resolution: 'local' | 'server' | 'merge',
+    mergedData?: any
+  ) => Promise<void>;
+  resolveAllConflicts: (
+    strategy?: 'local' | 'server' | 'auto'
+  ) => Promise<void>;
+
+  // Sync control
+  enableAutoSync: () => Promise<void>;
+  disableAutoSync: () => Promise<void>;
+
   // Utility
   clearOfflineData: () => Promise<void>;
   getStorageInfo: () => Promise<any>;
+  getSyncInfo: () => Promise<any>;
 }
 
 export function useOfflineSync(): UseOfflineSyncReturn {
@@ -211,6 +229,69 @@ export function useOfflineSync(): UseOfflineSyncReturn {
     }
   }, []);
 
+  const getSyncInfo = useCallback(async () => {
+    try {
+      return await syncManager.getSyncInfo();
+    } catch (error) {
+      console.error('Failed to get sync info:', error);
+      throw error;
+    }
+  }, []);
+
+  const getConflicts = useCallback(() => {
+    return syncManager.getConflicts();
+  }, []);
+
+  const resolveConflict = useCallback(
+    async (
+      conflictId: string,
+      resolution: 'local' | 'server' | 'merge',
+      mergedData?: any
+    ) => {
+      try {
+        await syncManager.resolveConflict(conflictId, resolution, mergedData);
+        // Reload data after conflict resolution
+        await Promise.all([loadTasks(), loadCategories()]);
+      } catch (error) {
+        console.error('Failed to resolve conflict:', error);
+        throw error;
+      }
+    },
+    [loadTasks, loadCategories]
+  );
+
+  const resolveAllConflicts = useCallback(
+    async (strategy: 'local' | 'server' | 'auto' = 'auto') => {
+      try {
+        await syncManager.resolveAllConflicts(strategy);
+        // Reload data after conflict resolution
+        await Promise.all([loadTasks(), loadCategories()]);
+      } catch (error) {
+        console.error('Failed to resolve all conflicts:', error);
+        throw error;
+      }
+    },
+    [loadTasks, loadCategories]
+  );
+
+  const enableAutoSync = useCallback(async () => {
+    try {
+      syncManager.enableAutoSync();
+    } catch (error) {
+      console.error('Failed to enable auto-sync:', error);
+      throw error;
+    }
+  }, []);
+
+  const disableAutoSync = useCallback(async () => {
+    try {
+      syncManager.disableAutoSync();
+    } catch (error) {
+      console.error('Failed to disable auto-sync:', error);
+      throw error;
+    }
+  }, []);
+
   return {
     status,
     tasks,
@@ -223,7 +304,13 @@ export function useOfflineSync(): UseOfflineSyncReturn {
     toggleTaskCompletion,
     sync,
     forceSync,
+    getConflicts,
+    resolveConflict,
+    resolveAllConflicts,
+    enableAutoSync,
+    disableAutoSync,
     clearOfflineData,
     getStorageInfo,
+    getSyncInfo,
   };
 }

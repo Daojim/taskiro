@@ -188,14 +188,23 @@
     - Clean up commented-out code and obsolete styles
     - _Requirements: 2.1, 2.2, 7.3_
 
-  - [ ] 10.6 Standardize component class naming convention
+  - [x] 10.6 Standardize component class naming convention
 
     - Establish consistent naming patterns (BEM, utility-first, or CSS modules)
     - Rename inconsistent class names to follow the chosen convention
     - Update component files to use standardized class names
     - _Requirements: 3.1, 3.2, 1.1_
 
-  - [ ] 10.7 Fix remaining !important declarations
+  - [x] 10.7 Complete migration to standardized CSS class names
+
+    - Update all React components to use new BEM naming convention (.button--primary instead of .btn-primary)
+    - Remove legacy CSS class definitions to eliminate code duplication
+    - Test all components to ensure proper styling with new class names
+    - Reduce CSS bundle size by removing duplicate class definitions
+    - _Requirements: 3.1, 3.2, 2.1, 7.3_
+
+  - [x] 10.8 Fix remaining !important declarations
+
     - Identify all remaining !important declarations in the codebase
     - Replace with proper cascade management and specificity control
     - Ensure styles work correctly without !important overrides

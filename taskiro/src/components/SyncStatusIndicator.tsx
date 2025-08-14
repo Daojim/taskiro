@@ -5,8 +5,12 @@ import {
   ExclamationTriangleIcon,
   ArrowPathIcon,
   InformationCircleIcon,
+  Cog6ToothIcon,
+  PlayIcon,
+  PauseIcon,
 } from '@heroicons/react/24/outline';
 import { useOfflineSync } from '../hooks/useOfflineSync';
+import { ConflictResolutionModal } from './ConflictResolutionModal';
 
 interface SyncStatusIndicatorProps {
   className?: string;
@@ -17,17 +21,31 @@ export function SyncStatusIndicator({
   className = '',
   showDetails = false,
 }: SyncStatusIndicatorProps) {
-  const { status, sync, forceSync, getStorageInfo } = useOfflineSync();
+  const {
+    status,
+    sync,
+    forceSync,
+    getStorageInfo,
+    getSyncInfo,
+    enableAutoSync,
+    disableAutoSync,
+  } = useOfflineSync();
   const [showInfo, setShowInfo] = useState(false);
+  const [showConflictModal, setShowConflictModal] = useState(false);
   const [storageInfo, setStorageInfo] = useState<any>(null);
+  const [syncInfo, setSyncInfo] = useState<any>(null);
 
   const handleInfoClick = async () => {
     if (!showInfo) {
       try {
-        const info = await getStorageInfo();
-        setStorageInfo(info);
+        const [storageData, syncData] = await Promise.all([
+          getStorageInfo(),
+          getSyncInfo(),
+        ]);
+        setStorageInfo(storageData);
+        setSyncInfo(syncData);
       } catch (error) {
-        console.error('Failed to get storage info:', error);
+        console.error('Failed to get sync info:', error);
       }
     }
     setShowInfo(!showInfo);
@@ -62,6 +80,10 @@ export function SyncStatusIndicator({
       return <ArrowPathIcon className="h-4 w-4 animate-spin text-blue-500" />;
     }
 
+    if (status.conflicts > 0) {
+      return <ExclamationTriangleIcon className="h-4 w-4 text-orange-500" />;
+    }
+
     if (status.error) {
       return <ExclamationTriangleIcon className="h-4 w-4 text-red-500" />;
     }
@@ -79,6 +101,8 @@ export function SyncStatusIndicator({
 
   const getStatusText = () => {
     if (status.isSyncing) return 'Syncing...';
+    if (status.conflicts > 0)
+      return `${status.conflicts} conflict${status.conflicts !== 1 ? 's' : ''}`;
     if (status.error) return 'Sync error';
     if (!status.isOnline) return 'Offline';
     if (status.pendingActions > 0) return `${status.pendingActions} pending`;
@@ -87,10 +111,33 @@ export function SyncStatusIndicator({
 
   const getStatusColor = () => {
     if (status.isSyncing) return 'text-primary-600';
+    if (status.conflicts > 0) return 'text-orange-600';
     if (status.error) return 'text-red-600';
     if (!status.isOnline) return 'text-gray-600';
     if (status.pendingActions > 0) return 'text-yellow-600';
     return 'text-green-600';
+  };
+
+  const handleToggleAutoSync = async () => {
+    try {
+      if (status.autoSyncEnabled) {
+        await disableAutoSync();
+      } else {
+        await enableAutoSync();
+      }
+    } catch (error) {
+      console.error('Failed to toggle auto-sync:', error);
+    }
+  };
+
+  const handleResolveConflicts = () => {
+    setShowConflictModal(true);
+  };
+
+  const handleConflictsResolved = () => {
+    setShowConflictModal(false);
+    // Refresh sync info
+    handleInfoClick();
   };
 
   return (
@@ -113,6 +160,17 @@ export function SyncStatusIndicator({
           </div>
         )}
 
+        {/* Conflict Resolution Button */}
+        {status.conflicts > 0 && (
+          <button
+            onClick={handleResolveConflicts}
+            className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-orange-600"
+            title="Resolve sync conflicts"
+          >
+            <ExclamationTriangleIcon className="h-4 w-4" />
+          </button>
+        )}
+
         {/* Manual Sync Button */}
         <button
           onClick={handleSyncClick}
@@ -126,6 +184,23 @@ export function SyncStatusIndicator({
             }`}
           />
         </button>
+
+        {/* Auto-sync Toggle */}
+        {showDetails && (
+          <button
+            onClick={handleToggleAutoSync}
+            className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+            title={
+              status.autoSyncEnabled ? 'Disable auto-sync' : 'Enable auto-sync'
+            }
+          >
+            {status.autoSyncEnabled ? (
+              <PauseIcon className="h-4 w-4 text-green-600 dark:text-green-400" />
+            ) : (
+              <PlayIcon className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+            )}
+          </button>
+        )}
 
         {/* Info Button */}
         {showDetails && (
@@ -149,21 +224,84 @@ export function SyncStatusIndicator({
       )}
 
       {/* Storage Info Modal */}
-      {showInfo && storageInfo && (
-        <div className="absolute top-full right-0 mt-1 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-10 min-w-64">
-          <div className="text-sm space-y-2">
-            <div className="font-medium text-gray-900 dark:text-gray-100">
-              Offline Storage
+      {showInfo && storageInfo && syncInfo && (
+        <div className="absolute top-full right-0 mt-1 p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-10 min-w-80">
+          <div className="text-sm space-y-3">
+            <div className="font-medium text-gray-900 dark:text-gray-100 flex items-center gap-2">
+              <Cog6ToothIcon className="h-4 w-4" />
+              Sync Status
             </div>
-            <div className="space-y-1 text-gray-600 dark:text-gray-400">
-              <div>Tasks: {storageInfo.tasksCount}</div>
-              <div>Categories: {storageInfo.categoriesCount}</div>
-              <div>Pending: {storageInfo.syncQueueCount}</div>
-              <div>Last sync: {formatLastSync(storageInfo.lastSync)}</div>
+
+            <div className="space-y-2">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                    Storage
+                  </div>
+                  <div className="space-y-1 text-gray-600 dark:text-gray-400">
+                    <div>Tasks: {storageInfo.tasksCount}</div>
+                    <div>Categories: {storageInfo.categoriesCount}</div>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                    Sync Queue
+                  </div>
+                  <div className="space-y-1 text-gray-600 dark:text-gray-400">
+                    <div>Pending: {storageInfo.syncQueueCount}</div>
+                    <div>Conflicts: {syncInfo.conflictSummary.total}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">
+                    Auto-sync:
+                  </span>
+                  <span
+                    className={`text-xs px-2 py-1 rounded-full ${
+                      status.autoSyncEnabled
+                        ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
+                    }`}
+                  >
+                    {status.autoSyncEnabled ? 'Enabled' : 'Disabled'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between mt-1">
+                  <span className="text-gray-600 dark:text-gray-400">
+                    Last sync:
+                  </span>
+                  <span className="text-gray-600 dark:text-gray-400">
+                    {formatLastSync(storageInfo.lastSync)}
+                  </span>
+                </div>
+              </div>
+
+              {syncInfo.conflictSummary.total > 0 && (
+                <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                  <button
+                    onClick={handleResolveConflicts}
+                    className="w-full px-3 py-2 text-sm bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 rounded-lg hover:bg-orange-200 dark:hover:bg-orange-900/50"
+                  >
+                    Resolve {syncInfo.conflictSummary.total} Conflict
+                    {syncInfo.conflictSummary.total !== 1 ? 's' : ''}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
       )}
+
+      {/* Conflict Resolution Modal */}
+      <ConflictResolutionModal
+        isOpen={showConflictModal}
+        onClose={() => setShowConflictModal(false)}
+        onResolved={handleConflictsResolved}
+      />
     </div>
   );
 }

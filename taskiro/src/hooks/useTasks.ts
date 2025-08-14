@@ -28,8 +28,24 @@ interface UseTasksReturn {
     lastSync: number | null;
     pendingActions: number;
     error: string | null;
+    conflicts: number;
+    autoSyncEnabled: boolean;
   };
   forceSync: () => Promise<void>;
+  // Conflict resolution
+  getConflicts: () => any[];
+  resolveConflict: (
+    conflictId: string,
+    resolution: 'local' | 'server' | 'merge',
+    mergedData?: any
+  ) => Promise<void>;
+  resolveAllConflicts: (
+    strategy?: 'local' | 'server' | 'auto'
+  ) => Promise<void>;
+  // Sync control
+  enableAutoSync: () => Promise<void>;
+  disableAutoSync: () => Promise<void>;
+  getSyncInfo: () => Promise<any>;
 }
 
 /**
@@ -54,6 +70,12 @@ export const useTasks = (): UseTasksReturn => {
     deleteTask: deleteTaskOffline,
     toggleTaskCompletion: toggleTaskCompletionOffline,
     forceSync,
+    getConflicts,
+    resolveConflict,
+    resolveAllConflicts,
+    enableAutoSync,
+    disableAutoSync,
+    getSyncInfo,
   } = useOfflineSync();
 
   // Prevent duplicate calls
@@ -291,5 +313,11 @@ export const useTasks = (): UseTasksReturn => {
     clearError,
     syncStatus,
     forceSync,
+    getConflicts,
+    resolveConflict,
+    resolveAllConflicts,
+    enableAutoSync,
+    disableAutoSync,
+    getSyncInfo,
   };
 };
