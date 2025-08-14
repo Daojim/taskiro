@@ -240,7 +240,7 @@ const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
             </button>
             <button
               type="submit"
-              className="btn-primary"
+              className="button button--primary"
               disabled={isSubmitting || !formData.title.trim()}
             >
               {isSubmitting ? 'Creating...' : 'Create Task'}

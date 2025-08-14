@@ -62,18 +62,18 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
     filters.category || filters.priority || filters.status;
 
   return (
-    <div className="task-filters">
+    <div className="filters">
       <div className="flex flex-wrap items-center gap-4">
         {/* Category Filter */}
         <div className="flex items-center space-x-2">
-          <label htmlFor="category-filter" className="task-filter-label">
+          <label htmlFor="category-filter" className="filter__label">
             Category:
           </label>
           <select
             id="category-filter"
             value={filters.category}
             onChange={handleCategoryChange}
-            className="filter-select"
+            className="filter__select"
           >
             <option value="">All categories</option>
             <option value="uncategorized">Uncategorized</option>
@@ -87,14 +87,14 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
 
         {/* Priority Filter */}
         <div className="flex items-center space-x-2">
-          <label htmlFor="priority-filter" className="task-filter-label">
+          <label htmlFor="priority-filter" className="filter__label">
             Priority:
           </label>
           <select
             id="priority-filter"
             value={filters.priority}
             onChange={handlePriorityChange}
-            className="filter-select"
+            className="filter__select"
           >
             <option value="">All priorities</option>
             <option value="high">High</option>
@@ -105,14 +105,14 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
 
         {/* Status Filter */}
         <div className="flex items-center space-x-2">
-          <label htmlFor="status-filter" className="task-filter-label">
+          <label htmlFor="status-filter" className="filter__label">
             Status:
           </label>
           <select
             id="status-filter"
             value={filters.status}
             onChange={handleStatusChange}
-            className="filter-select"
+            className="filter__select"
           >
             <option value="">All tasks</option>
             <option value="active">Active</option>
@@ -122,14 +122,14 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
 
         {/* Sort By */}
         <div className="flex items-center space-x-2">
-          <label htmlFor="sort-by" className="task-filter-label">
+          <label htmlFor="sort-by" className="filter__label">
             Sort by:
           </label>
           <select
             id="sort-by"
             value={filters.sortBy}
             onChange={handleSortByChange}
-            className="filter-select"
+            className="filter__select"
           >
             <option value="dueDate">Due Date</option>
             <option value="priority">Priority</option>
@@ -139,14 +139,14 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
 
         {/* Sort Order */}
         <div className="flex items-center space-x-2">
-          <label htmlFor="sort-order" className="task-filter-label">
+          <label htmlFor="sort-order" className="filter__label">
             Order:
           </label>
           <select
             id="sort-order"
             value={filters.sortOrder}
             onChange={handleSortOrderChange}
-            className="filter-select"
+            className="filter__select"
           >
             <option value="asc">Ascending</option>
             <option value="desc">Descending</option>
@@ -155,7 +155,10 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
 
         {/* Clear Filters Button */}
         {hasActiveFilters && (
-          <button onClick={handleClearFilters} className="btn-ghost btn-sm">
+          <button
+            onClick={handleClearFilters}
+            className="button button--ghost button--small"
+          >
             Clear filters
           </button>
         )}
@@ -177,7 +180,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
                   'Unknown'}
               <button
                 onClick={() => onChange({ category: '' })}
-                className="filter-tag-remove ml-1 text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300"
+                className="filter__tag-remove ml-1 text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300"
               >
                 ×
               </button>
@@ -191,7 +194,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
                 filters.priority.slice(1)}
               <button
                 onClick={() => onChange({ priority: '' })}
-                className="filter-tag-remove ml-1 text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-300"
+                className="filter__tag-remove ml-1 text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-300"
               >
                 ×
               </button>
@@ -204,7 +207,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
               {filters.status.charAt(0).toUpperCase() + filters.status.slice(1)}
               <button
                 onClick={() => onChange({ status: '' })}
-                className="filter-tag-remove ml-1 text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300"
+                className="filter__tag-remove ml-1 text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300"
               >
                 ×
               </button>
@@ -221,7 +224,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
 
         <button
           onClick={() => onChange({ status: 'active', priority: 'high' })}
-          className="quick-filter quick-filter-high"
+          className="filter__quick filter__quick--high"
         >
           High Priority Active
         </button>
@@ -230,7 +233,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
           onClick={() =>
             onChange({ status: 'active', sortBy: 'dueDate', sortOrder: 'asc' })
           }
-          className="quick-filter quick-filter-due"
+          className="filter__quick filter__quick--due"
         >
           Due Soon
         </button>
@@ -243,7 +246,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
               sortOrder: 'desc',
             })
           }
-          className="quick-filter quick-filter-completed"
+          className="filter__quick filter__quick--completed"
         >
           Recently Completed
         </button>

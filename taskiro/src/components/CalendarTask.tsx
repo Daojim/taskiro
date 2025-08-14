@@ -121,7 +121,7 @@ const CalendarTask: React.FC<CalendarTaskProps> = ({
             <div className="task-actions flex items-center space-x-1 ml-2">
               <button
                 onClick={handleToggleCompletion}
-                className="task-action-button"
+                className="button--task-action"
                 style={{
                   backgroundColor: 'rgba(255, 255, 255, 0.1)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -144,7 +144,7 @@ const CalendarTask: React.FC<CalendarTaskProps> = ({
 
               <button
                 onClick={handleTaskClick}
-                className="task-action-button"
+                className="button--task-action"
                 style={{
                   backgroundColor: 'rgba(255, 255, 255, 0.1)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -165,7 +165,7 @@ const CalendarTask: React.FC<CalendarTaskProps> = ({
 
               <button
                 onClick={handleDelete}
-                className="task-action-button"
+                className="button--task-action"
                 style={{
                   backgroundColor: 'rgba(255, 255, 255, 0.1)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',

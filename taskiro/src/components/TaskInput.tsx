@@ -300,7 +300,7 @@ const TaskInput: React.FC<TaskInputProps> = ({
             <button
               type="button"
               onClick={() => setIsManualMode(!isManualMode)}
-              className="btn-ghost btn-sm"
+              className="button button--ghost button--small"
             >
               {isManualMode
                 ? 'Switch to Natural Language'
@@ -554,7 +554,7 @@ const TaskInput: React.FC<TaskInputProps> = ({
         <button
           type="submit"
           disabled={isLoading || (!isManualMode && !parsedData?.title)}
-          className="btn-primary w-full btn-lg"
+          className="button button--primary w-full button--large"
         >
           {isLoading ? (
             <div className="flex items-center justify-center">
@@ -609,7 +609,7 @@ const TaskInput: React.FC<TaskInputProps> = ({
                   setShowDisambiguation(false);
                   setAmbiguousElements([]);
                 }}
-                className="btn-secondary"
+                className="button button--secondary"
               >
                 Cancel
               </button>

@@ -43,16 +43,6 @@
   border-color: var(--border-primary);
 }
 
-.dark .btn-secondary {
-  background-color: var(--color-surface-tertiary);
-  color: var(--text-primary);
-  border-color: var(--border-primary);
-}
-
-.dark .btn-secondary:hover {
-  background-color: var(--border-primary);
-}
-
 /* Theme toggle button styles */
 .theme-toggle {
   display: flex;

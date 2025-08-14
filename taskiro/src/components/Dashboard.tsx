@@ -127,12 +127,15 @@ const Dashboard: React.FC = () => {
               <ThemeToggle />
               <button
                 onClick={() => setShowCategoryManager(true)}
-                className="btn-secondary btn-sm"
+                className="button button--secondary button--small"
               >
                 <TagIcon className="h-4 w-4 mr-2" />
                 Categories
               </button>
-              <button onClick={handleLogout} className="btn-danger btn-sm">
+              <button
+                onClick={handleLogout}
+                className="button button--danger button--small"
+              >
                 Logout
               </button>
             </div>

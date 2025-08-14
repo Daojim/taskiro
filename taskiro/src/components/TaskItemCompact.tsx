@@ -370,17 +370,17 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
   const getTaskCardClasses = () => {
     const baseClasses =
       'relative p-4 rounded-lg w-full min-h-[180px] flex flex-col justify-between';
-    const priorityClass = `task-card-priority-${task.priority}`;
+    const priorityClass = `task-card--priority-${task.priority}`;
     const completedClass =
-      task.status.toLowerCase() === 'completed' ? 'task-card-completed' : '';
-    const overdueClass = isOverdue ? `task-card-overdue` : '';
-    const urgentClass = isUrgent ? 'task-card-urgent' : '';
+      task.status.toLowerCase() === 'completed' ? 'task-card--completed' : '';
+    const overdueClass = isOverdue ? `task-card--overdue` : '';
+    const urgentClass = isUrgent ? 'task-card--urgent' : '';
     const completingClass = completionAnimation
-      ? `task-card-${completionAnimation}`
+      ? `task-card--${completionAnimation}`
       : '';
     const feedbackClass = showCompletionFeedback
-      ? 'task-card-completion-feedback completing'
-      : 'task-card-completion-feedback';
+      ? 'task-card--completion-feedback completing'
+      : 'task-card--completion-feedback';
 
     const finalClasses =
       `${baseClasses} ${priorityClass} ${completedClass} ${overdueClass} ${urgentClass} ${completingClass} ${feedbackClass}`.trim();
@@ -471,9 +471,9 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
         transform: completionAnimation ? 'scale(0.98)' : 'scale(1)',
       }}
     >
-      <div className="task-card-content">
+      <div className="task-card__content">
         {/* Card Header - Title with Checkbox */}
-        <div className="task-card-header">
+        <div className="task-card__header">
           <div
             className="task-checkbox-wrapper"
             onClick={handleToggleCompletion}
@@ -519,7 +519,9 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
               <h3
                 onClick={() => handleStartEdit('title')}
                 className={`editable-field cursor-pointer hover:bg-white/20 rounded transition-colors ${
-                  completionAnimation ? 'task-title-completing completing' : ''
+                  completionAnimation
+                    ? 'task__title--completing completing'
+                    : ''
                 }`}
                 style={{
                   fontSize: '16px',
@@ -550,7 +552,7 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
         </div>
 
         {/* Card Body - Description */}
-        <div className="task-card-body">
+        <div className="task-card__body">
           {(task.description || editingField === 'description') && (
             <div>
               {editingField === 'description' ? (
@@ -574,8 +576,8 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
                   onClick={() => handleStartEdit('description')}
                   className={`editable-field cursor-pointer hover:bg-white/20 rounded transition-colors line-clamp-2 ${
                     task.status.toLowerCase() === 'completed'
-                      ? 'task-description-completed'
-                      : 'task-description'
+                      ? 'task__description--completed'
+                      : 'task__description'
                   }`}
                 >
                   {task.description || 'Add description...'}
@@ -586,10 +588,10 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
         </div>
 
         {/* Card Meta - Date, Time, Priority, Category */}
-        <div className="task-card-meta">
-          <div className="task-metadata space-y-2">
+        <div className="task-card__meta">
+          <div className="task__metadata space-y-2">
             {/* Due Date and Time */}
-            <div className="task-badge-group">
+            <div className="task__badge-group">
               {/* Due Date */}
               <div className="flex items-center space-x-1">
                 {editingField === 'dueDate' ? (
@@ -709,7 +711,7 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
             </div>
 
             {/* Priority and Category */}
-            <div className="task-badge-group">
+            <div className="task__badge-group">
               {/* Priority */}
               <div className="flex items-center space-x-1">
                 {editingField === 'priority' ? (
@@ -796,10 +798,10 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
           </div>
 
           {/* Card Footer - Delete Button */}
-          <div className="task-card-footer">
+          <div className="task-card__footer">
             <button
               onClick={handleDelete}
-              className="task-action-button hover:text-red-600"
+              className="button--task-delete hover:text-red-600"
               title="Delete task"
             >
               <svg

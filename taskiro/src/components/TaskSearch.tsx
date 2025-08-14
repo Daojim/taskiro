@@ -111,7 +111,7 @@ const TaskSearch: React.FC<TaskSearchProps> = ({
             <button
               type="button"
               onClick={handleClear}
-              className="search-clear-button p-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-all duration-250 focus-ring rounded-lg hover-scale"
+              className="button--search-clear p-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-all duration-250 button--focus rounded-lg hover-scale"
               aria-label="Clear search"
             >
               <svg
