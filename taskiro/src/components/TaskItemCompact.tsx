@@ -400,73 +400,12 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
     return finalClasses;
   };
 
-  // Get inline styles for priority (fallback if CSS doesn't load)
-  const getInlineStyles = () => {
-    const isCompleted = task.status.toLowerCase() === 'completed';
-
-    console.log(
-      'DEBUG - Task:',
-      task.title,
-      'Priority:',
-      task.priority,
-      'Completed:',
-      isCompleted
-    );
-
-    if (isCompleted) {
-      const completedStyle = {
-        background: 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)',
-        borderLeft: '4px solid #9ca3af',
-        opacity: 0.7,
-      };
-      console.log('DEBUG - Applying completed style:', completedStyle);
-      return completedStyle;
-    }
-
-    const priorityStyles = {
-      high: {
-        background: 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)',
-        borderLeft: '4px solid #ef4444',
-        borderColor: '#fecaca',
-        boxShadow:
-          '0 4px 6px -1px rgba(239, 68, 68, 0.1), 0 2px 4px -1px rgba(239, 68, 68, 0.06)',
-      },
-      medium: {
-        background: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)',
-        borderLeft: '4px solid #f59e0b',
-        borderColor: '#fed7aa',
-        boxShadow:
-          '0 4px 6px -1px rgba(245, 158, 11, 0.1), 0 2px 4px -1px rgba(245, 158, 11, 0.06)',
-      },
-      low: {
-        background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
-        borderLeft: '4px solid #10b981',
-        borderColor: '#bbf7d0',
-        boxShadow:
-          '0 4px 6px -1px rgba(16, 185, 129, 0.1), 0 2px 4px -1px rgba(16, 185, 129, 0.06)',
-      },
-    };
-
-    // Convert priority to lowercase for lookup since priorities come as UPPERCASE
-    const priorityKey =
-      task.priority.toLowerCase() as keyof typeof priorityStyles;
-    const selectedStyle = priorityStyles[priorityKey] || {};
-    console.log(
-      'DEBUG - Applying priority style for',
-      task.priority,
-      'using key',
-      priorityKey,
-      ':',
-      selectedStyle
-    );
-    return selectedStyle;
-  };
+  // Removed inline styles - now using CSS classes for better theme support
 
   return (
     <div
       className={getTaskCardClasses()}
       style={{
-        ...getInlineStyles(),
         transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
         transform: completionAnimation ? 'scale(0.98)' : 'scale(1)',
       }}
@@ -536,12 +475,8 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
                   opacity: task.status.toLowerCase() === 'completed' ? 0.7 : 1,
                   color:
                     task.status.toLowerCase() === 'completed'
-                      ? '#6b7280'
-                      : task.priority === 'high'
-                        ? '#7f1d1d'
-                        : task.priority === 'medium'
-                          ? '#92400e'
-                          : '#064e3b',
+                      ? 'var(--text-tertiary)'
+                      : 'var(--text-primary)',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
               >

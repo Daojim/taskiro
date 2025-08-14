@@ -257,4 +257,37 @@
   --color-error-100: rgba(239, 68, 68, 0.2);
   --color-warning-50: rgba(245, 158, 11, 0.1);
   --color-warning-100: rgba(245, 158, 11, 0.2);
+
+  /* Dark mode task priority colors - muted and darker */
+  --priority-high-bg: rgba(239, 68, 68, 0.15);
+  --priority-high-text: #fca5a5;
+  --priority-high-border: #dc2626;
+  --priority-medium-bg: rgba(245, 158, 11, 0.15);
+  --priority-medium-text: #fcd34d;
+  --priority-medium-border: #f59e0b;
+  --priority-low-bg: rgba(16, 185, 129, 0.15);
+  --priority-low-text: #6ee7b7;
+  --priority-low-border: #10b981;
+
+  /* Dark mode task card backgrounds - more muted */
+  --task-card-high-bg: linear-gradient(
+    135deg,
+    rgba(127, 29, 29, 0.2) 0%,
+    rgba(153, 27, 27, 0.15) 100%
+  );
+  --task-card-medium-bg: linear-gradient(
+    135deg,
+    rgba(146, 64, 14, 0.2) 0%,
+    rgba(180, 83, 9, 0.15) 100%
+  );
+  --task-card-low-bg: linear-gradient(
+    135deg,
+    rgba(6, 78, 59, 0.2) 0%,
+    rgba(5, 150, 105, 0.15) 100%
+  );
+  --task-card-completed-bg: linear-gradient(
+    135deg,
+    rgba(68, 64, 60, 0.3) 0%,
+    rgba(87, 83, 78, 0.2) 100%
+  );
 }
