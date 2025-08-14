@@ -198,28 +198,28 @@ body {
 .text-heading-1 {
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-primary-600) !important;
+  color: var(--color-primary-600);
   line-height: var(--line-height-tight);
 }
 
 .text-heading-2 {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-primary-600) !important;
+  color: var(--color-primary-600);
   line-height: var(--line-height-tight);
 }
 
 .text-heading-3 {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-primary-600) !important;
+  color: var(--color-primary-600);
   line-height: var(--line-height-tight);
 }
 
 .text-heading-4 {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-medium);
-  color: var(--color-primary-600) !important;
+  color: var(--color-primary-600);
   line-height: var(--line-height-tight);
 }
 

@@ -442,11 +442,11 @@
   }
 }
 
-.task-card-overdue {
-  border-color: var(--color-error-400) !important;
+.task-card.task-card-overdue {
+  border-color: var(--color-error-400);
   box-shadow:
     0 0 0 1px var(--color-error-200),
-    0 4px 6px -1px rgba(239, 68, 68, 0.2) !important;
+    0 4px 6px -1px rgba(239, 68, 68, 0.2);
 }
 
 .task-card-urgent {
@@ -515,9 +515,9 @@
   border-color: var(--color-primary-600);
 }
 
-.task-checkbox-completed {
-  background-color: var(--color-success-500) !important;
-  border-color: var(--color-success-500) !important;
+.task-checkbox.task-checkbox-completed {
+  background-color: var(--color-success-500);
+  border-color: var(--color-success-500);
 }
 
 .task-checkbox-loading {
