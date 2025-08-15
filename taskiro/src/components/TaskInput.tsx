@@ -439,7 +439,7 @@ const TaskInput: React.FC<TaskInputProps> = ({
             {/* Manual Entry Form */}
             <div className="space-y-5 animate-fade-in">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-white mb-2">
                   Task Title *
                 </label>
                 <input
@@ -455,7 +455,7 @@ const TaskInput: React.FC<TaskInputProps> = ({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-white mb-2">
                   Description
                 </label>
                 <textarea
@@ -474,7 +474,7 @@ const TaskInput: React.FC<TaskInputProps> = ({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-white mb-2">
                     Due Date
                   </label>
                   <input
@@ -488,7 +488,7 @@ const TaskInput: React.FC<TaskInputProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-white mb-2">
                     Due Time
                   </label>
                   <input
@@ -504,7 +504,7 @@ const TaskInput: React.FC<TaskInputProps> = ({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-white mb-2">
                     Priority
                   </label>
                   <select
@@ -524,7 +524,7 @@ const TaskInput: React.FC<TaskInputProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-white mb-2">
                     Category
                   </label>
                   <select
