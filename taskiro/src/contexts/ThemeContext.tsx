@@ -18,28 +18,37 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [theme, setThemeState] = useState<Theme>('light');
-
   // Initialize theme from localStorage or system preference
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('taskiro_theme') as Theme;
+  const getInitialTheme = (): Theme => {
+    try {
+      const savedTheme = localStorage.getItem('taskiro_theme');
+      if (savedTheme === 'light' || savedTheme === 'dark') {
+        return savedTheme;
+      }
+    } catch (error) {
+      console.warn('Failed to read theme from localStorage:', error);
+    }
 
-    if (savedTheme) {
-      setThemeState(savedTheme);
-    } else {
-      // Check system preference
+    // Fallback to system preference
+    if (typeof window !== 'undefined' && window.matchMedia) {
       const systemPrefersDark = window.matchMedia(
         '(prefers-color-scheme: dark)'
       ).matches;
-      setThemeState(systemPrefersDark ? 'dark' : 'light');
+      return systemPrefersDark ? 'dark' : 'light';
     }
 
-    // Listen for system theme changes
+    return 'light';
+  };
+
+  const [theme, setThemeState] = useState<Theme>(getInitialTheme);
+
+  // Listen for system theme changes
+  useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleSystemThemeChange = (e: MediaQueryListEvent) => {
       // Only update if no theme is saved in localStorage (user hasn't manually set a preference)
       const savedTheme = localStorage.getItem('taskiro_theme');
-      if (!savedTheme) {
+      if (!savedTheme || (savedTheme !== 'light' && savedTheme !== 'dark')) {
         setThemeState(e.matches ? 'dark' : 'light');
       }
     };
@@ -51,28 +60,23 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     };
   }, []);
 
-  // Apply theme to document
+  // Apply theme to document and save to localStorage
   useEffect(() => {
     const root = window.document.documentElement;
 
-    // Add smooth transition class for theme changes
-    root.style.transition = 'background-color 0.3s ease, color 0.3s ease';
-
+    // Apply theme class
     if (theme === 'dark') {
       root.classList.add('dark');
     } else {
       root.classList.remove('dark');
     }
 
-    // Save to localStorage
-    localStorage.setItem('taskiro_theme', theme);
-
-    // Clean up transition after animation completes
-    const timeoutId = setTimeout(() => {
-      root.style.transition = '';
-    }, 300);
-
-    return () => clearTimeout(timeoutId);
+    // Save to localStorage with error handling
+    try {
+      localStorage.setItem('taskiro_theme', theme);
+    } catch (error) {
+      console.warn('Failed to save theme to localStorage:', error);
+    }
   }, [theme]);
 
   const toggleTheme = () => {

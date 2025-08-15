@@ -12,6 +12,41 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="theme-color" content="#d97706" />
     <title>Taskiro - Smart Task Management</title>
+
+    <!-- Theme persistence script - runs before React loads -->
+    <script>
+      (function () {
+        try {
+          const savedTheme = localStorage.getItem('taskiro_theme');
+          console.log(
+            '🎨 Pre-React: Saved theme from localStorage:',
+            savedTheme
+          );
+
+          if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+            console.log('🎨 Pre-React: Applied dark theme');
+          } else if (savedTheme === 'light') {
+            document.documentElement.classList.remove('dark');
+            console.log('🎨 Pre-React: Applied light theme');
+          } else {
+            // No saved theme, check system preference
+            const systemPrefersDark =
+              window.matchMedia &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (systemPrefersDark) {
+              document.documentElement.classList.add('dark');
+              console.log('🎨 Pre-React: Applied system dark theme');
+            } else {
+              document.documentElement.classList.remove('dark');
+              console.log('🎨 Pre-React: Applied system light theme');
+            }
+          }
+        } catch (error) {
+          console.warn('🎨 Pre-React: Failed to apply theme:', error);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

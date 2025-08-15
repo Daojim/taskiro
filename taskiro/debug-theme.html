@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Theme Persistence Debug</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
+      }
+      body.light {
+        background-color: white;
+        color: black;
+      }
+      body.dark {
+        background-color: #1a1a1a;
+        color: white;
+      }
+      button {
+        padding: 10px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .light button {
+        background-color: #007bff;
+        color: white;
+      }
+      .dark button {
+        background-color: #0056b3;
+        color: white;
+      }
+      .debug {
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Theme Persistence Debug Tool</h1>
+
+    <div>
+      <button onclick="setTheme('light')">Set Light Theme</button>
+      <button onclick="setTheme('dark')">Set Dark Theme</button>
+      <button onclick="toggleTheme()">Toggle Theme</button>
+      <button onclick="clearTheme()">Clear Saved Theme</button>
+      <button onclick="refreshPage()">Refresh Page</button>
+    </div>
+
+    <div class="debug">
+      <h3>Debug Info:</h3>
+      <div id="debug-info"></div>
+    </div>
+
+    <script>
+      const THEME_KEY = 'taskiro_theme';
+
+      function updateDebugInfo() {
+        const savedTheme = localStorage.getItem(THEME_KEY);
+        const currentTheme = document.body.className;
+        const systemPrefersDark = window.matchMedia(
+          '(prefers-color-scheme: dark)'
+        ).matches;
+
+        document.getElementById('debug-info').innerHTML = `
+                <strong>Saved in localStorage:</strong> ${savedTheme || 'null'}<br>
+                <strong>Current body class:</strong> ${currentTheme || 'none'}<br>
+                <strong>System prefers dark:</strong> ${systemPrefersDark}<br>
+                <strong>localStorage available:</strong> ${typeof Storage !== 'undefined'}<br>
+                <strong>Timestamp:</strong> ${new Date().toLocaleTimeString()}
+            `;
+      }
+
+      function setTheme(theme) {
+        console.log('Setting theme to:', theme);
+
+        // Apply to body
+        document.body.className = theme;
+
+        // Save to localStorage
+        try {
+          localStorage.setItem(THEME_KEY, theme);
+          console.log('Theme saved to localStorage:', theme);
+        } catch (error) {
+          console.error('Failed to save theme:', error);
+        }
+
+        updateDebugInfo();
+      }
+
+      function toggleTheme() {
+        const currentTheme = document.body.className;
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        setTheme(newTheme);
+      }
+
+      function clearTheme() {
+        localStorage.removeItem(THEME_KEY);
+        console.log('Theme cleared from localStorage');
+        updateDebugInfo();
+      }
+
+      function refreshPage() {
+        window.location.reload();
+      }
+
+      function initializeTheme() {
+        console.log('Initializing theme...');
+
+        const savedTheme = localStorage.getItem(THEME_KEY);
+        console.log('Saved theme from localStorage:', savedTheme);
+
+        if (savedTheme === 'light' || savedTheme === 'dark') {
+          setTheme(savedTheme);
+          console.log('Applied saved theme:', savedTheme);
+        } else {
+          const systemPrefersDark = window.matchMedia(
+            '(prefers-color-scheme: dark)'
+          ).matches;
+          const defaultTheme = systemPrefersDark ? 'dark' : 'light';
+          setTheme(defaultTheme);
+          console.log('Applied default theme:', defaultTheme);
+        }
+      }
+
+      // Initialize on page load
+      document.addEventListener('DOMContentLoaded', function () {
+        initializeTheme();
+        updateDebugInfo();
+      });
+
+      // Update debug info every second
+      setInterval(updateDebugInfo, 1000);
+    </script>
+  </body>
+</html>
