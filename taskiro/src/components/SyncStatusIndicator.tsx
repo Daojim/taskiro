@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   WifiIcon,
   CloudIcon,
@@ -34,6 +34,27 @@ export function SyncStatusIndicator({
   const [showConflictModal, setShowConflictModal] = useState(false);
   const [storageInfo, setStorageInfo] = useState<unknown>(null);
   const [syncInfo, setSyncInfo] = useState<unknown>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
+
+  // Handle click outside to close popup
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
+        setShowInfo(false);
+      }
+    };
+
+    if (showInfo) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showInfo]);
 
   const handleInfoClick = async () => {
     if (!showInfo) {
@@ -226,6 +247,7 @@ export function SyncStatusIndicator({
       {/* Storage Info Modal */}
       {showInfo && storageInfo && syncInfo && (
         <div
+          ref={popupRef}
           className="absolute top-full right-0 mt-1 p-4 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg shadow-2xl z-20 min-w-80"
           style={{ backgroundColor: 'var(--bg-primary, #ffffff)' }}
         >
@@ -238,20 +260,20 @@ export function SyncStatusIndicator({
             <div className="space-y-2">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                  <div className="text-xs text-gray-500 dark:text-gray-300 uppercase tracking-wide">
                     Storage
                   </div>
-                  <div className="space-y-1 text-gray-700 dark:text-gray-300">
+                  <div className="space-y-1 text-gray-800 dark:text-white">
                     <div>Tasks: {storageInfo.tasksCount}</div>
                     <div>Categories: {storageInfo.categoriesCount}</div>
                   </div>
                 </div>
 
                 <div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                  <div className="text-xs text-gray-500 dark:text-gray-300 uppercase tracking-wide">
                     Sync Queue
                   </div>
-                  <div className="space-y-1 text-gray-700 dark:text-gray-300">
+                  <div className="space-y-1 text-gray-800 dark:text-white">
                     <div>Pending: {storageInfo.syncQueueCount}</div>
                     <div>Conflicts: {syncInfo.conflictSummary.total}</div>
                   </div>
@@ -260,24 +282,24 @@ export function SyncStatusIndicator({
 
               <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-700 dark:text-gray-300">
+                  <span className="text-gray-800 dark:text-white">
                     Auto-sync:
                   </span>
                   <span
                     className={`text-xs px-2 py-1 rounded-full ${
                       status.autoSyncEnabled
-                        ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
+                        ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-200'
                     }`}
                   >
                     {status.autoSyncEnabled ? 'Enabled' : 'Disabled'}
                   </span>
                 </div>
                 <div className="flex items-center justify-between mt-1">
-                  <span className="text-gray-700 dark:text-gray-300">
+                  <span className="text-gray-800 dark:text-white">
                     Last sync:
                   </span>
-                  <span className="text-gray-700 dark:text-gray-300">
+                  <span className="text-gray-800 dark:text-white">
                     {formatLastSync(storageInfo.lastSync)}
                   </span>
                 </div>
