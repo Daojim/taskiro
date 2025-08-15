@@ -518,17 +518,13 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
             ) : (
               <h3
                 onClick={() => handleStartEdit('title')}
-                className={`editable-field cursor-pointer hover:bg-white/20 rounded transition-colors ${
+                className={`task-card__title editable-field cursor-pointer hover:bg-white/20 rounded transition-colors ${
                   completionAnimation
                     ? 'task__title--completing completing'
                     : ''
                 }`}
                 style={{
-                  fontSize: '16px',
-                  fontWeight: 600,
-                  lineHeight: 1.4,
                   letterSpacing: '-0.025em',
-                  marginBottom: '8px',
                   textDecoration:
                     task.status.toLowerCase() === 'completed'
                       ? 'line-through'

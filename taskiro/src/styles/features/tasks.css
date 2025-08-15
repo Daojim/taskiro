@@ -475,6 +475,46 @@
   margin-bottom: var(--spacing-sm);
 }
 
+/* BEM-style task card components */
+.task-card__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.task-card__content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.task-card__body {
+  flex: 1;
+  margin-bottom: var(--spacing-sm);
+}
+
+.task-card__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: auto;
+}
+
+.task-card__footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--spacing-sm);
+}
+
+.task-card__title {
+  margin-top: 0;
+  margin-bottom: var(--spacing-xs);
+  line-height: 1.4;
+  font-size: 1rem;
+  font-weight: var(--font-weight-semibold);
+}
+
 .task-card-body {
   flex: 1;
   margin-bottom: var(--spacing-sm);
@@ -495,9 +535,12 @@
 .task-checkbox-wrapper {
   cursor: pointer;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   position: relative;
+  flex-shrink: 0;
+  /* Align checkbox with text baseline - calculated for 16px font with 1.4 line-height */
+  padding-top: 0.125rem; /* 2px to align with text baseline */
 }
 
 .task-checkbox {
