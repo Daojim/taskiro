@@ -286,20 +286,20 @@ const TaskEditModal: React.FC<TaskEditModalProps> = ({
         {/* Actions */}
         <div className="modal-footer">
           <button
-            type="button"
-            onClick={onClose}
-            className="button button--secondary"
-            disabled={isSubmitting}
-          >
-            Cancel
-          </button>
-          <button
             type="submit"
             form="edit-task-form"
             className="button button--primary"
             disabled={isSubmitting || !formData.title.trim()}
           >
             {isSubmitting ? 'Updating...' : 'Update Task'}
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="button button--secondary"
+            disabled={isSubmitting}
+          >
+            Cancel
           </button>
         </div>
       </div>
