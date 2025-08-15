@@ -64,10 +64,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   useEffect(() => {
     const root = window.document.documentElement;
 
-    // Apply theme class
-    if (theme === 'dark') {
+    // Only apply theme class if it's not already correct (avoid unnecessary DOM changes)
+    const isDarkClassPresent = root.classList.contains('dark');
+    const shouldHaveDarkClass = theme === 'dark';
+
+    if (shouldHaveDarkClass && !isDarkClassPresent) {
       root.classList.add('dark');
-    } else {
+    } else if (!shouldHaveDarkClass && isDarkClassPresent) {
       root.classList.remove('dark');
     }
 

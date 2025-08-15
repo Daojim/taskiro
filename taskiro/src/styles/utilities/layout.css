@@ -532,6 +532,11 @@
   height: 1.5rem;
 }
 
+.spinner-lg {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);

@@ -213,6 +213,13 @@
   --border-primary: #57534e; /* warm-gray-600 */
   --border-secondary: #44403c; /* warm-gray-700 */
 
+  /* Override gray colors for dark mode */
+  --color-gray-100: #44403c; /* warm-gray-700 */
+  --color-gray-200: #57534e; /* warm-gray-600 */
+  --color-gray-300: #78716c; /* warm-gray-500 */
+  --color-gray-400: #a8a29e; /* warm-gray-400 */
+  --color-gray-500: #d6d3d1; /* warm-gray-300 */
+
   /* Dark mode backgrounds */
   --bg-primary: var(--color-surface-secondary);
   --bg-secondary: var(--color-surface-tertiary);

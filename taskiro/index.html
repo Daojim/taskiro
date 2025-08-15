@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
@@ -29,6 +29,8 @@
         color: #111827;
         margin: 0;
         padding: 0;
+        /* Prevent any transitions during initial load */
+        transition: none !important;
       }
 
       .dark body {
@@ -40,11 +42,21 @@
         min-height: 100vh;
         background-color: #f3f4f6;
         color: #111827;
+        /* Prevent any transitions during initial load */
+        transition: none !important;
       }
 
       .dark #root {
         background-color: #1c1917;
         color: #fafaf9;
+      }
+
+      /* Disable all transitions initially to prevent flash */
+      *,
+      *::before,
+      *::after {
+        transition: none !important;
+        animation-duration: 0s !important;
       }
     </style>
 
@@ -54,21 +66,34 @@
         try {
           const savedTheme = localStorage.getItem('taskiro_theme');
 
-          if (savedTheme === 'dark') {
-            document.documentElement.classList.add('dark');
-          } else if (savedTheme === 'light') {
+          // HTML starts with dark class, remove it if theme should be light
+          if (savedTheme === 'light') {
             document.documentElement.classList.remove('dark');
+          } else if (savedTheme === 'dark') {
+            // Already has dark class, keep it
+            document.documentElement.classList.add('dark');
           } else {
             // No saved theme, check system preference
             const systemPrefersDark =
               window.matchMedia &&
               window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (systemPrefersDark) {
-              document.documentElement.classList.add('dark');
-            } else {
+            if (!systemPrefersDark) {
+              // System prefers light, remove dark class
               document.documentElement.classList.remove('dark');
             }
+            // If system prefers dark, keep the existing dark class
           }
+
+          // Re-enable transitions after theme is applied
+          setTimeout(function () {
+            const style = document.createElement('style');
+            style.textContent = `
+              *, *::before, *::after {
+                transition: background-color 0.3s ease, color 0.3s ease !important;
+              }
+            `;
+            document.head.appendChild(style);
+          }, 100);
         } catch (error) {
           console.warn('🎨 Pre-React: Failed to apply theme:', error);
         }
