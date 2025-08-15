@@ -150,41 +150,42 @@ const TaskEditModal: React.FC<TaskEditModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 modal-overlay"
       onClick={handleBackdropClick}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="edit-task-title"
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+        className="modal-content max-w-md"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+        <div className="modal-header">
           <div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+            <h3 id="edit-task-title" className="modal-title">
               Edit Task
             </h3>
             {task.dueDate && (
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-sm text-secondary mt-1">
                 {formatDate(task.dueDate)}
               </p>
             )}
           </div>
-          <button
-            onClick={onClose}
-            className="close-button text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
-          >
+          <button onClick={onClose} className="modal-close">
             <XMarkIcon className="h-6 w-6" />
           </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form
+          id="edit-task-form"
+          onSubmit={handleSubmit}
+          className="modal-body space-y-4"
+        >
           {/* Title */}
           <div>
-            <label
-              htmlFor="title"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-            >
+            <label htmlFor="title" className="form-label">
               Title *
             </label>
             <input
@@ -192,7 +193,7 @@ const TaskEditModal: React.FC<TaskEditModalProps> = ({
               id="title"
               value={formData.title}
               onChange={(e) => handleInputChange('title', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+              className="form-input"
               placeholder="Enter task title..."
               autoFocus
               required
@@ -201,10 +202,7 @@ const TaskEditModal: React.FC<TaskEditModalProps> = ({
 
           {/* Description */}
           <div>
-            <label
-              htmlFor="description"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-            >
+            <label htmlFor="description" className="form-label">
               Description
             </label>
             <textarea
@@ -212,17 +210,14 @@ const TaskEditModal: React.FC<TaskEditModalProps> = ({
               value={formData.description}
               onChange={(e) => handleInputChange('description', e.target.value)}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+              className="form-textarea"
               placeholder="Enter task description..."
             />
           </div>
 
           {/* Due Date */}
           <div>
-            <label
-              htmlFor="dueDate"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-            >
+            <label htmlFor="dueDate" className="form-label">
               Due Date
             </label>
             <input
@@ -230,16 +225,13 @@ const TaskEditModal: React.FC<TaskEditModalProps> = ({
               id="dueDate"
               value={formData.dueDate}
               onChange={(e) => handleInputChange('dueDate', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+              className="form-input"
             />
           </div>
 
           {/* Time */}
           <div>
-            <label
-              htmlFor="dueTime"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-            >
+            <label htmlFor="dueTime" className="form-label">
               Time
             </label>
             <EnhancedTimeInput
@@ -247,16 +239,13 @@ const TaskEditModal: React.FC<TaskEditModalProps> = ({
               onChange={(value) => handleInputChange('dueTime', value)}
               onError={onError}
               placeholder="Enter time (e.g., 9:00 AM, 14:30, noon)"
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+              className="form-input"
             />
           </div>
 
           {/* Priority */}
           <div>
-            <label
-              htmlFor="priority"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-            >
+            <label htmlFor="priority" className="form-label">
               Priority
             </label>
             <select
@@ -265,7 +254,7 @@ const TaskEditModal: React.FC<TaskEditModalProps> = ({
               onChange={(e) =>
                 handleInputChange('priority', e.target.value as Priority)
               }
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+              className="form-select"
             >
               <option value="low">Low</option>
               <option value="medium">Medium</option>
@@ -275,17 +264,14 @@ const TaskEditModal: React.FC<TaskEditModalProps> = ({
 
           {/* Category */}
           <div>
-            <label
-              htmlFor="category"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-            >
+            <label htmlFor="category" className="form-label">
               Category
             </label>
             <select
               id="category"
               value={formData.categoryId}
               onChange={(e) => handleInputChange('categoryId', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+              className="form-select"
             >
               <option value="">No category</option>
               {categories.map((category) => (
@@ -295,26 +281,27 @@ const TaskEditModal: React.FC<TaskEditModalProps> = ({
               ))}
             </select>
           </div>
-
-          {/* Actions */}
-          <div className="flex justify-end space-x-3 pt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              disabled={isSubmitting}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={isSubmitting || !formData.title.trim()}
-            >
-              {isSubmitting ? 'Updating...' : 'Update Task'}
-            </button>
-          </div>
         </form>
+
+        {/* Actions */}
+        <div className="modal-footer">
+          <button
+            type="button"
+            onClick={onClose}
+            className="button button--secondary"
+            disabled={isSubmitting}
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            form="edit-task-form"
+            className="button button--primary"
+            disabled={isSubmitting || !formData.title.trim()}
+          >
+            {isSubmitting ? 'Updating...' : 'Update Task'}
+          </button>
+        </div>
       </div>
     </div>
   );
