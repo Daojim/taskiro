@@ -32,8 +32,8 @@ export function SyncStatusIndicator({
   } = useOfflineSync();
   const [showInfo, setShowInfo] = useState(false);
   const [showConflictModal, setShowConflictModal] = useState(false);
-  const [storageInfo, setStorageInfo] = useState<any>(null);
-  const [syncInfo, setSyncInfo] = useState<any>(null);
+  const [storageInfo, setStorageInfo] = useState<unknown>(null);
+  const [syncInfo, setSyncInfo] = useState<unknown>(null);
 
   const handleInfoClick = async () => {
     if (!showInfo) {
@@ -216,8 +216,8 @@ export function SyncStatusIndicator({
 
       {/* Error Message */}
       {status.error && showDetails && (
-        <div className="absolute top-full left-0 mt-1 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md shadow-sm z-10 min-w-64">
-          <div className="text-sm text-red-700 dark:text-red-300">
+        <div className="absolute top-full left-0 mt-1 p-3 bg-red-50 dark:bg-red-900/40 border border-red-200 dark:border-red-800 rounded-md shadow-lg backdrop-blur-sm z-10 min-w-64">
+          <div className="text-sm text-red-800 dark:text-red-200 font-medium">
             {status.error}
           </div>
         </div>
@@ -225,7 +225,10 @@ export function SyncStatusIndicator({
 
       {/* Storage Info Modal */}
       {showInfo && storageInfo && syncInfo && (
-        <div className="absolute top-full right-0 mt-1 p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-10 min-w-80">
+        <div
+          className="absolute top-full right-0 mt-1 p-4 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg shadow-2xl z-20 min-w-80"
+          style={{ backgroundColor: 'var(--bg-primary, #ffffff)' }}
+        >
           <div className="text-sm space-y-3">
             <div className="font-medium text-gray-900 dark:text-gray-100 flex items-center gap-2">
               <Cog6ToothIcon className="h-4 w-4" />
@@ -238,7 +241,7 @@ export function SyncStatusIndicator({
                   <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                     Storage
                   </div>
-                  <div className="space-y-1 text-gray-600 dark:text-gray-400">
+                  <div className="space-y-1 text-gray-700 dark:text-gray-300">
                     <div>Tasks: {storageInfo.tasksCount}</div>
                     <div>Categories: {storageInfo.categoriesCount}</div>
                   </div>
@@ -248,7 +251,7 @@ export function SyncStatusIndicator({
                   <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                     Sync Queue
                   </div>
-                  <div className="space-y-1 text-gray-600 dark:text-gray-400">
+                  <div className="space-y-1 text-gray-700 dark:text-gray-300">
                     <div>Pending: {storageInfo.syncQueueCount}</div>
                     <div>Conflicts: {syncInfo.conflictSummary.total}</div>
                   </div>
@@ -257,7 +260,7 @@ export function SyncStatusIndicator({
 
               <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">
+                  <span className="text-gray-700 dark:text-gray-300">
                     Auto-sync:
                   </span>
                   <span
@@ -271,10 +274,10 @@ export function SyncStatusIndicator({
                   </span>
                 </div>
                 <div className="flex items-center justify-between mt-1">
-                  <span className="text-gray-600 dark:text-gray-400">
+                  <span className="text-gray-700 dark:text-gray-300">
                     Last sync:
                   </span>
-                  <span className="text-gray-600 dark:text-gray-400">
+                  <span className="text-gray-700 dark:text-gray-300">
                     {formatLastSync(storageInfo.lastSync)}
                   </span>
                 </div>
@@ -284,7 +287,7 @@ export function SyncStatusIndicator({
                 <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
                   <button
                     onClick={handleResolveConflicts}
-                    className="w-full px-3 py-2 text-sm bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 rounded-lg hover:bg-orange-200 dark:hover:bg-orange-900/50"
+                    className="w-full px-3 py-2 text-sm bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 rounded-lg hover:bg-orange-200 dark:hover:bg-orange-900/50 transition-colors"
                   >
                     Resolve {syncInfo.conflictSummary.total} Conflict
                     {syncInfo.conflictSummary.total !== 1 ? 's' : ''}
