@@ -437,22 +437,22 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
     // Dark theme priority styles - solid colors similar to create task button
     const darkPriorityStyles = {
       high: {
-        background: '#dc2626', // solid red-600 for dark theme
+        background: '#dc2626', // red-600 - less bright than rose
         borderLeft: '4px solid #ef4444',
         color: '#ffffff',
         boxShadow: '0 4px 6px -1px rgba(220, 38, 38, 0.3)',
       },
       medium: {
-        background: '#b45309', // solid amber-700 for better contrast
-        borderLeft: '4px solid #f59e0b',
+        background: '#b45309', // amber-700 - compromise between brightness and accessibility
+        borderLeft: '4px solid #d97706',
         color: '#ffffff',
         boxShadow: '0 4px 6px -1px rgba(180, 83, 9, 0.3)',
       },
       low: {
-        background: '#047857', // solid emerald-700 for better contrast
-        borderLeft: '4px solid #10b981',
+        background: '#15803d', // green-600 - keep as user likes it
+        borderLeft: '4px solid #16a34a',
         color: '#ffffff',
-        boxShadow: '0 4px 6px -1px rgba(4, 120, 87, 0.3)',
+        boxShadow: '0 4px 6px -1px rgba(21, 128, 61, 0.3)',
       },
     };
 

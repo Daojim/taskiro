@@ -259,13 +259,13 @@
   --color-warning-100: rgba(245, 158, 11, 0.2);
 
   /* Dark mode task priority colors - solid/flat appearance */
-  --priority-high-bg: #dc2626; /* solid red-600 */
+  --priority-high-bg: #dc2626; /* red-600 - less bright */
   --priority-high-text: #ffffff;
   --priority-high-border: #ef4444;
-  --priority-medium-bg: #b45309; /* solid amber-700 for better contrast */
+  --priority-medium-bg: #b45309; /* amber-700 - compromise between brightness and accessibility */
   --priority-medium-text: #ffffff;
-  --priority-medium-border: #f59e0b;
-  --priority-low-bg: #047857; /* solid emerald-700 for better contrast */
+  --priority-medium-border: #d97706;
+  --priority-low-bg: #15803d; /* green-600 - keep as is */
   --priority-low-text: #ffffff;
-  --priority-low-border: #10b981;
+  --priority-low-border: #16a34a;
 }
