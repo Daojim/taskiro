@@ -13,22 +13,51 @@
     <meta name="theme-color" content="#d97706" />
     <title>Taskiro - Smart Task Management</title>
 
+    <!-- Inline CSS to prevent flash of white background -->
+    <style>
+      /* Prevent flash by setting immediate background colors */
+      html {
+        background-color: #ffffff;
+      }
+
+      html.dark {
+        background-color: #1c1917;
+      }
+
+      body {
+        background-color: #f3f4f6;
+        color: #111827;
+        margin: 0;
+        padding: 0;
+      }
+
+      .dark body {
+        background-color: #1c1917;
+        color: #fafaf9;
+      }
+
+      #root {
+        min-height: 100vh;
+        background-color: #f3f4f6;
+        color: #111827;
+      }
+
+      .dark #root {
+        background-color: #1c1917;
+        color: #fafaf9;
+      }
+    </style>
+
     <!-- Theme persistence script - runs before React loads -->
     <script>
       (function () {
         try {
           const savedTheme = localStorage.getItem('taskiro_theme');
-          console.log(
-            '🎨 Pre-React: Saved theme from localStorage:',
-            savedTheme
-          );
 
           if (savedTheme === 'dark') {
             document.documentElement.classList.add('dark');
-            console.log('🎨 Pre-React: Applied dark theme');
           } else if (savedTheme === 'light') {
             document.documentElement.classList.remove('dark');
-            console.log('🎨 Pre-React: Applied light theme');
           } else {
             // No saved theme, check system preference
             const systemPrefersDark =
@@ -36,10 +65,8 @@
               window.matchMedia('(prefers-color-scheme: dark)').matches;
             if (systemPrefersDark) {
               document.documentElement.classList.add('dark');
-              console.log('🎨 Pre-React: Applied system dark theme');
             } else {
               document.documentElement.classList.remove('dark');
-              console.log('🎨 Pre-React: Applied system light theme');
             }
           }
         } catch (error) {
