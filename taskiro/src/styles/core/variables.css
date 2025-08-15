@@ -257,4 +257,15 @@
   --color-error-100: rgba(239, 68, 68, 0.2);
   --color-warning-50: rgba(245, 158, 11, 0.1);
   --color-warning-100: rgba(245, 158, 11, 0.2);
+
+  /* Dark mode task priority colors - solid/flat appearance */
+  --priority-high-bg: #dc2626; /* solid red-600 */
+  --priority-high-text: #ffffff;
+  --priority-high-border: #ef4444;
+  --priority-medium-bg: #b45309; /* solid amber-700 for better contrast */
+  --priority-medium-text: #ffffff;
+  --priority-medium-border: #f59e0b;
+  --priority-low-bg: #047857; /* solid emerald-700 for better contrast */
+  --priority-low-text: #ffffff;
+  --priority-low-border: #10b981;
 }

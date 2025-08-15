@@ -647,6 +647,25 @@
   border: 1px solid var(--color-success-200);
 }
 
+/* Dark theme priority indicators - solid colors */
+.dark .priority-indicator-high {
+  background-color: #dc2626;
+  color: #ffffff;
+  border: 1px solid #ef4444;
+}
+
+.dark .priority-indicator-medium {
+  background-color: #b45309;
+  color: #ffffff;
+  border: 1px solid #f59e0b;
+}
+
+.dark .priority-indicator-low {
+  background-color: #047857;
+  color: #ffffff;
+  border: 1px solid #10b981;
+}
+
 /* Task badge completed state */
 .task-badge-completed {
   opacity: 0.6;
@@ -709,4 +728,34 @@
 
 .dark .quick-filter:hover {
   background-color: var(--border-primary);
+}
+/* Dark theme priority styles - solid colors */
+.dark .task-priority.high {
+  background-color: var(--priority-high-bg);
+  color: var(--priority-high-text);
+}
+
+.dark .task-priority.medium {
+  background-color: var(--priority-medium-bg);
+  color: var(--priority-medium-text);
+}
+
+.dark .task-priority.low {
+  background-color: var(--priority-low-bg);
+  color: var(--priority-low-text);
+}
+
+.dark .task__priority--high {
+  background-color: var(--priority-high-bg);
+  color: var(--priority-high-text);
+}
+
+.dark .task__priority--medium {
+  background-color: var(--priority-medium-bg);
+  color: var(--priority-medium-text);
+}
+
+.dark .task__priority--low {
+  background-color: var(--priority-low-bg);
+  color: var(--priority-low-text);
 }

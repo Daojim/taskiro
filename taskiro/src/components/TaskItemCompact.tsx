@@ -6,6 +6,7 @@ import type {
   Priority,
 } from '../types/task';
 import EnhancedTimeInput from './EnhancedTimeInput';
+import { useTheme } from '../hooks/useTheme';
 // parseTime is now handled by EnhancedTimeInput component
 
 interface TaskItemCompactProps {
@@ -25,6 +26,7 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
   onDelete,
   onError,
 }) => {
+  const { theme } = useTheme();
   const [isToggling, setIsToggling] = useState(false);
   const [editingField, setEditingField] = useState<string | null>(null);
 
@@ -403,6 +405,7 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
   // Get inline styles for priority (fallback if CSS doesn't load)
   const getInlineStyles = () => {
     const isCompleted = task.status.toLowerCase() === 'completed';
+    const isDarkTheme = theme === 'dark';
 
     console.log(
       'DEBUG - Task:',
@@ -410,20 +413,51 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
       'Priority:',
       task.priority,
       'Completed:',
-      isCompleted
+      isCompleted,
+      'Dark theme:',
+      isDarkTheme
     );
 
     if (isCompleted) {
-      const completedStyle = {
-        background: 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)',
-        borderLeft: '4px solid #9ca3af',
-        opacity: 0.7,
-      };
+      const completedStyle = isDarkTheme
+        ? {
+            background: '#44403c', // solid warm gray for dark theme
+            borderLeft: '4px solid #6b7280',
+            opacity: 0.7,
+          }
+        : {
+            background: 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)',
+            borderLeft: '4px solid #9ca3af',
+            opacity: 0.7,
+          };
       console.log('DEBUG - Applying completed style:', completedStyle);
       return completedStyle;
     }
 
-    const priorityStyles = {
+    // Dark theme priority styles - solid colors similar to create task button
+    const darkPriorityStyles = {
+      high: {
+        background: '#dc2626', // solid red-600 for dark theme
+        borderLeft: '4px solid #ef4444',
+        color: '#ffffff',
+        boxShadow: '0 4px 6px -1px rgba(220, 38, 38, 0.3)',
+      },
+      medium: {
+        background: '#b45309', // solid amber-700 for better contrast
+        borderLeft: '4px solid #f59e0b',
+        color: '#ffffff',
+        boxShadow: '0 4px 6px -1px rgba(180, 83, 9, 0.3)',
+      },
+      low: {
+        background: '#047857', // solid emerald-700 for better contrast
+        borderLeft: '4px solid #10b981',
+        color: '#ffffff',
+        boxShadow: '0 4px 6px -1px rgba(4, 120, 87, 0.3)',
+      },
+    };
+
+    // Light theme priority styles - keep existing gradients
+    const lightPriorityStyles = {
       high: {
         background: 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)',
         borderLeft: '4px solid #ef4444',
@@ -447,6 +481,10 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
       },
     };
 
+    const priorityStyles = isDarkTheme
+      ? darkPriorityStyles
+      : lightPriorityStyles;
+
     // Convert priority to lowercase for lookup since priorities come as UPPERCASE
     const priorityKey =
       task.priority.toLowerCase() as keyof typeof priorityStyles;
@@ -456,6 +494,8 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
       task.priority,
       'using key',
       priorityKey,
+      'dark theme:',
+      isDarkTheme,
       ':',
       selectedStyle
     );
@@ -533,11 +573,13 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
                   color:
                     task.status.toLowerCase() === 'completed'
                       ? '#6b7280'
-                      : task.priority === 'high'
-                        ? '#7f1d1d'
-                        : task.priority === 'medium'
-                          ? '#92400e'
-                          : '#064e3b',
+                      : theme === 'dark'
+                        ? '#ffffff' // White text for dark theme solid backgrounds
+                        : task.priority === 'high'
+                          ? '#7f1d1d'
+                          : task.priority === 'medium'
+                            ? '#92400e'
+                            : '#064e3b',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
               >

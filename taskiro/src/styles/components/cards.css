@@ -520,6 +520,60 @@ div[data-index] .task-card {
   color: var(--text-muted);
 }
 
+/* Dark theme priority card styles - solid/flat appearance */
+.dark .task-card--priority-high {
+  background-color: var(--priority-high-bg);
+  color: var(--priority-high-text);
+  border-left: 4px solid var(--priority-high-border);
+}
+
+.dark .task-card--priority-medium {
+  background-color: var(--priority-medium-bg);
+  color: var(--priority-medium-text);
+  border-left: 4px solid var(--priority-medium-border);
+}
+
+.dark .task-card--priority-low {
+  background-color: var(--priority-low-bg);
+  color: var(--priority-low-text);
+  border-left: 4px solid var(--priority-low-border);
+}
+
+/* Ensure text is white on dark theme priority cards */
+.dark .task-card--priority-high .task-card__title,
+.dark .task-card--priority-high h3,
+.dark .task-card--priority-high h4 {
+  color: #ffffff !important;
+}
+
+.dark .task-card--priority-medium .task-card__title,
+.dark .task-card--priority-medium h3,
+.dark .task-card--priority-medium h4 {
+  color: #ffffff !important;
+}
+
+.dark .task-card--priority-low .task-card__title,
+.dark .task-card--priority-low h3,
+.dark .task-card--priority-low h4 {
+  color: #ffffff !important;
+}
+
+/* Ensure description text has good contrast on dark priority cards */
+.dark .task-card--priority-high .task__description,
+.dark .task-card--priority-high p {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.dark .task-card--priority-medium .task__description,
+.dark .task-card--priority-medium p {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.dark .task-card--priority-low .task__description,
+.dark .task-card--priority-low p {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
 /* Responsive spacing adjustments */
 @media (max-width: 640px) {
   .task-card {
