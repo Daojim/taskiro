@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import type { Category } from '../types/task';
 import { apiService } from '../services/api';
 
@@ -48,6 +48,9 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const deleteModalRef = useRef<HTMLDivElement>(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [deleteConfirmation, setDeleteConfirmation] =
     useState<DeleteConfirmation | null>(null);
@@ -77,6 +80,64 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
       loadCategories();
     }
   }, [isOpen, loadCategories]);
+
+  // Handle click outside to close modal
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, onClose]);
+
+  // Handle click outside to close delete confirmation modal
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        deleteModalRef.current &&
+        !deleteModalRef.current.contains(event.target as Node)
+      ) {
+        setDeleteConfirmation(null);
+      }
+    };
+
+    if (deleteConfirmation) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [deleteConfirmation]);
+
+  // Detect dark mode changes
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    };
+
+    checkDarkMode();
+
+    // Watch for dark mode changes
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -156,14 +217,22 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content max-w-2xl">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div
+        ref={modalRef}
+        className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden"
+        style={{
+          backgroundColor: isDarkMode ? '#292524' : '#ffffff',
+        }}
+      >
         {/* Header */}
-        <div className="modal-header">
-          <h2 className="text-heading-2">Manage Categories</h2>
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">
+            Manage Categories
+          </h2>
           <button
             onClick={onClose}
-            className="close-button button button--ghost p-2 hover-scale"
+            className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
             <svg
               className="w-6 h-6"
@@ -181,13 +250,13 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
           </button>
         </div>
 
-        <div className="modal-body scrollbar-thin">
+        <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
           {/* Error Message */}
           {error && (
-            <div className="mb-6 bg-error-50 dark:bg-error-900-20 border border-error-200 dark:border-error-800 rounded-lg p-4 animate-slide-down">
+            <div className="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
               <div className="flex items-center">
                 <svg
-                  className="w-5 h-5 text-error-500 mr-3"
+                  className="w-5 h-5 text-red-500 mr-3"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -197,7 +266,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-body text-error-700 dark:text-error-200">
+                <span className="text-sm text-red-700 dark:text-red-200">
                   {error}
                 </span>
               </div>
@@ -205,7 +274,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
           )}
 
           {/* Category Form */}
-          <div className="card mb-6 animate-fade-in">
+          <div className="card">
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
@@ -246,7 +315,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
                           color: e.target.value,
                         }))
                       }
-                      className="w-12 h-10 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover-scale transition-transform duration-250"
+                      className="w-12 h-10 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer transition-transform duration-200 hover:scale-105"
                     />
                     <div className="flex flex-wrap gap-2">
                       {DEFAULT_COLORS.map((color) => (
@@ -256,7 +325,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
                           onClick={() =>
                             setFormData((prev) => ({ ...prev, color }))
                           }
-                          className={`w-8 h-8 rounded-full border-2 hover-scale transition-all duration-250 ${
+                          className={`w-8 h-8 rounded-full border-2 transition-all duration-200 hover:scale-105 ${
                             formData.color === color
                               ? 'border-gray-900 dark:border-white shadow-md'
                               : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
@@ -278,7 +347,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
                   >
                     {loading ? (
                       <div className="flex items-center">
-                        <div className="spinner-sm mr-2"></div>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                         {editingCategory ? 'Updating...' : 'Creating...'}
                       </div>
                     ) : (
@@ -309,7 +378,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
 
             {/* Template Selection */}
             {showTemplates && (
-              <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+              <div className="card mt-4">
                 <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Default Category Templates
                 </h4>
@@ -359,7 +428,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
                 {categories.map((category) => (
                   <div
                     key={category.id}
-                    className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
+                    className="card card--flat flex items-center justify-between"
                   >
                     <div className="flex items-center space-x-3">
                       <div
@@ -386,7 +455,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
                     <div className="flex items-center space-x-2">
                       <button
                         onClick={() => handleEdit(category)}
-                        className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none"
+                        className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                       >
                         <svg
                           className="w-4 h-4"
@@ -406,7 +475,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
                       {!category.isDefault && (
                         <button
                           onClick={() => handleDeleteClick(category)}
-                          className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 focus:outline-none"
+                          className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors"
                         >
                           <svg
                             className="w-4 h-4"
@@ -434,7 +503,13 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
         {/* Delete Confirmation Modal */}
         {deleteConfirmation && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-60 p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full">
+            <div
+              ref={deleteModalRef}
+              className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg shadow-2xl max-w-md w-full"
+              style={{
+                backgroundColor: isDarkMode ? '#292524' : '#ffffff',
+              }}
+            >
               <div className="p-6">
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
                   Delete Category
@@ -468,7 +543,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
                               : null
                           )
                         }
-                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 bg-white dark:bg-gray-700"
                       />
                       <span className="text-sm text-gray-700 dark:text-gray-300">
                         Archive all tasks in this category
@@ -485,14 +560,14 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
                 <div className="flex justify-end space-x-3">
                   <button
                     onClick={() => setDeleteConfirmation(null)}
-                    className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-600 rounded-md hover:bg-gray-200 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                    className="button button--secondary"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleDeleteConfirm}
                     disabled={loading}
-                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="button button--danger"
                   >
                     {loading ? 'Deleting...' : 'Delete Category'}
                   </button>
