@@ -11,6 +11,8 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import LoginForm from './components/auth/LoginForm';
 import RegisterForm from './components/auth/RegisterForm';
 import Dashboard from './components/Dashboard';
+import { CalendarCallback } from './components/CalendarCallback';
+import { Settings } from './components/Settings';
 
 function App() {
   return (
@@ -23,6 +25,10 @@ function App() {
                 {/* Public routes */}
                 <Route path="/login" element={<LoginForm />} />
                 <Route path="/register" element={<RegisterForm />} />
+                <Route
+                  path="/calendar/callback"
+                  element={<CalendarCallback />}
+                />
 
                 {/* Protected routes */}
                 <Route
@@ -30,6 +36,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/settings"
+                  element={
+                    <ProtectedRoute>
+                      <Settings />
                     </ProtectedRoute>
                   }
                 />

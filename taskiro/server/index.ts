@@ -8,6 +8,7 @@ import authRoutes from './routes/auth';
 import taskRoutes from './routes/tasks';
 import categoryRoutes from './routes/categories';
 import nlpRoutes from './routes/nlp';
+import calendarRoutes from './routes/calendar';
 import { errorHandler } from './middleware/errorHandler';
 
 // Load environment variables
@@ -51,6 +52,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/nlp', nlpRoutes);
+app.use('/api/calendar', calendarRoutes);
 
 // Error handling middleware
 app.use(errorHandler);
