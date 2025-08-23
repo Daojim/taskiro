@@ -221,9 +221,10 @@
     - Test theme persistence when navigating between pages
     - _Requirements: User experience enhancement_
 
-- [ ] 13. Deploy application
+- [-] 13. Deploy application
 
-  - [ ] 13.1 Prepare for deployment
+  - [x] 13.1 Prepare for deployment
+
     - Set up production environment configuration
     - Create deployment scripts and documentation
     - Optimize production builds

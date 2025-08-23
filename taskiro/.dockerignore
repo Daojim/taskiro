@@ -1,0 +1,50 @@
+# Dependencies
+node_modules
+npm-debug.log*
+
+# Build outputs
+dist
+coverage
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.test
+
+# IDE files
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+*.md
+!DEPLOYMENT.md
+
+# Test files
+**/*.test.*
+**/*.spec.*
+test-*
+coverage/
+
+# Logs
+logs
+*.log
+
+# Development files
+docker-compose.yml
+docker-compose.dev.yml
+
+# Temporary files
+.tmp
+.cache
