@@ -77,45 +77,23 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
   return (
     <>
       <div
-        style={{
-          minHeight: '120px',
-          padding: '8px',
-          cursor: 'pointer',
-          position: 'relative',
-          border: isToday ? '2px solid #3b82f6' : 'none',
-          opacity: !isCurrentMonth ? 0.5 : 1,
-        }}
-        className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group"
+        className={`calendar-day ${
+          isCurrentMonth
+            ? 'calendar-day--current-month'
+            : 'calendar-day--other-month'
+        } ${isToday ? 'calendar-day--today' : ''} group`}
         onClick={handleDayClick}
       >
         {/* Day number */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: '4px',
-          }}
-        >
+        <div className="calendar-day__header">
           <span
-            style={{
-              fontSize: '14px',
-              fontWeight: '500',
-              backgroundColor: isToday ? '#3b82f6' : 'transparent',
-              borderRadius: isToday ? '50%' : '0',
-              width: isToday ? '24px' : 'auto',
-              height: isToday ? '24px' : 'auto',
-              display: isToday ? 'flex' : 'inline',
-              alignItems: isToday ? 'center' : 'normal',
-              justifyContent: isToday ? 'center' : 'normal',
-            }}
-            className={
+            className={`calendar-day__number ${
               isToday
-                ? 'text-white'
-                : !isCurrentMonth
-                  ? 'text-gray-400 dark:text-gray-500'
-                  : 'text-gray-900 dark:text-gray-100'
-            }
+                ? 'calendar-day__number--today'
+                : isCurrentMonth
+                  ? 'calendar-day__number--current-month'
+                  : 'calendar-day__number--other-month'
+            }`}
           >
             {dayNumber}
           </span>
@@ -123,16 +101,18 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
           {/* Task limit warning */}
           {hasTaskLimitWarning && (
             <div
-              className={`flex items-center text-xs font-medium ${
+              className={`calendar-day__warning ${
                 taskOverloadLevel === 'critical'
-                  ? 'text-red-600 dark:text-red-400'
-                  : 'text-amber-600 dark:text-amber-400'
+                  ? 'calendar-day__warning--critical'
+                  : 'calendar-day__warning--high'
               }`}
               title={`${tasks.length} tasks - ${taskOverloadLevel === 'critical' ? 'Critical task overload' : 'High task load'}`}
             >
               <ExclamationTriangleIcon
-                className={`h-3 w-3 mr-1 ${
-                  taskOverloadLevel === 'critical' ? 'animate-pulse' : ''
+                className={`calendar-day__warning-icon ${
+                  taskOverloadLevel === 'critical'
+                    ? 'calendar-day__warning-icon--critical'
+                    : ''
                 }`}
               />
               {tasks.length}
@@ -146,16 +126,16 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
                 e.stopPropagation();
                 setShowCreateModal(true);
               }}
-              className="opacity-0 group-hover:opacity-100 hover:opacity-100 p-1 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-opacity"
+              className="calendar-day__add-button"
               title="Add task"
             >
-              <PlusIcon className="h-3 w-3" />
+              <PlusIcon className="calendar-day__add-icon" />
             </button>
           )}
         </div>
 
         {/* Tasks */}
-        <div className="space-y-1">
+        <div className="calendar-day__tasks">
           {/* Always visible tasks */}
           {visibleTasks.slice(0, 3).map((task) => (
             <CalendarTask
@@ -172,11 +152,13 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
           {/* Expandable tasks with smooth animation */}
           {hasOverflow && (
             <div
-              className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                showAllTasks ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+              className={`calendar-day__expandable-tasks ${
+                showAllTasks
+                  ? 'calendar-day__expandable-tasks--expanded'
+                  : 'calendar-day__expandable-tasks--collapsed'
               }`}
             >
-              <div className="space-y-1 pt-1">
+              <div className="calendar-day__expandable-content">
                 {visibleTasks.slice(3).map((task) => (
                   <CalendarTask
                     key={task.id}
@@ -196,17 +178,17 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
           {hasOverflow && (
             <button
               onClick={handleShowMore}
-              className={`w-full text-xs py-1 text-left font-medium transition-colors duration-200 ${
+              className={`calendar-day__toggle-button ${
                 showAllTasks
-                  ? 'text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
-                  : 'text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300'
+                  ? 'calendar-day__toggle-button--show-less'
+                  : 'calendar-day__toggle-button--show-more'
               }`}
             >
               {showAllTasks ? (
-                <span className="flex items-center">
+                <span className="calendar-day__toggle-content">
                   <span>Show less</span>
                   <svg
-                    className="ml-1 h-3 w-3 transform rotate-180 transition-transform duration-200"
+                    className="calendar-day__toggle-icon calendar-day__toggle-icon--expanded"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -220,10 +202,10 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
                   </svg>
                 </span>
               ) : (
-                <span className="flex items-center">
+                <span className="calendar-day__toggle-content">
                   <span>+{hiddenTaskCount} more</span>
                   <svg
-                    className="ml-1 h-3 w-3 transition-transform duration-200"
+                    className="calendar-day__toggle-icon calendar-day__toggle-icon--collapsed"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"

@@ -75,37 +75,18 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
   }, [currentDate, tasks]);
 
   return (
-    <div style={{ padding: '32px' }}>
+    <div className="calendar-grid">
       {/* Day headers */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(7, 1fr)',
-          gap: '1px',
-          marginBottom: '8px',
-        }}
-      >
+      <div className="calendar-grid__day-headers">
         {dayNames.map((day) => (
-          <div
-            key={day}
-            className="p-2 text-center text-sm font-medium text-gray-600 dark:text-gray-400"
-          >
+          <div key={day} className="calendar-grid__day-header">
             {day}
           </div>
         ))}
       </div>
 
       {/* Calendar grid */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(7, 1fr)',
-          gap: '1px',
-          borderRadius: '8px',
-          overflow: 'hidden',
-        }}
-        className="bg-gray-300 dark:bg-gray-600 border border-gray-300 dark:border-gray-600"
-      >
+      <div className="calendar-grid__container">
         {calendarDays.map((day) => (
           <CalendarDay
             key={`${day.date.getFullYear()}-${day.date.getMonth()}-${day.date.getDate()}`}

@@ -30,9 +30,13 @@
 
   /* Colors - Semantic */
   --color-success-50: #dcfce7;
+  --color-success-100: #bbf7d0;
+  --color-success-200: #86efac;
+  --color-success-400: #4ade80;
   --color-success-500: #10b981;
   --color-success-600: #16a34a;
   --color-success-700: #166534;
+  --color-success-800: #15803d;
 
   --color-error-50: #fef2f2;
   --color-error-100: #fee2e2;
@@ -42,11 +46,16 @@
   --color-error-600: #dc2626;
   --color-error-700: #b91c1c;
   --color-error-800: #991b1b;
+  --color-error-900: #7f1d1d;
 
   --color-warning-50: #fef3c7;
+  --color-warning-100: #fef3c7;
+  --color-warning-200: #fde68a;
+  --color-warning-400: #fbbf24;
   --color-warning-500: #f59e0b;
   --color-warning-600: #d97706;
   --color-warning-700: #92400e;
+  --color-warning-800: #78350f;
 
   /* Colors - Surface */
   --color-surface: #ffffff;
@@ -54,8 +63,12 @@
   --color-surface-tertiary: #f3f4f6;
 
   /* Spacing Scale */
-  --spacing-xs: 0.25rem; /* 4px */
-  --spacing-sm: 0.5rem; /* 8px */
+  --spacing-5xs: 0.0625rem; /* 1px */
+  --spacing-4xs: 0.125rem; /* 2px */
+  --spacing-3xs: 0.1875rem; /* 3px */
+  --spacing-2xs: 0.25rem; /* 4px */
+  --spacing-xs: 0.5rem; /* 8px */
+  --spacing-sm: 0.75rem; /* 12px */
   --spacing-md: 1rem; /* 16px */
   --spacing-lg: 1.5rem; /* 24px */
   --spacing-xl: 2rem; /* 32px */
@@ -69,6 +82,7 @@
     'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New',
     monospace;
 
+  --font-size-2xs: 0.625rem; /* 10px */
   --font-size-xs: 0.75rem; /* 12px */
   --font-size-sm: 0.875rem; /* 14px */
   --font-size-base: 1rem; /* 16px */
@@ -98,6 +112,7 @@
     0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
   /* Border Radius */
+  --radius-xs: 0.125rem; /* 2px */
   --radius-sm: 0.25rem; /* 4px */
   --radius-md: 0.5rem; /* 8px */
   --radius-lg: 0.75rem; /* 12px */
@@ -224,6 +239,20 @@
   --bg-primary: var(--color-surface-secondary);
   --bg-secondary: var(--color-surface-tertiary);
   --bg-tertiary: var(--color-surface);
+
+  /* Dark mode text aliases */
+  --text-primary-dark: var(--text-primary);
+  --text-secondary-dark: var(--text-secondary);
+  --text-tertiary-dark: var(--text-tertiary);
+
+  /* Dark mode background aliases */
+  --bg-primary-dark: var(--bg-primary);
+  --bg-secondary-dark: var(--bg-secondary);
+  --bg-tertiary-dark: var(--bg-tertiary);
+
+  /* Dark mode border aliases */
+  --border-primary-dark: var(--border-primary);
+  --border-secondary-dark: var(--border-secondary);
 
   /* Dark mode inputs */
   --input-bg: #44403c;

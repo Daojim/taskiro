@@ -1,0 +1,63 @@
+/* Calendar View Component Styles */
+
+/* Main calendar container */
+.calendar-view {
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+/* Loading state */
+.calendar-view__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-3xl);
+}
+
+.calendar-view__loading-spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid var(--border-primary);
+  border-radius: 50%;
+  border-top-color: var(--color-primary-600);
+  animation: spin 1s linear infinite;
+}
+
+.calendar-view__loading-text {
+  margin-left: var(--spacing-sm);
+  color: var(--text-secondary);
+}
+
+/* Error state */
+.calendar-view__error {
+  background-color: var(--color-error-50);
+  border: 1px solid var(--color-error-200);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+}
+
+.calendar-view__error-text {
+  color: var(--color-error-800);
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  .calendar-view {
+    background-color: var(--bg-primary-dark);
+  }
+
+  .calendar-view__loading-text {
+    color: var(--text-secondary-dark);
+  }
+
+  .calendar-view__error {
+    background-color: var(--color-error-900-20);
+    border-color: var(--color-error-800);
+  }
+
+  .calendar-view__error-text {
+    color: var(--color-error-200);
+  }
+}

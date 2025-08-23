@@ -1,0 +1,57 @@
+/* Calendar Grid Component Styles */
+
+/* Grid container */
+.calendar-grid {
+  padding: var(--spacing-2xl);
+}
+
+/* Day headers */
+.calendar-grid__day-headers {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  margin-bottom: var(--spacing-xs);
+}
+
+.calendar-grid__day-header {
+  padding: var(--spacing-xs);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+}
+
+/* Calendar grid */
+.calendar-grid__container {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background-color: var(--border-secondary);
+  border: 1px solid var(--border-secondary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .calendar-grid {
+    padding: var(--spacing-lg);
+  }
+
+  .calendar-grid__day-header {
+    font-size: var(--font-size-xs);
+    padding: var(--spacing-2xs);
+  }
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  .calendar-grid__day-header {
+    color: var(--text-secondary-dark);
+  }
+
+  .calendar-grid__container {
+    background-color: var(--border-secondary-dark);
+    border-color: var(--border-secondary-dark);
+  }
+}

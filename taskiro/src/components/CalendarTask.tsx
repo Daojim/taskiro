@@ -43,23 +43,17 @@ const CalendarTask: React.FC<CalendarTaskProps> = ({
     }
   };
 
-  // Get priority-based styling
-  const getPriorityStyles = (priority: string, isCompleted: boolean) => {
-    const baseStyles = 'border-l-2 pl-2 pr-1 py-1 text-xs rounded-r';
-
-    if (isCompleted) {
-      return `${baseStyles} bg-gray-100 border-gray-300 text-gray-500 line-through dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400`;
-    }
-
+  // Get priority-based CSS classes
+  const getPriorityClass = (priority: string) => {
     switch (priority) {
       case 'high':
-        return `${baseStyles} bg-red-50 border-red-400 text-red-800 dark:bg-red-900/20 dark:border-red-500 dark:text-red-200`;
+        return 'calendar-task--priority-high';
       case 'medium':
-        return `${baseStyles} bg-yellow-50 border-yellow-400 text-yellow-800 dark:bg-yellow-900/20 dark:border-yellow-500 dark:text-yellow-200`;
+        return 'calendar-task--priority-medium';
       case 'low':
-        return `${baseStyles} bg-green-50 border-green-400 text-green-800 dark:bg-green-900/20 dark:border-green-500 dark:text-green-200`;
+        return 'calendar-task--priority-low';
       default:
-        return `${baseStyles} bg-gray-50 border-gray-400 text-gray-800 dark:bg-gray-700 dark:border-gray-500 dark:text-gray-200`;
+        return 'calendar-task--priority-normal';
     }
   };
 
@@ -95,12 +89,14 @@ const CalendarTask: React.FC<CalendarTaskProps> = ({
   );
 
   const isCompleted = task.status.toLowerCase() === 'completed';
-  const taskStyles = getPriorityStyles(task.priority, isCompleted);
+  const priorityClass = getPriorityClass(task.priority);
 
   return (
     <>
       <div
-        className={`calendar-task ${taskStyles} cursor-pointer hover:shadow-sm transition-shadow relative group`}
+        className={`calendar-task ${priorityClass} ${
+          isCompleted ? 'calendar-task--completed' : ''
+        } group`}
         onClick={handleTaskClick}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -108,80 +104,43 @@ const CalendarTask: React.FC<CalendarTaskProps> = ({
         onMouseUp={(e) => e.stopPropagation()}
         title={`${task.title}${task.description ? ` - ${task.description}` : ''}`}
       >
-        <div className="flex items-center justify-between">
-          <div className="flex-1 min-w-0">
-            <div className="truncate font-medium">{task.title}</div>
-            <div className="text-xs opacity-75 mt-0.5">
+        <div className="calendar-task__content">
+          <div className="calendar-task__main">
+            <div className="calendar-task__title">{task.title}</div>
+            <div className="calendar-task__time">
               {task.dueTime ? formatTime(task.dueTime) : 'No time set'}
             </div>
           </div>
 
           {/* Action buttons (visible on hover) */}
           {isHovered && (
-            <div className="task-actions flex items-center space-x-1 ml-2">
+            <div className="calendar-task__actions">
               <button
                 onClick={handleToggleCompletion}
-                className="button--task-action"
-                style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  color: isCompleted ? '#10b981' : '#6b7280',
-                }}
+                className={`calendar-task__action-button calendar-task__action-button--complete ${
+                  isCompleted ? 'calendar-task__action-button--completed' : ''
+                }`}
                 title={
                   isCompleted ? '✓ Mark as incomplete' : '✓ Mark as complete'
                 }
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    'rgba(255, 255, 255, 0.3)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    'rgba(255, 255, 255, 0.1)';
-                }}
               >
-                <CheckIcon style={{ width: '12px', height: '12px' }} />
+                <CheckIcon className="calendar-task__action-icon" />
               </button>
 
               <button
                 onClick={handleTaskClick}
-                className="button--task-action"
-                style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  color: '#6b7280',
-                }}
+                className="calendar-task__action-button calendar-task__action-button--edit"
                 title="✏️ Edit task"
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    'rgba(255, 255, 255, 0.3)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    'rgba(255, 255, 255, 0.1)';
-                }}
               >
-                <PencilIcon style={{ width: '12px', height: '12px' }} />
+                <PencilIcon className="calendar-task__action-icon" />
               </button>
 
               <button
                 onClick={handleDelete}
-                className="button--task-action"
-                style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  color: '#ef4444',
-                }}
+                className="calendar-task__action-button calendar-task__action-button--delete"
                 title="🗑️ Delete task"
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    'rgba(255, 255, 255, 0.3)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    'rgba(255, 255, 255, 0.1)';
-                }}
               >
-                <TrashIcon style={{ width: '12px', height: '12px' }} />
+                <TrashIcon className="calendar-task__action-icon" />
               </button>
             </div>
           )}
@@ -189,13 +148,15 @@ const CalendarTask: React.FC<CalendarTaskProps> = ({
 
         {/* Category indicator */}
         {task.category && (
-          <div className="mt-1">
+          <div className="calendar-task__category">
             <span
-              className="inline-block w-2 h-2 rounded-full mr-1"
+              className="calendar-task__category-dot"
               style={{ backgroundColor: task.category.color }}
               title={task.category.name}
             />
-            <span className="text-xs opacity-75">{task.category.name}</span>
+            <span className="calendar-task__category-name">
+              {task.category.name}
+            </span>
           </div>
         )}
       </div>

@@ -1,0 +1,107 @@
+/* Calendar Header Component Styles */
+
+/* Header container */
+.calendar-header {
+  padding: var(--spacing-lg) var(--spacing-2xl);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.calendar-header__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Title section */
+.calendar-header__title-section {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.calendar-header__title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* Today button */
+.calendar-header__today-button {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary-600);
+  background-color: transparent;
+  border: 1px solid var(--color-primary-300);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.calendar-header__today-button:hover {
+  color: var(--color-primary-700);
+  border-color: var(--color-primary-400);
+  background-color: var(--color-primary-50);
+}
+
+/* Navigation controls */
+.calendar-header__nav-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.calendar-header__nav-button {
+  padding: var(--spacing-xs);
+  color: var(--text-tertiary);
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-header__nav-button:hover {
+  color: var(--text-secondary);
+  background-color: var(--bg-secondary);
+}
+
+.calendar-header__nav-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  .calendar-header {
+    border-bottom-color: var(--border-primary-dark);
+  }
+
+  .calendar-header__title {
+    color: var(--text-primary-dark);
+  }
+
+  .calendar-header__today-button {
+    color: var(--color-primary-400);
+    border-color: var(--color-primary-600);
+  }
+
+  .calendar-header__today-button:hover {
+    color: var(--color-primary-300);
+    border-color: var(--color-primary-500);
+    background-color: var(--color-primary-900-20);
+  }
+
+  .calendar-header__nav-button {
+    color: var(--text-tertiary-dark);
+  }
+
+  .calendar-header__nav-button:hover {
+    color: var(--text-secondary-dark);
+    background-color: var(--bg-secondary-dark);
+  }
+}

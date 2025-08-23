@@ -37,38 +37,35 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
     currentDate.getFullYear() === today.getFullYear();
 
   return (
-    <div className="px-8 py-4 border-b border-gray-200 dark:border-gray-700">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+    <div className="calendar-header">
+      <div className="calendar-header__container">
+        <div className="calendar-header__title-section">
+          <h2 className="calendar-header__title">
             {currentMonth} {currentYear}
           </h2>
 
           {!isCurrentMonth && (
-            <button
-              onClick={onToday}
-              className="px-3 py-1 text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 border border-blue-300 hover:border-blue-400 dark:border-blue-600 dark:hover:border-blue-500 rounded-md transition-colors"
-            >
+            <button onClick={onToday} className="calendar-header__today-button">
               Today
             </button>
           )}
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="calendar-header__nav-controls">
           <button
             onClick={onPreviousMonth}
-            className="p-2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+            className="calendar-header__nav-button"
             aria-label="Previous month"
           >
-            <ChevronLeftIcon className="h-5 w-5" />
+            <ChevronLeftIcon className="calendar-header__nav-icon" />
           </button>
 
           <button
             onClick={onNextMonth}
-            className="p-2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+            className="calendar-header__nav-button"
             aria-label="Next month"
           >
-            <ChevronRightIcon className="h-5 w-5" />
+            <ChevronRightIcon className="calendar-header__nav-icon" />
           </button>
         </div>
       </div>

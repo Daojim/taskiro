@@ -22,9 +22,15 @@
 @import './components/navigation.css';
 @import './components/feedback.css';
 
+/* Calendar Component Styles - Modular calendar components */
+@import './components/calendar-view.css';
+@import './components/calendar-header.css';
+@import './components/calendar-grid.css';
+@import './components/calendar-day.css';
+@import './components/calendar-task.css';
+
 /* Feature-Specific Styles - Application features */
 @import './features/tasks.css';
-@import './features/calendar.css';
 
 /* Global Application Styles - App-specific layout and structure */
 .app {

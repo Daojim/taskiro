@@ -174,25 +174,23 @@ const CalendarView: React.FC<CalendarViewProps> = ({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-        <span className="ml-3 text-gray-600 dark:text-gray-400">
-          Loading calendar...
-        </span>
+      <div className="calendar-view__loading">
+        <div className="calendar-view__loading-spinner"></div>
+        <span className="calendar-view__loading-text">Loading calendar...</span>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-4 dark:bg-red-900/20 dark:border-red-800">
-        <p className="text-red-800 dark:text-red-200">{error}</p>
+      <div className="calendar-view__error">
+        <p className="calendar-view__error-text">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+    <div className="calendar-view">
       <CalendarHeader
         currentDate={currentDate}
         onPreviousMonth={handlePreviousMonth}
