@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useTaskContext } from '../contexts/TaskContext';
 import {
   ListBulletIcon,
   CalendarDaysIcon,
   TagIcon,
+  CogIcon,
 } from '@heroicons/react/24/outline';
 import TaskInput from './TaskInput';
 import TaskList from './TaskList';
@@ -18,6 +20,7 @@ import type { Task, CreateTaskRequest } from '../types/task';
 type ViewMode = 'list' | 'calendar';
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
   const {
     tasks,
@@ -113,6 +116,10 @@ const Dashboard: React.FC = () => {
     showNotification('success', 'Categories updated successfully!');
   };
 
+  const handleSettingsClick = () => {
+    navigate('/settings');
+  };
+
   return (
     <div className="app-container">
       <nav className="app-nav">
@@ -130,6 +137,13 @@ const Dashboard: React.FC = () => {
               >
                 <TagIcon className="h-4 w-4 mr-2" />
                 Categories
+              </button>
+              <button
+                onClick={handleSettingsClick}
+                className="button button--secondary button--small"
+              >
+                <CogIcon className="h-4 w-4 mr-2" />
+                Settings
               </button>
               <button
                 onClick={handleLogout}
