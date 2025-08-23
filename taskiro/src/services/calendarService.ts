@@ -6,6 +6,8 @@ export interface CalendarIntegration {
   connected: boolean;
   calendars?: number;
   createdAt?: string;
+  lastSyncAt?: string;
+  lastSyncStatus?: string;
   error?: string;
 }
 
@@ -17,6 +19,10 @@ export interface SyncResult {
     eventsCreated?: number;
     eventsUpdated?: number;
     errors: string[];
+    warnings?: string[];
+    syncedAt?: string;
+    totalProcessed?: number;
+    skipped?: number;
   };
 }
 
@@ -172,6 +178,21 @@ class CalendarService {
       console.error('Error refreshing token:', error);
       const message =
         error.response?.data?.error?.message || 'Failed to refresh token';
+      throw new Error(message);
+    }
+  }
+
+  /**
+   * Get sync history
+   */
+  async getSyncHistory(): Promise<any> {
+    try {
+      const response = await this.api.get('/api/calendar/sync/history');
+      return response.data;
+    } catch (error: any) {
+      console.error('Error getting sync history:', error);
+      const message =
+        error.response?.data?.error?.message || 'Failed to get sync history';
       throw new Error(message);
     }
   }

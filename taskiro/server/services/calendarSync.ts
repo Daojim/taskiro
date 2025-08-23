@@ -11,9 +11,33 @@ export interface SyncResult {
   eventsCreated: number;
   eventsUpdated: number;
   errors: string[];
+  warnings: string[];
+  syncedAt: Date;
+  totalProcessed: number;
+  skipped: number;
 }
 
 export class CalendarSyncService {
+  /**
+   * Update sync status in database
+   */
+  private async updateSyncStatus(
+    userId: string,
+    result: SyncResult
+  ): Promise<void> {
+    try {
+      await prisma.calendarIntegration.updateMany({
+        where: { userId },
+        data: {
+          lastSyncAt: result.syncedAt,
+          lastSyncStatus: result.success ? 'SUCCESS' : 'ERROR',
+        },
+      });
+    } catch (error) {
+      console.error('Failed to update sync status:', error);
+      // Don't throw here to avoid breaking the sync operation
+    }
+  }
   /**
    * Sync tasks to Google Calendar
    */
@@ -25,6 +49,10 @@ export class CalendarSyncService {
       eventsCreated: 0,
       eventsUpdated: 0,
       errors: [],
+      warnings: [],
+      syncedAt: new Date(),
+      totalProcessed: 0,
+      skipped: 0,
     };
 
     try {
@@ -52,29 +80,75 @@ export class CalendarSyncService {
       });
 
       for (const task of tasks) {
-        try {
-          const event = this.taskToCalendarEvent(task);
+        result.totalProcessed++;
 
-          // Create event in Google Calendar
-          await calendar.events.insert({
+        try {
+          // Check if task already has a corresponding event
+          const existingEvents = await calendar.events.list({
             calendarId: integration.googleCalendarId || 'primary',
-            requestBody: event,
+            q: task.title,
+            timeMin: task.dueDate
+              ? new Date(
+                  task.dueDate.getTime() - 24 * 60 * 60 * 1000
+                ).toISOString()
+              : undefined,
+            timeMax: task.dueDate
+              ? new Date(
+                  task.dueDate.getTime() + 24 * 60 * 60 * 1000
+                ).toISOString()
+              : undefined,
           });
 
-          result.eventsCreated++;
-        } catch (error) {
-          result.errors.push(
-            `Failed to sync task "${task.title}": ${error instanceof Error ? error.message : 'Unknown error'}`
+          const existingEvent = existingEvents.data.items?.find(
+            (event) => event.summary === task.title
           );
+
+          const event = this.taskToCalendarEvent(task);
+
+          if (existingEvent) {
+            // Update existing event
+            await calendar.events.update({
+              calendarId: integration.googleCalendarId || 'primary',
+              eventId: existingEvent.id!,
+              requestBody: event,
+            });
+            result.eventsUpdated++;
+          } else {
+            // Create new event
+            await calendar.events.insert({
+              calendarId: integration.googleCalendarId || 'primary',
+              requestBody: event,
+            });
+            result.eventsCreated++;
+          }
+        } catch (error) {
+          if (error instanceof Error && error.message.includes('Rate limit')) {
+            result.warnings.push(
+              `Rate limited while syncing task "${task.title}". Will retry later.`
+            );
+            result.skipped++;
+          } else {
+            result.errors.push(
+              `Failed to sync task "${task.title}": ${error instanceof Error ? error.message : 'Unknown error'}`
+            );
+          }
         }
       }
 
       result.success = result.errors.length === 0;
+
+      // Update sync status in database
+      await this.updateSyncStatus(userId, result);
+
       return result;
     } catch (error) {
       result.errors.push(
         `Sync failed: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
+
+      // Update sync status even on failure
+      await this.updateSyncStatus(userId, result);
+
       return result;
     }
   }
@@ -90,6 +164,10 @@ export class CalendarSyncService {
       eventsCreated: 0,
       eventsUpdated: 0,
       errors: [],
+      warnings: [],
+      syncedAt: new Date(),
+      totalProcessed: 0,
+      skipped: 0,
     };
 
     try {
@@ -118,12 +196,18 @@ export class CalendarSyncService {
       const events = response.data.items || [];
 
       for (const event of events) {
+        result.totalProcessed++;
+
         try {
           // Skip events without summary or all-day events without dates
           if (
             !event.summary ||
             (!event.start?.dateTime && !event.start?.date)
           ) {
+            result.skipped++;
+            result.warnings.push(
+              `Skipped event without title or date: ${event.id}`
+            );
             continue;
           }
 
@@ -200,11 +284,19 @@ export class CalendarSyncService {
       }
 
       result.success = result.errors.length === 0;
+
+      // Update sync status in database
+      await this.updateSyncStatus(userId, result);
+
       return result;
     } catch (error) {
       result.errors.push(
         `Sync failed: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
+
+      // Update sync status even on failure
+      await this.updateSyncStatus(userId, result);
+
       return result;
     }
   }
@@ -216,14 +308,30 @@ export class CalendarSyncService {
     const tasksToCalendarResult = await this.syncTasksToCalendar(userId);
     const eventsToTasksResult = await this.syncEventsToTasks(userId);
 
-    return {
+    const combinedResult: SyncResult = {
       success: tasksToCalendarResult.success && eventsToTasksResult.success,
       tasksCreated: eventsToTasksResult.tasksCreated,
       tasksUpdated: eventsToTasksResult.tasksUpdated,
       eventsCreated: tasksToCalendarResult.eventsCreated,
       eventsUpdated: tasksToCalendarResult.eventsUpdated,
       errors: [...tasksToCalendarResult.errors, ...eventsToTasksResult.errors],
+      warnings: [
+        ...(tasksToCalendarResult.warnings || []),
+        ...(eventsToTasksResult.warnings || []),
+      ],
+      syncedAt: new Date(),
+      totalProcessed:
+        (tasksToCalendarResult.totalProcessed || 0) +
+        (eventsToTasksResult.totalProcessed || 0),
+      skipped:
+        (tasksToCalendarResult.skipped || 0) +
+        (eventsToTasksResult.skipped || 0),
     };
+
+    // Update sync status for bidirectional sync
+    await this.updateSyncStatus(userId, combinedResult);
+
+    return combinedResult;
   }
 
   /**

@@ -11,7 +11,7 @@ import TaskList from './TaskList';
 import CalendarView from './CalendarView';
 import CategoryManager from './CategoryManager';
 import ThemeToggle from './ThemeToggle';
-import { SyncStatusIndicator } from './SyncStatusIndicator';
+
 import { networkStatus } from '../services/networkStatus';
 import type { Task, CreateTaskRequest } from '../types/task';
 
@@ -122,7 +122,6 @@ const Dashboard: React.FC = () => {
               <h1 className="app-logo">Taskiro</h1>
             </div>
             <div className="flex items-center gap-4">
-              <SyncStatusIndicator showDetails={true} />
               <span className="welcome-text">Welcome, {user?.email}</span>
               <ThemeToggle />
               <button

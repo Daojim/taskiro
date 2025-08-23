@@ -66,7 +66,7 @@ export class GoogleCalendarService {
   /**
    * Store calendar integration for user
    */
-  async storeCalendarIntegration(userId: string, tokens: unknown) {
+  async storeCalendarIntegration(userId: string, tokens: any) {
     try {
       // Delete existing integration if any
       await prisma.calendarIntegration.deleteMany({

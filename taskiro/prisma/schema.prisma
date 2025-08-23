@@ -69,6 +69,8 @@ model CalendarIntegration {
   accessToken      String?   @map("access_token")
   refreshToken     String?   @map("refresh_token")
   tokenExpiresAt   DateTime? @map("token_expires_at")
+  lastSyncAt       DateTime? @map("last_sync_at")
+  lastSyncStatus   String?   @map("last_sync_status")
   createdAt        DateTime  @default(now()) @map("created_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
