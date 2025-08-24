@@ -91,6 +91,7 @@ const TaskInput: React.FC<TaskInputProps> = ({
         const response = await apiService.parseNaturalLanguage({
           input: input.trim(),
           referenceDate: new Date().toISOString(),
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         });
 
         if (response.success) {
@@ -175,12 +176,20 @@ const TaskInput: React.FC<TaskInputProps> = ({
         categoryId = matchedCategory?.id || '';
       }
 
+      // Helper function to format date without timezone shifts
+      const formatDateForServer = (date: Date | string): string => {
+        const dateObj = typeof date === 'string' ? new Date(date) : date;
+        // Use local date components to avoid timezone shifts
+        const year = dateObj.getFullYear();
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
+
       const taskData: CreateTaskRequest = {
         title: parsedData.title,
         dueDate: parsedData.dueDate
-          ? typeof parsedData.dueDate === 'string'
-            ? new Date(parsedData.dueDate).toISOString().split('T')[0]
-            : parsedData.dueDate.toISOString().split('T')[0]
+          ? formatDateForServer(parsedData.dueDate)
           : undefined,
         dueTime: parsedData.dueTime,
         priority: parsedData.priority || 'medium',
@@ -268,10 +277,13 @@ const TaskInput: React.FC<TaskInputProps> = ({
 
   const formatDate = (date: Date | string) => {
     const dateObj = typeof date === 'string' ? new Date(date) : date;
+    // Use user's timezone for consistent display
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     return dateObj.toLocaleDateString('en-US', {
       weekday: 'short',
       month: 'short',
       day: 'numeric',
+      timeZone: userTimezone,
     });
   };
 

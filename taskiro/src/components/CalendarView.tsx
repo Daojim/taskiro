@@ -116,8 +116,8 @@ const CalendarView: React.FC<CalendarViewProps> = ({
           createRequest.description = taskData.description.trim();
         }
         if (taskData.dueDate) {
-          // Convert YYYY-MM-DD to proper ISO8601 format at noon UTC to avoid timezone issues
-          createRequest.dueDate = `${taskData.dueDate}T12:00:00.000Z`;
+          // Keep date as YYYY-MM-DD format to avoid timezone conversion issues
+          createRequest.dueDate = taskData.dueDate;
         }
         if (taskData.dueTime) {
           createRequest.dueTime = taskData.dueTime;

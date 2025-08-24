@@ -49,12 +49,18 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
     while (currentDay <= endDate) {
       const dayTasks = tasks.filter((task) => {
         if (!task.dueDate) return false;
-        const taskDate = new Date(task.dueDate);
-        // Use UTC methods to avoid timezone conversion issues
+
+        // Parse the task date string (YYYY-MM-DD format) without timezone conversion
+        const taskDateParts = task.dueDate.split('T')[0].split('-');
+        const taskYear = parseInt(taskDateParts[0], 10);
+        const taskMonth = parseInt(taskDateParts[1], 10) - 1; // Month is 0-indexed
+        const taskDay = parseInt(taskDateParts[2], 10);
+
+        // Compare with calendar day using local date components
         return (
-          taskDate.getUTCFullYear() === currentDay.getFullYear() &&
-          taskDate.getUTCMonth() === currentDay.getMonth() &&
-          taskDate.getUTCDate() === currentDay.getDate()
+          taskYear === currentDay.getFullYear() &&
+          taskMonth === currentDay.getMonth() &&
+          taskDay === currentDay.getDate()
         );
       });
 

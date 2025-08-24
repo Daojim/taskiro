@@ -71,6 +71,7 @@ export interface Suggestion {
 export interface ParseRequest {
   input: string;
   referenceDate?: string;
+  timezone?: string;
 }
 
 export interface ParseResponse {

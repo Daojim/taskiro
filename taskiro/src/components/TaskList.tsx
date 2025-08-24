@@ -165,12 +165,18 @@ const TaskList: React.FC<TaskListProps> = ({
 
       switch (filters.sortBy) {
         case 'dueDate': {
-          const aDate = a.dueDate
-            ? new Date(a.dueDate)
-            : new Date('9999-12-31');
-          const bDate = b.dueDate
-            ? new Date(b.dueDate)
-            : new Date('9999-12-31');
+          // Parse dates without timezone conversion for consistent sorting
+          const parseTaskDate = (dateString: string) => {
+            if (!dateString) return new Date('9999-12-31');
+            const dateParts = dateString.split('T')[0].split('-');
+            const year = parseInt(dateParts[0], 10);
+            const month = parseInt(dateParts[1], 10) - 1; // Month is 0-indexed
+            const day = parseInt(dateParts[2], 10);
+            return new Date(year, month, day);
+          };
+
+          const aDate = parseTaskDate(a.dueDate || '');
+          const bDate = parseTaskDate(b.dueDate || '');
           comparison = aDate.getTime() - bDate.getTime();
           break;
         }

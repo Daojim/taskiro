@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useRef,
+  useEffect,
+  useMemo,
+} from 'react';
 import type {
   Task,
   Category,
@@ -50,11 +56,8 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
     const formatDate = (dateString: string) => {
       if (!dateString) return '';
       try {
-        const date = new Date(dateString);
-        const year = date.getUTCFullYear();
-        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-        const day = String(date.getUTCDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+        // Extract date part from YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS format
+        return dateString.split('T')[0];
       } catch {
         return '';
       }
@@ -111,11 +114,8 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
     const formatDate = (dateString: string) => {
       if (!dateString) return '';
       try {
-        const date = new Date(dateString);
-        const year = date.getUTCFullYear();
-        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-        const day = String(date.getUTCDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+        // Extract date part from YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS format
+        return dateString.split('T')[0];
       } catch {
         return '';
       }
@@ -151,11 +151,8 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
     const formatDate = (dateString: string) => {
       if (!dateString) return '';
       try {
-        const date = new Date(dateString);
-        const year = date.getUTCFullYear();
-        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-        const day = String(date.getUTCDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+        // Extract date part from YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS format
+        return dateString.split('T')[0];
       } catch {
         return '';
       }
@@ -196,11 +193,9 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
           updates.dueTime = formatTimeForInput(task.dueTime);
         }
 
-        // Handle dueDate
+        // Handle dueDate - keep as YYYY-MM-DD format to avoid timezone conversion
         if (editValues.dueDate) {
-          const dateStr = editValues.dueDate + 'T00:00:00.000Z';
-          const date = new Date(dateStr);
-          updates.dueDate = date.toISOString();
+          updates.dueDate = editValues.dueDate;
         }
 
         await onUpdate(task.id, updates);
@@ -248,11 +243,9 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
           updates.dueTime = formatTimeForInput(task.dueTime);
         }
 
-        // Handle dueDate
+        // Handle dueDate - keep as YYYY-MM-DD format to avoid timezone conversion
         if (editValues.dueDate) {
-          const dateStr = editValues.dueDate + 'T00:00:00.000Z';
-          const date = new Date(dateStr);
-          updates.dueDate = date.toISOString();
+          updates.dueDate = editValues.dueDate;
         }
 
         // Validate title
@@ -309,33 +302,45 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
   }, [task, onUpdate, onError]);
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+    // Parse date string (YYYY-MM-DD format) without timezone conversion
+    const dateParts = dateString.split('T')[0].split('-');
+    const taskYear = parseInt(dateParts[0], 10);
+    const taskMonth = parseInt(dateParts[1], 10) - 1; // Month is 0-indexed
+    const taskDay = parseInt(dateParts[2], 10);
+
+    const taskDate = new Date(taskYear, taskMonth, taskDay);
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const dateUTC = new Date(
-      date.getUTCFullYear(),
-      date.getUTCMonth(),
-      date.getUTCDate()
-    );
-    const todayUTC = new Date(
+    // Compare using local date components to avoid timezone issues
+    const todayLocal = new Date(
       today.getFullYear(),
       today.getMonth(),
       today.getDate()
     );
-    const tomorrowUTC = new Date(
+    const tomorrowLocal = new Date(
       tomorrow.getFullYear(),
       tomorrow.getMonth(),
       tomorrow.getDate()
     );
 
-    if (dateUTC.getTime() === todayUTC.getTime()) {
+    if (taskDate.getTime() === todayLocal.getTime()) {
       return 'Today';
-    } else if (dateUTC.getTime() === tomorrowUTC.getTime()) {
+    } else if (taskDate.getTime() === tomorrowLocal.getTime()) {
       return 'Tomorrow';
     } else {
-      return dateUTC.toLocaleDateString();
+      // Use user's timezone for consistent display
+      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      return taskDate.toLocaleDateString('en-US', {
+        timeZone: userTimezone,
+        month: 'short',
+        day: 'numeric',
+        year:
+          taskDate.getFullYear() !== today.getFullYear()
+            ? 'numeric'
+            : undefined,
+      });
     }
   };
 
@@ -356,17 +361,54 @@ const TaskItemCompact: React.FC<TaskItemCompactProps> = ({
     }
   };
 
-  const isOverdue =
-    task.dueDate &&
-    new Date(task.dueDate) < new Date() &&
-    task.status.toLowerCase() !== 'completed';
+  const isOverdue = useMemo(() => {
+    if (!task.dueDate || task.status.toLowerCase() === 'completed') {
+      return false;
+    }
+
+    // Parse date string (YYYY-MM-DD format) without timezone conversion
+    const dateParts = task.dueDate.split('T')[0].split('-');
+    const taskYear = parseInt(dateParts[0], 10);
+    const taskMonth = parseInt(dateParts[1], 10) - 1; // Month is 0-indexed
+    const taskDay = parseInt(dateParts[2], 10);
+
+    const taskDate = new Date(taskYear, taskMonth, taskDay);
+    const today = new Date();
+    const todayLocal = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    );
+
+    return taskDate.getTime() < todayLocal.getTime();
+  }, [task.dueDate, task.status]);
 
   // Determine if task is urgent (high priority and due today or overdue)
-  const isUrgent =
-    task.priority.toLowerCase() === 'high' &&
-    (isOverdue ||
-      (task.dueDate &&
-        new Date(task.dueDate).toDateString() === new Date().toDateString()));
+  const isUrgent = useMemo(() => {
+    if (task.priority.toLowerCase() !== 'high' || !task.dueDate) {
+      return false;
+    }
+
+    if (isOverdue) {
+      return true;
+    }
+
+    // Check if due today using local date components
+    const dateParts = task.dueDate.split('T')[0].split('-');
+    const taskYear = parseInt(dateParts[0], 10);
+    const taskMonth = parseInt(dateParts[1], 10) - 1; // Month is 0-indexed
+    const taskDay = parseInt(dateParts[2], 10);
+
+    const taskDate = new Date(taskYear, taskMonth, taskDay);
+    const today = new Date();
+    const todayLocal = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    );
+
+    return taskDate.getTime() === todayLocal.getTime();
+  }, [task.priority, task.dueDate, isOverdue]);
 
   // Generate CSS classes for priority-based visual system
   const getTaskCardClasses = () => {
