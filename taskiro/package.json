@@ -30,7 +30,7 @@
     "docker:stop": "docker-compose -f docker-compose.prod.yml down",
     "deploy:build": "npm run build:prod && npm run docker:build",
     "render:build": "npm install && npm run db:generate",
-    "render:start": "npm run db:migrate:prod && tsx server/index.ts"
+    "render:start": "npm run db:migrate:prod && npx tsx server/index.ts"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
