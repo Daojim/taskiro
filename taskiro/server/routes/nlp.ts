@@ -21,6 +21,10 @@ router.post(
       .optional()
       .isISO8601()
       .withMessage('Reference date must be a valid ISO 8601 date'),
+    body('timezone')
+      .optional()
+      .isString()
+      .withMessage('Timezone must be a valid IANA timezone identifier'),
   ],
   (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -33,10 +37,22 @@ router.post(
     }
 
     try {
-      const { input, referenceDate }: ParseRequest = req.body;
-      const refDate = referenceDate ? new Date(referenceDate) : new Date();
+      const { input, referenceDate, timezone }: ParseRequest = req.body;
 
-      const parsed = dateParsingService.parseInput(input, refDate);
+      // Create reference date in user's timezone if provided
+      let refDate: Date;
+      if (referenceDate) {
+        refDate = new Date(referenceDate);
+      } else if (timezone) {
+        // Get current time in user's timezone
+        refDate = new Date(
+          new Date().toLocaleString('en-US', { timeZone: timezone })
+        );
+      } else {
+        refDate = new Date();
+      }
+
+      const parsed = dateParsingService.parseInput(input, refDate, timezone);
 
       const response: ParseResponse = {
         parsed,
@@ -71,6 +87,10 @@ router.post(
       .optional()
       .isISO8601()
       .withMessage('Reference date must be a valid ISO 8601 date'),
+    body('timezone')
+      .optional()
+      .isString()
+      .withMessage('Timezone must be a valid IANA timezone identifier'),
   ],
   (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -83,12 +103,28 @@ router.post(
     }
 
     try {
-      const { dateText, referenceDate } = req.body;
-      const refDate = referenceDate ? new Date(referenceDate) : new Date();
+      const { dateText, referenceDate, timezone } = req.body;
+
+      // Create reference date in user's timezone if provided
+      let refDate: Date;
+      if (referenceDate) {
+        refDate = new Date(referenceDate);
+      } else if (timezone) {
+        // Get current time in user's timezone
+        refDate = new Date(
+          new Date().toLocaleString('en-US', { timeZone: timezone })
+        );
+      } else {
+        refDate = new Date();
+      }
 
       // Generate disambiguation suggestions directly
       const ambiguousElements =
-        dateParsingService.generateDisambiguationSuggestions(dateText, refDate);
+        dateParsingService.generateDisambiguationSuggestions(
+          dateText,
+          refDate,
+          timezone
+        );
 
       res.json({
         success: true,
@@ -120,6 +156,10 @@ router.post(
       .optional()
       .isISO8601()
       .withMessage('Reference date must be a valid ISO 8601 date'),
+    body('timezone')
+      .optional()
+      .isString()
+      .withMessage('Timezone must be a valid IANA timezone identifier'),
   ],
   (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -132,12 +172,25 @@ router.post(
     }
 
     try {
-      const { dateText, referenceDate } = req.body;
-      const refDate = referenceDate ? new Date(referenceDate) : new Date();
+      const { dateText, referenceDate, timezone } = req.body;
+
+      // Create reference date in user's timezone if provided
+      let refDate: Date;
+      if (referenceDate) {
+        refDate = new Date(referenceDate);
+      } else if (timezone) {
+        // Get current time in user's timezone
+        refDate = new Date(
+          new Date().toLocaleString('en-US', { timeZone: timezone })
+        );
+      } else {
+        refDate = new Date();
+      }
 
       const parsedDate = dateParsingService.parseRelativeDate(
         dateText,
-        refDate
+        refDate,
+        timezone
       );
 
       res.json({

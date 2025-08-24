@@ -27,6 +27,7 @@ export interface ParseRequest {
   input: string;
   referenceDate?: string; // ISO string for API compatibility
   userId?: string; // For context-aware parsing
+  timezone?: string; // IANA timezone identifier (e.g., 'America/Toronto')
 }
 
 export interface ParseResponse {

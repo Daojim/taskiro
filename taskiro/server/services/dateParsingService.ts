@@ -174,7 +174,8 @@ export class DateParsingService {
    */
   public parseInput(
     input: string,
-    referenceDate: Date = new Date()
+    referenceDate: Date = new Date(),
+    timezone?: string
   ): ParsedInput {
     const result: ParsedInput = {
       title: input,
@@ -204,7 +205,8 @@ export class DateParsingService {
     // Check for special ambiguous date patterns first
     const ambiguousDate = this.checkForAmbiguousDatePatterns(
       workingTitle,
-      referenceDate
+      referenceDate,
+      timezone
     );
     if (ambiguousDate) {
       result.ambiguousElements?.push(ambiguousDate);
@@ -217,12 +219,45 @@ export class DateParsingService {
         .replace(new RegExp(ambiguousDate.originalText, 'gi'), '')
         .trim();
     } else {
-      // Parse dates using chrono-node only if no ambiguous patterns found
-      const dateResults = chrono.parse(workingTitle, referenceDate);
+      // Parse dates using chrono-node with timezone-aware reference date
+      let chronoReferenceDate = referenceDate;
+      if (timezone) {
+        // Create a reference date that represents the current time in the user's timezone
+        const userLocalTime = new Date().toLocaleString('en-US', {
+          timeZone: timezone,
+        });
+        chronoReferenceDate = new Date(userLocalTime);
+      }
+
+      const dateResults = chrono.parse(workingTitle, chronoReferenceDate);
 
       if (dateResults.length > 0) {
         const dateResult = dateResults[0];
-        result.dueDate = dateResult.start.date();
+        const parsedDate = dateResult.start.date();
+
+        // If timezone is provided, ensure the parsed date is interpreted correctly
+        if (timezone) {
+          // For date-only results (like "tomorrow", "today"), we want to preserve just the date
+          // For date+time results, we want to preserve both date and time in user's timezone
+          const hasTime =
+            dateResult.start.isCertain('hour') &&
+            dateResult.start.isCertain('minute');
+
+          if (hasTime) {
+            // For timed events, use the parsed date as-is since chrono already handled timezone
+            result.dueDate = parsedDate;
+          } else {
+            // For date-only events, create a date at midnight in user's timezone
+            const year = parsedDate.getFullYear();
+            const month = parsedDate.getMonth();
+            const day = parsedDate.getDate();
+
+            // Create date at midnight in user's timezone
+            result.dueDate = new Date(year, month, day);
+          }
+        } else {
+          result.dueDate = parsedDate;
+        }
 
         // Extract time if available
         if (
@@ -248,7 +283,8 @@ export class DateParsingService {
         // Check for ambiguous date expressions in the parsed text
         const ambiguousDateFromParsed = this.checkForAmbiguousDate(
           dateResult.text,
-          referenceDate
+          referenceDate,
+          timezone
         );
         if (ambiguousDateFromParsed) {
           result.ambiguousElements?.push(ambiguousDateFromParsed);
@@ -302,7 +338,8 @@ export class DateParsingService {
    */
   private checkForAmbiguousDatePatterns(
     text: string,
-    referenceDate: Date
+    referenceDate: Date,
+    timezone?: string
   ): AmbiguousElement | null {
     const lowerText = text.toLowerCase();
 
@@ -313,7 +350,10 @@ export class DateParsingService {
         return {
           type: 'date',
           originalText: match[0],
-          suggestions: this.generateNextWeekSuggestions(referenceDate),
+          suggestions: this.generateNextWeekSuggestions(
+            referenceDate,
+            timezone
+          ),
         };
       }
     }
@@ -328,7 +368,10 @@ export class DateParsingService {
         return {
           type: 'date',
           originalText: match[0],
-          suggestions: this.generateEndOfMonthSuggestions(referenceDate),
+          suggestions: this.generateEndOfMonthSuggestions(
+            referenceDate,
+            timezone
+          ),
         };
       }
     }
@@ -341,14 +384,15 @@ export class DateParsingService {
    */
   private checkForAmbiguousDate(
     dateText: string,
-    referenceDate: Date
+    referenceDate: Date,
+    timezone?: string
   ): AmbiguousElement | null {
     // Check for "next week" - ambiguous, could be any day next week
     if (DATE_PATTERNS.NEXT_WEEK.test(dateText)) {
       return {
         type: 'date',
         originalText: dateText,
-        suggestions: this.generateNextWeekSuggestions(referenceDate),
+        suggestions: this.generateNextWeekSuggestions(referenceDate, timezone),
       };
     }
 
@@ -359,15 +403,28 @@ export class DateParsingService {
    * Generate suggestions for "next week" (7-14 days ahead)
    * Requirements 2.4: Generate date options for "next week" (7-14 days ahead)
    */
-  private generateNextWeekSuggestions(referenceDate: Date): Suggestion[] {
+  private generateNextWeekSuggestions(
+    referenceDate: Date,
+    timezone?: string
+  ): Suggestion[] {
     const suggestions: Suggestion[] = [];
+
+    // Use timezone-aware reference date if provided
+    let baseDate = referenceDate;
+    if (timezone) {
+      const userLocalTime = new Date().toLocaleString('en-US', {
+        timeZone: timezone,
+      });
+      baseDate = new Date(userLocalTime);
+    }
 
     // Start from 7 days ahead and go to 14 days ahead
     for (let daysAhead = 7; daysAhead <= 14; daysAhead++) {
-      const date = this.addDaysToDate(referenceDate, daysAhead);
+      const date = this.addDaysToDate(baseDate, daysAhead);
       const suggestion = this.createDateSuggestion(
         date,
-        CONFIDENCE_SCORES.NEXT_WEEK
+        CONFIDENCE_SCORES.NEXT_WEEK,
+        timezone
       );
       suggestions.push(suggestion);
     }
@@ -387,13 +444,25 @@ export class DateParsingService {
   /**
    * Create a standardized date suggestion object
    */
-  private createDateSuggestion(date: Date, confidence: number): Suggestion {
+  private createDateSuggestion(
+    date: Date,
+    confidence: number,
+    timezone?: string
+  ): Suggestion {
     const dayOfWeek = date.getDay();
     const dayName = DAY_NAMES[dayOfWeek];
 
+    // Format date in user's timezone if provided
+    const displayDate = timezone
+      ? date.toLocaleDateString('en-US', {
+          ...DATE_FORMAT_OPTIONS.SHORT_DATE,
+          timeZone: timezone,
+        })
+      : date.toLocaleDateString('en-US', DATE_FORMAT_OPTIONS.SHORT_DATE);
+
     return {
       value: date,
-      display: `${dayName}, ${date.toLocaleDateString('en-US', DATE_FORMAT_OPTIONS.SHORT_DATE)}`,
+      display: `${dayName}, ${displayDate}`,
       confidence,
     };
   }
@@ -402,14 +471,27 @@ export class DateParsingService {
    * Generate suggestions for "end of month" (last few days)
    * Requirements 2.5: Generate options for "end of month" (last few days)
    */
-  private generateEndOfMonthSuggestions(referenceDate: Date): Suggestion[] {
+  private generateEndOfMonthSuggestions(
+    referenceDate: Date,
+    timezone?: string
+  ): Suggestion[] {
     const suggestions: Suggestion[] = [];
-    const year = referenceDate.getFullYear();
-    const month = referenceDate.getMonth();
+
+    // Use timezone-aware reference date if provided
+    let baseDate = referenceDate;
+    if (timezone) {
+      const userLocalTime = new Date().toLocaleString('en-US', {
+        timeZone: timezone,
+      });
+      baseDate = new Date(userLocalTime);
+    }
+
+    const year = baseDate.getFullYear();
+    const month = baseDate.getMonth();
 
     // Get last day of current month
     const lastDay = new Date(year, month + 1, 0).getDate();
-    const today = referenceDate.getDate();
+    const today = baseDate.getDate();
 
     // Generate suggestions for last few days of month (last 3-5 days)
     // Start from 5 days before end of month, but not before today
@@ -419,7 +501,8 @@ export class DateParsingService {
       const date = new Date(year, month, day);
       const suggestion = this.createDateSuggestion(
         date,
-        CONFIDENCE_SCORES.END_OF_MONTH
+        CONFIDENCE_SCORES.END_OF_MONTH,
+        timezone
       );
       suggestions.push(suggestion);
     }
@@ -600,10 +683,37 @@ export class DateParsingService {
    */
   public parseRelativeDate(
     dateText: string,
-    referenceDate: Date = new Date()
+    referenceDate: Date = new Date(),
+    timezone?: string
   ): Date | null {
-    const results = chrono.parse(dateText, referenceDate);
-    return results.length > 0 ? results[0].start.date() : null;
+    // Use timezone-aware reference date if provided
+    let chronoReferenceDate = referenceDate;
+    if (timezone) {
+      const userLocalTime = new Date().toLocaleString('en-US', {
+        timeZone: timezone,
+      });
+      chronoReferenceDate = new Date(userLocalTime);
+    }
+
+    const results = chrono.parse(dateText, chronoReferenceDate);
+    if (results.length > 0) {
+      const parsedDate = results[0].start.date();
+
+      // If timezone is provided, ensure the parsed date is interpreted correctly
+      if (timezone) {
+        // For relative dates like "tomorrow", "today", we want just the date part
+        const year = parsedDate.getFullYear();
+        const month = parsedDate.getMonth();
+        const day = parsedDate.getDate();
+
+        // Create date at midnight in user's timezone
+        return new Date(year, month, day);
+      }
+
+      return parsedDate;
+    }
+
+    return null;
   }
 
   /**
@@ -638,7 +748,8 @@ export class DateParsingService {
    */
   public generateDisambiguationSuggestions(
     dateText: string,
-    referenceDate: Date = new Date()
+    referenceDate: Date = new Date(),
+    timezone?: string
   ): AmbiguousElement[] {
     const ambiguousElements: AmbiguousElement[] = [];
     const lowerText = dateText.toLowerCase().trim();
@@ -648,7 +759,7 @@ export class DateParsingService {
       ambiguousElements.push({
         type: 'date',
         originalText: 'next week',
-        suggestions: this.generateNextWeekSuggestions(referenceDate),
+        suggestions: this.generateNextWeekSuggestions(referenceDate, timezone),
       });
     }
 
@@ -663,7 +774,10 @@ export class DateParsingService {
       ambiguousElements.push({
         type: 'date',
         originalText,
-        suggestions: this.generateEndOfMonthSuggestions(referenceDate),
+        suggestions: this.generateEndOfMonthSuggestions(
+          referenceDate,
+          timezone
+        ),
       });
     }
 
