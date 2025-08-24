@@ -28,20 +28,13 @@ services:
       - key: GOOGLE_REDIRECT_URI
         sync: false
 
-  # Static Site (Frontend)
+  # Frontend Web Service (serves static files with proper SPA routing)
   - type: web
     name: taskiro-frontend
-    env: static
+    env: node
     plan: free
     buildCommand: npm ci && npm run build
-    staticPublishPath: ./dist
-    routes:
-      - type: rewrite
-        source: /calendar/callback
-        destination: /index.html
-      - type: rewrite
-        source: /*
-        destination: /index.html
+    startCommand: node server-static.js
     envVars:
       - key: VITE_API_URL
         value: https://taskiro-api.onrender.com
