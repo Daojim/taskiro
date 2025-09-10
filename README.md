@@ -38,16 +38,22 @@ Taskiro is a modern personal productivity web application that transforms how yo
 
    ```bash
    git clone <your-repo-url>
+   cd <repo-name>
+   ```
+
+2. **Navigate to the project directory:**
+
+   ```bash
    cd taskiro
    ```
 
-2. **Install dependencies:**
+3. **Install dependencies:**
 
    ```bash
    npm install
    ```
 
-3. **Set up environment variables:**
+4. **Set up environment variables:**
 
    ```bash
    cp .env.example .env
@@ -55,20 +61,20 @@ Taskiro is a modern personal productivity web application that transforms how yo
 
    Edit `.env` and update the configuration values as needed.
 
-4. **Start the PostgreSQL database:**
+5. **Start the PostgreSQL database:**
 
    ```bash
    docker compose up -d
    ```
 
-5. **Set up the database:**
+6. **Set up the database:**
 
    ```bash
    npm run db:generate
    npm run db:migrate
    ```
 
-6. **Start the development servers:**
+7. **Start the development servers:**
 
    **Option A: Full-stack development (recommended)**
 
@@ -86,7 +92,7 @@ Taskiro is a modern personal productivity web application that transforms how yo
    npm run dev
    ```
 
-7. **Access the application:**
+8. **Access the application:**
    - Frontend: http://localhost:5173
    - Backend API: http://localhost:3001
    - Database Studio: `npm run db:studio` (http://localhost:5555)
@@ -96,6 +102,7 @@ Taskiro is a modern personal productivity web application that transforms how yo
 ### Development with Docker
 
 ```bash
+cd taskiro
 # Start PostgreSQL only
 docker compose up -d
 
@@ -106,6 +113,7 @@ docker compose -f docker-compose.prod.yml up -d
 ### Production Docker Build
 
 ```bash
+cd taskiro
 # Build production image
 npm run docker:build
 
@@ -117,6 +125,8 @@ npm run docker:stop
 ```
 
 ## 📝 Available Scripts
+
+All commands should be run from the `taskiro/` directory:
 
 ### Development
 
@@ -164,7 +174,7 @@ The application uses PostgreSQL with the following core models:
 
 ### Environment Variables
 
-Copy `.env.example` to `.env` and configure:
+Copy `taskiro/.env.example` to `taskiro/.env` and configure:
 
 ```bash
 # Database
@@ -200,6 +210,7 @@ GOOGLE_REDIRECT_URI="http://localhost:5173/calendar/callback"
 1. **Build and deploy:**
 
    ```bash
+   cd taskiro
    npm run deploy:build
    npm run docker:run
    ```
@@ -214,6 +225,7 @@ GOOGLE_REDIRECT_URI="http://localhost:5173/calendar/callback"
 1. **Build the application:**
 
    ```bash
+   cd taskiro
    npm run build:prod
    ```
 
