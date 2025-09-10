@@ -130,10 +130,16 @@ router.get(
         skip: parseInt(offset as string),
       });
 
+      // Format tasks for response to ensure consistent date format
+      const formattedTasks = tasks.map((task) => ({
+        ...task,
+        dueDate: task.dueDate ? task.dueDate.toISOString().split('T')[0] : null,
+      }));
+
       const totalCount = await prisma.task.count({ where });
 
       res.json({
-        tasks,
+        tasks: formattedTasks,
         pagination: {
           total: totalCount,
           limit: parseInt(limit as string),
@@ -174,6 +180,16 @@ router.post(
         }
       }
 
+      // Helper function to parse date without timezone conversion
+      const parseDateSafely = (dateString: string): Date => {
+        // For YYYY-MM-DD format, create date at midnight UTC to avoid timezone shifts
+        if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+          return new Date(dateString + 'T00:00:00.000Z');
+        }
+        // For other formats, use regular Date constructor
+        return new Date(dateString);
+      };
+
       // Create the task
       const task = await prisma.task.create({
         data: {
@@ -182,7 +198,7 @@ router.post(
           description: description
             ? sanitizeTaskDescription(description)
             : null,
-          dueDate: dueDate ? new Date(dueDate) : null,
+          dueDate: dueDate ? parseDateSafely(dueDate) : null,
           dueTime: dueTime ? new Date(`1970-01-01T${dueTime}:00.000Z`) : null,
           priority: priority
             ? (priority.toUpperCase() as Priority)
@@ -194,9 +210,15 @@ router.post(
         },
       });
 
+      // Format the task for response to ensure consistent date format
+      const formattedTask = {
+        ...task,
+        dueDate: task.dueDate ? task.dueDate.toISOString().split('T')[0] : null,
+      };
+
       res.status(201).json({
         message: 'Task created successfully',
-        task,
+        task: formattedTask,
       });
     } catch (error) {
       next(error);
@@ -227,7 +249,13 @@ router.get(
         throw createError('Task not found', 404, 'TASK_NOT_FOUND');
       }
 
-      res.json({ task });
+      // Format the task for response to ensure consistent date format
+      const formattedTask = {
+        ...task,
+        dueDate: task.dueDate ? task.dueDate.toISOString().split('T')[0] : null,
+      };
+
+      res.json({ task: formattedTask });
     } catch (error) {
       next(error);
     }
@@ -282,6 +310,16 @@ router.put(
         }
       }
 
+      // Helper function to parse date without timezone conversion
+      const parseDateSafely = (dateString: string): Date => {
+        // For YYYY-MM-DD format, create date at midnight UTC to avoid timezone shifts
+        if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+          return new Date(dateString + 'T00:00:00.000Z');
+        }
+        // For other formats, use regular Date constructor
+        return new Date(dateString);
+      };
+
       // Prepare update data
       interface TaskUpdateData {
         title: string;
@@ -298,7 +336,7 @@ router.put(
       const updateData: TaskUpdateData = {
         title: sanitizeTaskTitle(title),
         description: description ? sanitizeTaskDescription(description) : null,
-        dueDate: dueDate ? new Date(dueDate) : null,
+        dueDate: dueDate ? parseDateSafely(dueDate) : null,
         dueTime: dueTime ? new Date(`1970-01-01T${dueTime}:00.000Z`) : null,
         priority: priority
           ? (priority.toUpperCase() as Priority)
@@ -345,9 +383,17 @@ router.put(
         },
       });
 
+      // Format the task for response to ensure consistent date format
+      const formattedTask = {
+        ...updatedTask,
+        dueDate: updatedTask.dueDate
+          ? updatedTask.dueDate.toISOString().split('T')[0]
+          : null,
+      };
+
       res.json({
         message: 'Task updated successfully',
-        task: updatedTask,
+        task: formattedTask,
       });
     } catch (error) {
       next(error);
@@ -388,9 +434,17 @@ router.delete(
         },
       });
 
+      // Format the task for response to ensure consistent date format
+      const formattedTask = {
+        ...archivedTask,
+        dueDate: archivedTask.dueDate
+          ? archivedTask.dueDate.toISOString().split('T')[0]
+          : null,
+      };
+
       res.json({
         message: 'Task archived successfully',
-        task: archivedTask,
+        task: formattedTask,
       });
     } catch (error) {
       next(error);
@@ -443,10 +497,16 @@ router.get(
         skip: parseInt(offset as string),
       });
 
+      // Format tasks for response to ensure consistent date format
+      const formattedTasks = tasks.map((task) => ({
+        ...task,
+        dueDate: task.dueDate ? task.dueDate.toISOString().split('T')[0] : null,
+      }));
+
       const totalCount = await prisma.task.count({ where });
 
       res.json({
-        tasks,
+        tasks: formattedTasks,
         pagination: {
           total: totalCount,
           limit: parseInt(limit as string),
@@ -498,9 +558,17 @@ router.post(
         },
       });
 
+      // Format the task for response to ensure consistent date format
+      const formattedTask = {
+        ...restoredTask,
+        dueDate: restoredTask.dueDate
+          ? restoredTask.dueDate.toISOString().split('T')[0]
+          : null,
+      };
+
       res.json({
         message: 'Task restored successfully',
-        task: restoredTask,
+        task: formattedTask,
       });
     } catch (error) {
       next(error);
@@ -563,9 +631,17 @@ router.post(
         },
       });
 
+      // Format the task for response to ensure consistent date format
+      const formattedTask = {
+        ...updatedTask,
+        dueDate: updatedTask.dueDate
+          ? updatedTask.dueDate.toISOString().split('T')[0]
+          : null,
+      };
+
       res.json({
         message: `Task ${newStatus === Status.COMPLETED ? 'completed' : 'uncompleted'} successfully`,
-        task: updatedTask,
+        task: formattedTask,
       });
     } catch (error) {
       next(error);
