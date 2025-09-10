@@ -170,6 +170,26 @@ const DATE_FORMAT_OPTIONS = {
 
 export class DateParsingService {
   /**
+   * Create a reference date in the user's timezone for chrono parsing
+   */
+  private createTimezoneAwareReferenceDate(timezone: string): Date {
+    // Get the current time
+    const now = new Date();
+
+    // Format the current time as it appears in the user's timezone using ISO format
+    const userTimeString = now.toLocaleString('sv-SE', {
+      timeZone: timezone,
+    });
+
+    // Parse this string as if it were in the server's local timezone
+    // This gives us a Date object that represents the user's local time
+    // but in the server's timezone context, which is what chrono expects
+    const userLocalTime = new Date(userTimeString);
+
+    return userLocalTime;
+  }
+
+  /**
    * Parse natural language input to extract task information
    */
   public parseInput(
@@ -223,10 +243,7 @@ export class DateParsingService {
       let chronoReferenceDate = referenceDate;
       if (timezone) {
         // Create a reference date that represents the current time in the user's timezone
-        const userLocalTime = new Date().toLocaleString('en-US', {
-          timeZone: timezone,
-        });
-        chronoReferenceDate = new Date(userLocalTime);
+        chronoReferenceDate = this.createTimezoneAwareReferenceDate(timezone);
       }
 
       const dateResults = chrono.parse(workingTitle, chronoReferenceDate);
@@ -247,13 +264,27 @@ export class DateParsingService {
             // For timed events, use the parsed date as-is since chrono already handled timezone
             result.dueDate = parsedDate;
           } else {
-            // For date-only events, create a date at midnight in user's timezone
-            const year = parsedDate.getFullYear();
-            const month = parsedDate.getMonth();
-            const day = parsedDate.getDate();
+            // For date-only events, extract the date components from the timezone-aware reference date
+            // that was used for parsing, since chrono preserves the relative date relationship
+            const timezoneAwareRef =
+              this.createTimezoneAwareReferenceDate(timezone);
 
-            // Create date at midnight in user's timezone
-            result.dueDate = new Date(year, month, day);
+            // Calculate the day difference between the parsed result and reference
+            const daysDiff = Math.round(
+              (parsedDate.getTime() - chronoReferenceDate.getTime()) /
+                (1000 * 60 * 60 * 24)
+            );
+
+            // Apply the same day difference to the timezone-aware reference date
+            const resultDate = new Date(timezoneAwareRef);
+            resultDate.setDate(resultDate.getDate() + daysDiff);
+
+            // Create date at midnight in user's timezone using the calculated date
+            result.dueDate = new Date(
+              resultDate.getFullYear(),
+              resultDate.getMonth(),
+              resultDate.getDate()
+            );
           }
         } else {
           result.dueDate = parsedDate;
@@ -412,10 +443,7 @@ export class DateParsingService {
     // Use timezone-aware reference date if provided
     let baseDate = referenceDate;
     if (timezone) {
-      const userLocalTime = new Date().toLocaleString('en-US', {
-        timeZone: timezone,
-      });
-      baseDate = new Date(userLocalTime);
+      baseDate = this.createTimezoneAwareReferenceDate(timezone);
     }
 
     // Start from 7 days ahead and go to 14 days ahead
@@ -480,10 +508,7 @@ export class DateParsingService {
     // Use timezone-aware reference date if provided
     let baseDate = referenceDate;
     if (timezone) {
-      const userLocalTime = new Date().toLocaleString('en-US', {
-        timeZone: timezone,
-      });
-      baseDate = new Date(userLocalTime);
+      baseDate = this.createTimezoneAwareReferenceDate(timezone);
     }
 
     const year = baseDate.getFullYear();
@@ -689,10 +714,7 @@ export class DateParsingService {
     // Use timezone-aware reference date if provided
     let chronoReferenceDate = referenceDate;
     if (timezone) {
-      const userLocalTime = new Date().toLocaleString('en-US', {
-        timeZone: timezone,
-      });
-      chronoReferenceDate = new Date(userLocalTime);
+      chronoReferenceDate = this.createTimezoneAwareReferenceDate(timezone);
     }
 
     const results = chrono.parse(dateText, chronoReferenceDate);
@@ -702,12 +724,26 @@ export class DateParsingService {
       // If timezone is provided, ensure the parsed date is interpreted correctly
       if (timezone) {
         // For relative dates like "tomorrow", "today", we want just the date part
-        const year = parsedDate.getFullYear();
-        const month = parsedDate.getMonth();
-        const day = parsedDate.getDate();
+        // Extract the date components from the timezone-aware reference date
+        const timezoneAwareRef =
+          this.createTimezoneAwareReferenceDate(timezone);
 
-        // Create date at midnight in user's timezone
-        return new Date(year, month, day);
+        // Calculate the day difference between the parsed result and reference
+        const daysDiff = Math.round(
+          (parsedDate.getTime() - chronoReferenceDate.getTime()) /
+            (1000 * 60 * 60 * 24)
+        );
+
+        // Apply the same day difference to the timezone-aware reference date
+        const resultDate = new Date(timezoneAwareRef);
+        resultDate.setDate(resultDate.getDate() + daysDiff);
+
+        // Create date at midnight in user's timezone using the calculated date
+        return new Date(
+          resultDate.getFullYear(),
+          resultDate.getMonth(),
+          resultDate.getDate()
+        );
       }
 
       return parsedDate;

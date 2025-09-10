@@ -230,3 +230,29 @@
     - Optimize production builds
     - Deploy to hosting platform
     - _Requirements: Deployment readiness_
+
+- [ ] 14. Fix timezone handling for date parsing and task creation
+
+  - [x] 14.1 Fix server-side date parsing timezone issues
+
+    - Update chrono-node date parsing to use user's local timezone instead of server timezone
+    - Modify dateParsingService to accept and use timezone parameter
+    - Ensure "today", "tomorrow", and relative dates are calculated based on user's timezone
+    - Add timezone configuration to user preferences or detect from client
+    - _Requirements: 2.1, 2.2, 2.3 - Accurate date parsing for natural language input_
+
+  - [-] 14.2 Fix frontend date handling and display
+
+    - Update date conversion logic to prevent timezone shifts when creating tasks
+    - Fix date display formatting to show correct dates in user's timezone
+    - Ensure calendar grid shows tasks on correct dates regardless of timezone
+    - Update task input component to send timezone information to server
+    - _Requirements: 5.1, 6.1, 6.2 - Correct task display and calendar functionality_
+
+  - [ ] 14.3 Fix date disambiguation and calendar integration
+
+    - Update date disambiguation suggestions to use user's timezone
+    - Fix Google Calendar sync to handle timezone conversions properly
+    - Ensure "next week" and "end of month" suggestions are accurate for user's timezone
+    - Test timezone handling across different user locations
+    - _Requirements: 2.4, 2.5 - Accurate date disambiguation and calendar sync_

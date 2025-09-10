@@ -14,9 +14,6 @@ import { errorHandler } from './middleware/errorHandler';
 // Load environment variables
 dotenv.config();
 
-// Set server timezone to UTC for consistent date handling
-process.env.TZ = 'UTC';
-
 const app = express();
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3001;
