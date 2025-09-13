@@ -2,7 +2,7 @@
 
 ## Overview
 
-This design document outlines the technical approach for implementing comprehensive UI/UX improvements to the Taskiro task management application. The improvements focus on mobile responsiveness, visual hierarchy, accessibility, and overall user experience enhancements while maintaining the existing functionality and architecture.
+This design document outlines the technical approach for implementing comprehensive UI/UX improvements to the Taskoro task management application. The improvements focus on mobile responsiveness, visual hierarchy, accessibility, and overall user experience enhancements while maintaining the existing functionality and architecture.
 
 ## Architecture
 
@@ -584,4 +584,4 @@ interface ErrorHandlingSystem {
 3. Performance optimizations
 4. Advanced accessibility features
 
-This design provides a comprehensive roadmap for transforming Taskiro into a polished, accessible, and user-friendly task management application while maintaining its existing functionality and architecture.
+This design provides a comprehensive roadmap for transforming Taskoro into a polished, accessible, and user-friendly task management application while maintaining its existing functionality and architecture.

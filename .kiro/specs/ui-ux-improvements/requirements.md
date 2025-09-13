@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This document outlines requirements for improving the user interface and user experience of the Taskiro task management application. Based on a comprehensive codebase analysis, several areas need attention to enhance usability, accessibility, and overall user satisfaction.
+This document outlines requirements for improving the user interface and user experience of the Taskoro task management application. Based on a comprehensive codebase analysis, several areas need attention to enhance usability, accessibility, and overall user satisfaction.
 
 ## Requirements
 

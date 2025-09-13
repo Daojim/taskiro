@@ -27,7 +27,7 @@ The rename will follow a layered approach to minimize risk:
 
 #### Documentation Files
 
-- `README.md` (root and taskiro/)
+- `README.md` (root and taskoro/)
 - `.kiro/specs/` - All specification documents
 - `LICENSE` - Copyright notices
 - Architecture and setup documentation

@@ -1,8 +1,8 @@
-# Taskiro Design Document
+# Taskoro Design Document
 
 ## Overview
 
-Taskiro is a personal productivity web application that leverages natural language processing to streamline task creation and management. The application features a dual-view system (task list and calendar grid) with intelligent date parsing, inline editing capabilities, and Google Calendar integration. Built with React/TypeScript frontend, Node.js/Express backend, and PostgreSQL database, Taskiro emphasizes user experience through minimal friction task entry and comprehensive organization features.
+Taskoro is a personal productivity web application that leverages natural language processing to streamline task creation and management. The application features a dual-view system (task list and calendar grid) with intelligent date parsing, inline editing capabilities, and Google Calendar integration. Built with React/TypeScript frontend, Node.js/Express backend, and PostgreSQL database, Taskoro emphasizes user experience through minimal friction task entry and comprehensive organization features.
 
 ## Architecture
 

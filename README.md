@@ -1,6 +1,6 @@
-# Taskiro
+# Taskoro
 
-Taskiro is a modern personal productivity web application that transforms how you manage tasks through intelligent natural language processing. Simply type what you need to do in plain English, and Taskiro automatically extracts due dates, priorities, and categories to organize your workflow seamlessly.
+Taskoro is a modern personal productivity web application that transforms how you manage tasks through intelligent natural language processing. Simply type what you need to do in plain English, and Taskoro automatically extracts due dates, priorities, and categories to organize your workflow seamlessly.
 
 ## ✨ Features
 
@@ -44,7 +44,7 @@ Taskiro is a modern personal productivity web application that transforms how yo
 2. **Navigate to the project directory:**
 
    ```bash
-   cd taskiro
+   cd taskoro
    ```
 
 3. **Install dependencies:**
@@ -102,7 +102,7 @@ Taskiro is a modern personal productivity web application that transforms how yo
 ### Development with Docker
 
 ```bash
-cd taskiro
+cd taskoro
 # Start PostgreSQL only
 docker compose up -d
 
@@ -113,7 +113,7 @@ docker compose -f docker-compose.prod.yml up -d
 ### Production Docker Build
 
 ```bash
-cd taskiro
+cd taskoro
 # Build production image
 npm run docker:build
 
@@ -126,7 +126,7 @@ npm run docker:stop
 
 ## 📝 Available Scripts
 
-All commands should be run from the `taskiro/` directory:
+All commands should be run from the `taskoro/` directory:
 
 ### Development
 
@@ -174,11 +174,11 @@ The application uses PostgreSQL with the following core models:
 
 ### Environment Variables
 
-Copy `taskiro/.env.example` to `taskiro/.env` and configure:
+Copy `taskoro/.env.example` to `taskoro/.env` and configure:
 
 ```bash
 # Database
-DATABASE_URL="postgresql://taskiro:password@localhost:5432/taskiro_db"
+DATABASE_URL="postgresql://taskoro:password@localhost:5432/taskoro_db"
 
 # JWT Secrets (generate strong random strings for production)
 JWT_SECRET="your-super-secret-jwt-key"
@@ -210,7 +210,7 @@ GOOGLE_REDIRECT_URI="http://localhost:5173/calendar/callback"
 1. **Build and deploy:**
 
    ```bash
-   cd taskiro
+   cd taskoro
    npm run deploy:build
    npm run docker:run
    ```
@@ -225,7 +225,7 @@ GOOGLE_REDIRECT_URI="http://localhost:5173/calendar/callback"
 1. **Build the application:**
 
    ```bash
-   cd taskiro
+   cd taskoro
    npm run build:prod
    ```
 
@@ -256,4 +256,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 🐛 Issues & Support
 
-If you encounter any issues or have questions, please [open an issue](https://github.com/your-username/taskiro/issues) on GitHub.
+If you encounter any issues or have questions, please [open an issue](https://github.com/your-username/taskoro/issues) on GitHub.

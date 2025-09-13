@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Taskiro is a personal productivity web application that helps users organize both academic and everyday tasks more efficiently using natural language input. The application addresses the friction found in most calendar and to-do apps by allowing users to simply type phrases like "Assignment 2 due next Tuesday" and automatically creating tasks that appear in both a task list and calendar view. This solo-use tool is designed for busy individuals including students, professionals, and anyone who wants to quickly organize their day or week without the manual overhead of traditional task management systems.
+Taskoro is a personal productivity web application that helps users organize both academic and everyday tasks more efficiently using natural language input. The application addresses the friction found in most calendar and to-do apps by allowing users to simply type phrases like "Assignment 2 due next Tuesday" and automatically creating tasks that appear in both a task list and calendar view. This solo-use tool is designed for busy individuals including students, professionals, and anyone who wants to quickly organize their day or week without the manual overhead of traditional task management systems.
 
 ## Requirements
 

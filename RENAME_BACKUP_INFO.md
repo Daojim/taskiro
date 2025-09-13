@@ -12,29 +12,29 @@
 
 ### Project Structure
 
-- Main project folder: `taskiro/`
-- Package name in package.json: "taskiro"
-- Database references: taskiro_db, taskiro user
+- Main project folder: `taskoro/` (renamed from `taskiro/`)
+- Package name in package.json: "taskoro" (renamed from "taskiro")
+- Database references: taskoro_db, taskoro user (renamed from taskiro_db, taskiro user)
 
 ### Key Configuration Files
 
-- `taskiro/package.json` - Contains project name and npm scripts
-- `taskiro/.env*` - Database connection strings with taskiro references
-- `taskiro/docker-compose*.yml` - Container names using taskiro
-- `taskiro/Dockerfile` - Image tags with taskiro naming
+- `taskoro/package.json` - Contains project name and npm scripts (renamed from `taskiro/package.json`)
+- `taskoro/.env*` - Database connection strings with taskoro references (renamed from `taskiro/.env*`)
+- `taskoro/docker-compose*.yml` - Container names using taskoro (renamed from `taskiro/docker-compose*.yml`)
+- `taskoro/Dockerfile` - Image tags with taskoro naming (renamed from `taskiro/Dockerfile`)
 
 ### Documentation Files
 
 - `README.md` - Root project documentation
-- `taskiro/README.md` - Application-specific documentation
+- `taskoro/README.md` - Application-specific documentation (renamed from `taskiro/README.md`)
 - `.kiro/specs/` - Specification documents
 - `LICENSE` - Copyright notices
 
 ### Development Configuration
 
 - `.vscode/settings.json` - VS Code spell check settings
-- `taskiro/coverage/` - Test coverage reports
-- `taskiro/dist/` - Build artifacts
+- `taskoro/coverage/` - Test coverage reports (renamed from `taskiro/coverage/`)
+- `taskoro/dist/` - Build artifacts (renamed from `taskiro/dist/`)
 
 ## Rollback Instructions
 
@@ -54,7 +54,7 @@ If rollback is needed:
 
 3. Verify project state:
    ```bash
-   cd taskiro
+   cd taskoro
    npm install
    npm run build
    ```
