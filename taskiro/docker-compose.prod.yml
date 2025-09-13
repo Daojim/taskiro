@@ -3,19 +3,19 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: taskiro-postgres-prod
+    container_name: taskoro-postgres-prod
     environment:
-      POSTGRES_DB: taskiro_db
-      POSTGRES_USER: taskiro_user
+      POSTGRES_DB: taskoro_db
+      POSTGRES_USER: taskoro_user
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./prisma/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     restart: unless-stopped
     networks:
-      - taskiro-network
+      - taskoro-network
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U taskiro_user -d taskiro_db']
+      test: ['CMD-SHELL', 'pg_isready -U taskoro_user -d taskoro_db']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -24,10 +24,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: taskiro-app-prod
+    container_name: taskoro-app-prod
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgresql://taskiro_user:${POSTGRES_PASSWORD}@postgres:5432/taskiro_db
+      - DATABASE_URL=postgresql://taskoro_user:${POSTGRES_PASSWORD}@postgres:5432/taskoro_db
       - JWT_SECRET=${JWT_SECRET}
       - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
       - FRONTEND_URL=${FRONTEND_URL}
@@ -41,13 +41,13 @@ services:
         condition: service_healthy
     restart: unless-stopped
     networks:
-      - taskiro-network
+      - taskoro-network
     volumes:
       - ./logs:/app/logs
 
   nginx:
     image: nginx:alpine
-    container_name: taskiro-nginx-prod
+    container_name: taskoro-nginx-prod
     ports:
       - '80:80'
       - '443:443'
@@ -59,11 +59,11 @@ services:
       - app
     restart: unless-stopped
     networks:
-      - taskiro-network
+      - taskoro-network
 
 volumes:
   postgres_data:
 
 networks:
-  taskiro-network:
+  taskoro-network:
     driver: bridge

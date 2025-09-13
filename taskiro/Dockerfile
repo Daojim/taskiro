@@ -42,19 +42,19 @@ WORKDIR /app
 
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 taskiro
+RUN adduser --system --uid 1001 taskoro
 
 # Copy built application
-COPY --from=deps --chown=taskiro:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=taskiro:nodejs /app/dist ./dist
-COPY --from=builder --chown=taskiro:nodejs /app/prisma ./prisma
-COPY --from=builder --chown=taskiro:nodejs /app/package*.json ./
+COPY --from=deps --chown=taskoro:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=taskoro:nodejs /app/dist ./dist
+COPY --from=builder --chown=taskoro:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=taskoro:nodejs /app/package*.json ./
 
 # Copy environment files
-COPY --chown=taskiro:nodejs .env.production .env
+COPY --chown=taskoro:nodejs .env.production .env
 
 # Switch to non-root user
-USER taskiro
+USER taskoro
 
 # Expose port
 EXPOSE 3001

@@ -3,11 +3,11 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15
-    container_name: taskiro-postgres
+    container_name: taskoro-postgres
     environment:
-      POSTGRES_DB: taskiro
-      POSTGRES_USER: taskiro_user
-      POSTGRES_PASSWORD: taskiro_password
+      POSTGRES_DB: taskoro
+      POSTGRES_USER: taskoro_user
+      POSTGRES_PASSWORD: taskoro_password
     ports:
       - '5432:5432'
     volumes:
