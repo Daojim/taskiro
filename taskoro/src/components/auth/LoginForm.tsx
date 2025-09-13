@@ -44,7 +44,7 @@ const LoginForm: React.FC = () => {
           <div className="p-8">
             <div className="text-center mb-8">
               <h2 className="text-display-2 bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent font-bold mb-2">
-                Taskiro
+                Taskoro
               </h2>
               <h3 className="text-heading-4 mb-2">Welcome back</h3>
               <p className="text-body">

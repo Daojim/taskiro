@@ -60,7 +60,7 @@ class CalendarService {
   }
 
   private getStoredTokens() {
-    const tokens = localStorage.getItem('taskiro_tokens');
+    const tokens = localStorage.getItem('taskoro_tokens');
     return tokens ? JSON.parse(tokens) : null;
   }
 

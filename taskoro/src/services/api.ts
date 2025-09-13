@@ -78,17 +78,17 @@ class ApiService {
 
   // Token management
   private getStoredTokens() {
-    const tokens = localStorage.getItem('taskiro_tokens');
+    const tokens = localStorage.getItem('taskoro_tokens');
     return tokens ? JSON.parse(tokens) : null;
   }
 
   private storeTokens(tokens: { accessToken: string; refreshToken: string }) {
-    localStorage.setItem('taskiro_tokens', JSON.stringify(tokens));
+    localStorage.setItem('taskoro_tokens', JSON.stringify(tokens));
   }
 
   private clearTokens() {
-    localStorage.removeItem('taskiro_tokens');
-    localStorage.removeItem('taskiro_user');
+    localStorage.removeItem('taskoro_tokens');
+    localStorage.removeItem('taskoro_user');
   }
 
   // Authentication API methods
@@ -101,7 +101,7 @@ class ApiService {
 
       // Store tokens and user data
       this.storeTokens(response.data.tokens);
-      localStorage.setItem('taskiro_user', JSON.stringify(response.data.user));
+      localStorage.setItem('taskoro_user', JSON.stringify(response.data.user));
 
       return response.data;
     } catch (error: unknown) {
@@ -118,7 +118,7 @@ class ApiService {
 
       // Store tokens and user data
       this.storeTokens(response.data.tokens);
-      localStorage.setItem('taskiro_user', JSON.stringify(response.data.user));
+      localStorage.setItem('taskoro_user', JSON.stringify(response.data.user));
 
       return response.data;
     } catch (error: unknown) {
@@ -157,7 +157,7 @@ class ApiService {
         await this.api.get('/api/auth/me');
 
       // Update stored user data
-      localStorage.setItem('taskiro_user', JSON.stringify(response.data.user));
+      localStorage.setItem('taskoro_user', JSON.stringify(response.data.user));
 
       return response.data.user;
     } catch (error: unknown) {
@@ -167,7 +167,7 @@ class ApiService {
 
   // Utility methods
   getStoredUser(): User | null {
-    const user = localStorage.getItem('taskiro_user');
+    const user = localStorage.getItem('taskoro_user');
     return user ? JSON.parse(user) : null;
   }
 

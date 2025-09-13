@@ -126,7 +126,7 @@ const Dashboard: React.FC = () => {
         <div className="app-nav-container">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center">
-              <h1 className="app-logo">Taskiro</h1>
+              <h1 className="app-logo">Taskoro</h1>
             </div>
             <div className="flex items-center gap-4">
               <span className="welcome-text">Welcome, {user?.email}</span>

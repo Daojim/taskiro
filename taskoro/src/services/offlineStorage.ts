@@ -24,7 +24,7 @@ interface SyncAction {
 // }
 
 class OfflineStorageService {
-  private dbName = 'taskiro-offline';
+  private dbName = 'taskoro-offline';
   private dbVersion = 1;
   private db: IDBDatabase | null = null;
 

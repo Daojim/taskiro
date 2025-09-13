@@ -21,7 +21,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   // Initialize theme from localStorage or system preference
   const getInitialTheme = (): Theme => {
     try {
-      const savedTheme = localStorage.getItem('taskiro_theme');
+      const savedTheme = localStorage.getItem('taskoro_theme');
       if (savedTheme === 'light' || savedTheme === 'dark') {
         return savedTheme;
       }
@@ -47,7 +47,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleSystemThemeChange = (e: MediaQueryListEvent) => {
       // Only update if no theme is saved in localStorage (user hasn't manually set a preference)
-      const savedTheme = localStorage.getItem('taskiro_theme');
+      const savedTheme = localStorage.getItem('taskoro_theme');
       if (!savedTheme || (savedTheme !== 'light' && savedTheme !== 'dark')) {
         setThemeState(e.matches ? 'dark' : 'light');
       }
@@ -76,7 +76,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
     // Save to localStorage with error handling
     try {
-      localStorage.setItem('taskiro_theme', theme);
+      localStorage.setItem('taskoro_theme', theme);
     } catch (error) {
       console.warn('Failed to save theme to localStorage:', error);
     }
