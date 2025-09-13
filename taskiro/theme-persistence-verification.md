@@ -7,7 +7,7 @@
 ### What Was Implemented:
 
 1. **✅ Store user's theme preference in localStorage**
-   - Theme is saved to `localStorage` with key `taskiro_theme`
+   - Theme is saved to `localStorage` with key `taskoro_theme`
    - Automatically saved whenever theme changes via `toggleTheme()` or `setTheme()`
 
 2. **✅ Restore saved theme preference on page load/refresh**
@@ -28,7 +28,7 @@ Added a script in the HTML head that runs before React loads:
 
 ```javascript
 // Applies saved theme immediately to prevent flash
-const savedTheme = localStorage.getItem('taskiro_theme');
+const savedTheme = localStorage.getItem('taskoro_theme');
 if (savedTheme === 'dark') {
   document.documentElement.classList.add('dark');
 }
@@ -58,11 +58,11 @@ if (savedTheme === 'dark') {
 
    ```javascript
    // Check in browser console
-   localStorage.getItem('taskiro_theme'); // Should show 'dark' or 'light'
+   localStorage.getItem('taskoro_theme'); // Should show 'dark' or 'light'
    ```
 
 3. **System Preference Test**:
-   - Clear localStorage: `localStorage.removeItem('taskiro_theme')`
+   - Clear localStorage: `localStorage.removeItem('taskoro_theme')`
    - Refresh page - should use system preference
    - Set preference again - should save and persist
 
@@ -70,7 +70,7 @@ if (savedTheme === 'dark') {
 
 - `index.html` - Added pre-React theme script
 - `src/contexts/ThemeContext.tsx` - Enhanced theme persistence
-- `taskiro/debug-theme.html` - Debug tool for testing (optional)
+- `taskoro/debug-theme.html` - Debug tool for testing (optional)
 
 ### 🎯 Requirements Satisfied:
 

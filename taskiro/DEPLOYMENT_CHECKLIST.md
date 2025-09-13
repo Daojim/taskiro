@@ -1,4 +1,4 @@
-# Taskiro Deployment Checklist
+# Taskoro Deployment Checklist
 
 ## Pre-Deployment
 
@@ -93,7 +93,7 @@ If issues occur:
 docker-compose -f docker-compose.prod.yml down
 
 # Restore from backup (if needed)
-docker-compose -f docker-compose.prod.yml exec -T postgres psql -U taskiro_user taskiro_db < backup.sql
+docker-compose -f docker-compose.prod.yml exec -T postgres psql -U taskoro_user taskoro_db < backup.sql
 
 # Deploy previous version
 git checkout previous-tag

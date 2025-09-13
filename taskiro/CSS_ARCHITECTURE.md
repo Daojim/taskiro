@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes the modular CSS architecture implemented for Taskiro, replacing the previous monolithic emergency-styles.css approach with a clean, maintainable system.
+This document describes the modular CSS architecture implemented for Taskoro, replacing the previous monolithic emergency-styles.css approach with a clean, maintainable system.
 
 ## Architecture Principles
 

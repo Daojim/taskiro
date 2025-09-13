@@ -1,4 +1,4 @@
-# Quick Render Deployment Guide for Taskiro
+# Quick Render Deployment Guide for Taskoro
 
 Your app is already configured for Render! Here's exactly what you need to do:
 
@@ -32,7 +32,7 @@ git push origin main
 2. Click "New" → "Web Service"
 3. Connect your GitHub repo
 4. Configure:
-   - **Name**: `taskiro-api` (or whatever you prefer)
+   - **Name**: `taskoro-api` (or whatever you prefer)
    - **Environment**: Node
    - **Build Command**: `npm run render:build`
    - **Start Command**: `npm run render:start`
@@ -49,7 +49,7 @@ git push origin main
 
 6. **Create Database**:
    - Click "New" → "PostgreSQL"
-   - Name: `taskiro-db`
+   - Name: `taskoro-db`
    - Copy the connection string
    - Add to your web service: `DATABASE_URL=your-connection-string`
 
@@ -58,7 +58,7 @@ git push origin main
 1. Click "New" → "Static Site"
 2. Connect same GitHub repo
 3. Configure:
-   - **Name**: `taskiro-frontend`
+   - **Name**: `taskoro-frontend`
    - **Build Command**: `npm ci && npm run build`
    - **Publish Directory**: `dist`
 
@@ -94,4 +94,4 @@ Your app is now live on the internet for free!
 2. Make sure all environment variables are set
 3. Verify your Google OAuth settings match your URLs
 
-Your Taskiro app should now be accessible to anyone on the internet!
+Your Taskoro app should now be accessible to anyone on the internet!

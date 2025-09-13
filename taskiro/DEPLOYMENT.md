@@ -1,6 +1,6 @@
-# Taskiro Deployment Guide
+# Taskoro Deployment Guide
 
-This guide covers deploying Taskiro to production environments using Docker containers.
+This guide covers deploying Taskoro to production environments using Docker containers.
 
 ## Prerequisites
 
@@ -100,7 +100,7 @@ npm run server:build
 ### 2. Build Docker Image
 
 ```bash
-docker build -t taskiro:latest .
+docker build -t taskoro:latest .
 ```
 
 ### 3. Deploy with Docker Compose
@@ -161,10 +161,10 @@ docker-compose -f docker-compose.prod.yml exec app npx prisma migrate status
 
 ```bash
 # Create backup
-docker-compose -f docker-compose.prod.yml exec postgres pg_dump -U taskiro_user taskiro_db > backup.sql
+docker-compose -f docker-compose.prod.yml exec postgres pg_dump -U taskoro_user taskoro_db > backup.sql
 
 # Restore backup
-docker-compose -f docker-compose.prod.yml exec -T postgres psql -U taskiro_user taskiro_db < backup.sql
+docker-compose -f docker-compose.prod.yml exec -T postgres psql -U taskoro_user taskoro_db < backup.sql
 ```
 
 ## Monitoring and Logs
@@ -191,7 +191,7 @@ docker-compose -f docker-compose.prod.yml logs -f app
 curl http://localhost:3001/health
 
 # Database health
-docker-compose -f docker-compose.prod.yml exec postgres pg_isready -U taskiro_user
+docker-compose -f docker-compose.prod.yml exec postgres pg_isready -U taskoro_user
 ```
 
 ## Scaling and Performance
@@ -281,7 +281,7 @@ docker-compose -f docker-compose.prod.yml exec nginx ls -la /usr/share/nginx/htm
 
 ```bash
 # Enable query logging
-docker-compose -f docker-compose.prod.yml exec postgres psql -U taskiro_user -d taskiro_db -c "ALTER SYSTEM SET log_statement = 'all';"
+docker-compose -f docker-compose.prod.yml exec postgres psql -U taskoro_user -d taskoro_db -c "ALTER SYSTEM SET log_statement = 'all';"
 ```
 
 **2. High Memory Usage**
@@ -307,10 +307,10 @@ git pull origin main
 
 ```bash
 # Vacuum database
-docker-compose -f docker-compose.prod.yml exec postgres psql -U taskiro_user -d taskiro_db -c "VACUUM ANALYZE;"
+docker-compose -f docker-compose.prod.yml exec postgres psql -U taskoro_user -d taskoro_db -c "VACUUM ANALYZE;"
 
 # Check database size
-docker-compose -f docker-compose.prod.yml exec postgres psql -U taskiro_user -d taskiro_db -c "SELECT pg_size_pretty(pg_database_size('taskiro_db'));"
+docker-compose -f docker-compose.prod.yml exec postgres psql -U taskoro_user -d taskoro_db -c "SELECT pg_size_pretty(pg_database_size('taskoro_db'));"
 ```
 
 ## Support

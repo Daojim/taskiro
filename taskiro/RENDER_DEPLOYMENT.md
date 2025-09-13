@@ -1,6 +1,6 @@
-# Deploy Taskiro to Render (Free)
+# Deploy Taskoro to Render (Free)
 
-This guide will help you deploy your Taskiro app to Render's free tier.
+This guide will help you deploy your Taskoro app to Render's free tier.
 
 ## Prerequisites
 
@@ -19,7 +19,7 @@ git add .
 git commit -m "Initial commit"
 
 # Create a new repository on GitHub, then:
-git remote add origin https://github.com/yourusername/taskiro.git
+git remote add origin https://github.com/yourusername/taskoro.git
 git push -u origin main
 ```
 
@@ -71,7 +71,7 @@ git push -u origin main
    - Click "New" > "Web Service"
    - Connect your GitHub repo
    - Configure:
-     - **Name**: `taskiro-api`
+     - **Name**: `taskoro-api`
      - **Environment**: `Node`
      - **Build Command**: `npm run render:build`
      - **Start Command**: `npm run render:start`
@@ -88,7 +88,7 @@ git push -u origin main
 
 3. **Create PostgreSQL Database**:
    - Click "New" > "PostgreSQL"
-   - Name: `taskiro-db`
+   - Name: `taskoro-db`
    - Plan: Free
    - Copy the connection string
 
@@ -101,7 +101,7 @@ git push -u origin main
    - Click "New" > "Static Site"
    - Connect same GitHub repo
    - Configure:
-     - **Name**: `taskiro-frontend`
+     - **Name**: `taskoro-frontend`
      - **Build Command**: `npm ci && npm run build`
      - **Publish Directory**: `dist`
 
