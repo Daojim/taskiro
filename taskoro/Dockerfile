@@ -1,5 +1,5 @@
 # Multi-stage build for production
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -23,15 +23,15 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
-# Copy source code
+# Copy source code (excluding .env files)
 COPY . .
 COPY prisma ./prisma/
 
 # Generate Prisma client
 RUN npx prisma generate
 
-# Build frontend
-RUN npm run build
+# Build frontend (without NODE_ENV in .env file)
+RUN NODE_ENV=production npm run build
 
 # Build backend
 RUN npm run server:build
