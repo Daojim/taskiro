@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Render build script for Taskiro
+# Render build script for Taskoro
 set -e
 
-echo "🏗️ Building Taskiro for Render..."
+echo "🏗️ Building Taskoro for Render..."
 
 # Install dependencies
 echo "📦 Installing dependencies..."
