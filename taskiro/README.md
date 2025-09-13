@@ -1,6 +1,6 @@
-# Taskiro
+# Taskoro
 
-Taskiro is a modern personal productivity web application that transforms how you manage tasks through intelligent natural language processing. Simply type what you need to do in plain English, and Taskiro automatically extracts due dates, priorities, and categories to organize your workflow seamlessly.
+Taskoro is a modern personal productivity web application that transforms how you manage tasks through intelligent natural language processing. Simply type what you need to do in plain English, and Taskoro automatically extracts due dates, priorities, and categories to organize your workflow seamlessly.
 
 ## ✨ Features
 
@@ -38,7 +38,7 @@ Taskiro is a modern personal productivity web application that transforms how yo
 
    ```bash
    git clone <your-repo-url>
-   cd taskiro
+   cd taskoro
    ```
 
 2. **Install dependencies:**
@@ -168,7 +168,7 @@ Copy `.env.example` to `.env` and configure:
 
 ```bash
 # Database
-DATABASE_URL="postgresql://taskiro:password@localhost:5432/taskiro_db"
+DATABASE_URL="postgresql://taskoro:password@localhost:5432/taskoro_db"
 
 # JWT Secrets (generate strong random strings for production)
 JWT_SECRET="your-super-secret-jwt-key"
@@ -244,4 +244,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 🐛 Issues & Support
 
-If you encounter any issues or have questions, please [open an issue](https://github.com/your-username/taskiro/issues) on GitHub.
+If you encounter any issues or have questions, please [open an issue](https://github.com/your-username/taskoro/issues) on GitHub.
